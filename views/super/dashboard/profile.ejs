@@ -1,0 +1,521 @@
+<!-- AUI Framework -->
+<!DOCTYPE html>
+    <html>
+        <style>
+            .pac-container { z-index: 100000 !important; }
+
+        </style>
+   <%-include ('../partials/header')%>
+    <body style="overflow: hidden;">
+        
+
+       
+
+        <div id="page-wrapper" class="demo-example">
+
+           
+
+            <!-- #page-header -->
+
+            <%-include ('../partials/side_bar')%>
+            <!-- #page-sidebar -->
+            <div id="page-content-wrapper">
+                <div id="page-title">
+
+<h3>
+    <div class="bg-gray text-transform-upr font-size-15 font-bold primary-font pad10A"> Welcome , <%if(data.companyName && data.companyName!=""){ %>   <%-data.companyName%>  <%}else{%> Company Details <% }%></div>
+
+
+  
+    
+</h3>
+                </div>
+                   <!-- #page-title -->
+<div id="page-content">
+
+
+<%-include ('../partials/flashMessage')%>
+
+
+
+<div id="form-wizard" class="form-wizard large-box col-md-10">
+    <ul>
+      <li>
+          <a href="#step-1">
+            <label class="wizard-step">1</label>
+            <span class="wizard-description">
+               Basic details
+               <small>Gather the basic details</small>
+            </span>
+          </a>
+      </li>
+      <li>
+          <a href="#step-2">
+            <label class="wizard-step">2</label>
+            <span class="wizard-description">
+               Address information
+               <small>Confirm address details</small>
+            </span>
+          </a>
+      </li>
+      <li>
+        <a href="#step-3">
+          <label class="wizard-step">2</label>
+          <span class="wizard-description">
+             Logo information
+             <small>Confirm logo details</small>
+          </span>
+        </a>
+    </li>
+
+    </ul>
+
+    <div class="example-code clearfix">
+
+      <form  role="form" onsubmit="return false"  class="form-bordered data-parsley-focus"  id="adduser" >
+    
+        <div id="step-1">
+
+            <div class="form-row">
+                <div class="form-label col-md-4">
+                    <label for="">
+                        Company Name<span class="required">*</span>
+                    </label>
+                </div>
+                <div class="form-input col-md-8">
+                    <input type="text" id="companyName"  value="<%-data.companyName%>"  name="companyName"   data-trigger="change" data-required="true" class="parsley-validated" />
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-label col-md-4">
+                    <label for="">
+                        Email <span class="required">*</span>
+                    </label>
+                </div>
+                <div class="form-input col-md-8">
+                    <input type="email" id="email"  value="<%-data.email%>"  name="email" data-type="email" data-trigger="change" data-required="true" class="parsley-validated" />
+                </div>
+            </div>
+
+
+            <div class="form-row pad0B">
+                <div class="form-label col-md-4">
+                    <label for="">
+                        &nbsp;Phone Number<span class="required">*</span>
+                    </label>
+                </div>
+                <div class="form-input col-md-2">
+                    <input type="text" id="countryCode" value="<%-data.countryCode%>"    name="countryCode"   placeholder="91" data-trigger="change"    data-required="true"  class="parsley-validated" />
+                </div>
+                <div class="form-input col-md-6">
+
+                    <input type="text" id="phoneNumber" name="phoneNumber"  value="<%-data.phoneNumber%>"   data-trigger="change" data-type="phone" data-required="true"  class="parsley-validated" />
+               
+                </div>
+            </div>
+          
+
+
+       
+        </div>
+
+
+        <div  id="step-2">
+            <div class="form-row">
+                <div class="form-label col-md-4">
+                    <label for="" class="label-description">
+                        Address:
+                        <span>Select address from map</span>
+                    </label>
+                </div>
+                <div class="form-label col-md-2 mrg 10T">
+                <a  href="javascript:;"  onclick="openModal(1)" class="btn large primary-bg" >
+                    <span class="button-content font-size-12 ">
+                        <i class="glyph-icon icon-map-marker float-left"></i>
+                         Find Address
+                    </span>
+                </a>
+                </div>
+
+                <div class="form-input col-md-6">
+                    <textarea id="address1" name="address1"  data-required="true" readonly data-trigger="keyup"  class="parsley-validated textarea-autosize"><%-data.address1%></textarea>
+                    <input type="hidden" id="address1LatLong" value='<%-data.address1LatLong%>'  name="address1LatLong"/>
+
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-label col-md-4">
+                    <label for="" class="label-description">
+                        Address2:
+                        <span>Select address from map</span>
+                    </label>
+                </div>
+                <div class="form-label col-md-2 mrg 10T">
+                    <a  href="javascript:;"  onclick="openModal(2)" class="btn large primary-bg" >
+                        <span class="button-content font-size-12 ">
+                            <i class="glyph-icon icon-map-marker float-left"></i>
+                             Find Address
+                        </span>
+                    </a>
+                    </div>
+                <div class="form-input col-md-6">
+                    <textarea id="address2" name="address2"  readonly data-trigger="keyup"  class="parsley-validated textarea-autosize "><%-data.address2%></textarea>
+               <input type="hidden" id="address2LatLong" value='<%-data.address2LatLong%>' name="address2LatLong"/>
+                </div>
+            </div>
+
+           
+
+         </div>
+
+         <div  id="step-3">
+            <div class="form-row">
+                <div class="form-label col-md-4">
+                    <label for="">
+                        Logo 1:
+                        <span class="required">*</span>
+                    </label>
+                </div>
+                <div class="form-input col-md-4">
+                    <input type="file" id="image" name="image"  />
+                </div> 
+                <div class="form-group col-md-4" <% if (data.logo1 =="") {%> style="display :none"  <%}%>  > 
+                    <div class="fm-admin-file">
+                            <img id="myIcon1" src="<%=data.logo1%>"  style="border-radius:50%;width:50%;max-width:100px">
+    
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-label col-md-4">
+                    <label for="">
+                        Logo 2:
+                        <span class="required">*</span>
+                    </label>
+                </div>
+                <div class="form-input col-md-4">
+                    <input type="file" id="image2" name="image2"  />
+                </div> 
+                <div class="form-group col-md-4" <% if (data.logo2 =="") {%> style="display :none"  <%}%>  > 
+                    <div class="fm-admin-file">
+                        <img id="myIcon2" src="<%=data.logo2%>"  style="border-radius:50%;width:50%;max-width:100px">
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-label col-md-4">
+                    <label for="">
+                        Logo 3:
+                    </label>
+                </div>
+                <div class="form-input col-md-4">
+                    <input type="file" id="image3" name="image3"  />
+                </div> 
+                <div class="form-group col-md-4" <% if (data.logo3 =="") {%> style="display :none"  <%}%>  > 
+                    <div class="fm-admin-file">
+                        <img id="myIcon3" src="<%=data.logo3 %>"  style="border-radius:50%;width:50%;max-width:100px">
+                    </div>
+                </div>
+            </div>
+               
+
+          
+
+         </div>
+
+
+        </form>
+
+    <div class="hide" id="black-modal-60" title="Type and find address below">
+      
+
+                  <div class="form-input col-md-10">
+                    <input id="searchBox"  type="text" placeholder="Search Box">
+                  </div>
+                    <div class="form-input col-md-2 mrg 10T ">
+                        <a  href="javascript:;"  onclick="saveAddress()" class="black-modal-60 btn large primary-bg" >
+                            <span class="button-content font-size-11 ">
+                                <i class="glyph-icon icon-download float-left"></i>
+                                Save Address
+                            </span>
+                        </a>
+                        </div>
+           
+           
+            <div id="map" style="width:100%;height:400px;"></div>
+           
+      
+    </div>
+
+
+
+
+
+
+    
+</div>
+
+
+
+
+                	</div><!-- #page-content -->
+            </div><!-- #page-main -->
+        </div><!-- #page-wrapper -->
+
+    </body>
+</html>
+
+
+<script type="text/javascript">
+$("#countryCode").intlTelInput({ initialCountry:"in",
+ });
+ var addressFromMap="",addressLat="",addressLong=""
+ var companyClick=1
+
+ $("#black-modal-60").dialog({
+         autoOpen: false,
+        resizable: false,
+        modal: true,
+        width:'80%'
+ })
+
+var input = document.querySelector("#countryCode");
+input.addEventListener("countrychange",function() {
+$("#countryCode").val($("#countryCode").intlTelInput("getSelectedCountryData").dialCode);});
+
+ 
+    
+
+       
+     
+  
+        $(document).ready(function(){
+  $(function(event){
+    $(".buttonNext").on("click", function(event){
+      var tempform = $('#adduser');
+      tempform .parsley('validate' );
+    
+
+
+    });
+    $(".buttonFinish").on("click", function(){
+        submitForm()
+    });
+  });
+});
+
+
+  
+    </script>
+    <script>
+
+function saveAddress()
+{
+    $("#black-modal-60").dialog('close');
+   // alert(companyClick)
+if(companyClick==1) {$('#address1').val(addressFromMap)
+var obj={"lat":addressLat.toString(),"long":addressLong.toString()}
+$('#address1LatLong').val(JSON.stringify(obj))
+
+}
+if(companyClick==2){ $('#address2').val(addressFromMap)
+var obj={"lat":addressLat.toString(),"long":addressLong.toString()}
+$('#address2LatLong').val(JSON.stringify(obj))
+
+}
+
+}
+
+
+function openModal(value)
+{
+    companyClick=value
+    $("#black-modal-60").dialog('open');
+
+}
+
+          function submitForm()
+          {
+
+       var tempform = $('#adduser');
+      
+      tempform .parsley('validate' );
+
+      if(tempform.parsley('isValid' ))
+      {
+
+                var ext = $('#image').val().split('.').pop().toLowerCase();
+               if(ext==null || ext=="") ext=$('#myIcon1').attr('src').split('.').pop().toLowerCase();
+
+
+               if($.inArray(ext, ['gif','png','jpg','jpeg']) == -1   ) {
+                   showToastError('Please select only jpg and png files for Logo1!')
+               return false;
+      }
+
+      var form_data = new FormData(tempform[0]);
+      $("#loading1").show();
+               $.ajax({
+                   type: 'POST',
+                   url: '<%-superadminpath%>profile/companyUpdate',
+                   dataType: 'json',
+                   data: form_data,
+                   contentType:false,
+                   cache:false,
+                   processData:false,
+                   success: function (response) {
+                       $("#loading1").hide();
+
+                       if (response.code == 200) {
+                          showToastSuccess(response.message)
+                         //window.location.reload()                       
+                       }
+                   },
+                   error: function(response)
+               {    $("#loading1").hide();
+                  var errorResponse=JSON.parse(response.responseText)
+                  showToastError(errorResponse.message)
+
+
+               }
+               });
+           }
+     
+        }
+    </script>
+<script>
+    var geocoder =null;
+
+function initAutocomplete() {
+    geocoder = new google.maps.Geocoder();
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+      center: {lat: -33.8688, lng: 151.2195},
+      zoom: 13,
+      mapTypeId: 'roadmap'
+    });
+
+
+//     google.maps.event.addListener(map, 'click', function(event) {
+//        // placeMarker (map, event.latLng); 
+//       // marker = new google.maps.Marker({position: event.latLng, map: map});
+//      // alert("Latitude: " + event.latLng.lat() + " " + ", longitude: " + event.latLng.lng());
+//        addressLat= event.latLng.lat() 
+//        addressLong=event.latLng.lng()
+//        geocodePosition(event.latLng)
+
+//          // alert(event.latLng);  // in event.latLng  you have the coordinates of click
+// });
+
+    // Create the search box and link it to the UI element.
+    var input = document.getElementById('searchBox');
+    var searchBox = new google.maps.places.SearchBox(input);
+    //map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+    map.addListener('click', function(e) {
+    placeMarker(e.latLng, map);
+    addressLat= e.latLng.lat() 
+    addressLong=e.latLng.lng()
+    geocodePosition(e.latLng)
+
+});
+
+
+
+    // Bias the SearchBox results towards current map's viewport.
+    map.addListener('bounds_changed', function() {
+      searchBox.setBounds(map.getBounds());
+    });
+
+    var markers = [];
+    // Listen for the event fired when the user selects a prediction and retrieve
+    // more details for that place.
+    searchBox.addListener('places_changed', function() {
+      var places = searchBox.getPlaces();
+
+      if (places.length == 0) {
+        return;
+      }
+
+      // Clear out the old markers.
+      markers.forEach(function(marker) {
+        marker.setMap(null);
+      });
+      markers = [];
+
+      // For each place, get the icon, name and location.
+      var bounds = new google.maps.LatLngBounds();
+      places.forEach(function(place) {
+        if (!place.geometry) {
+          console.log("Returned place contains no geometry");
+          return;
+        }
+        var icon = {
+          url: place.icon,
+          size: new google.maps.Size(71, 71),
+          origin: new google.maps.Point(0, 0),
+          anchor: new google.maps.Point(17, 34),
+          scaledSize: new google.maps.Size(25, 25)
+        };
+
+        addressFromMap=place.formatted_address
+        //console.log(place.formatted_address)
+        addressLat=  place.geometry.location.lat() 
+        addressLong= place.geometry.location.lng()
+
+        // Create a marker for each place.
+        markers.push(new google.maps.Marker({
+          map: map,
+          icon: icon,
+          title: place.name,
+          position: place.geometry.location
+        }));
+
+        if (place.geometry.viewport) {
+          // Only geocodes have viewport.
+          bounds.union(place.geometry.viewport);
+        } else {
+          bounds.extend(place.geometry.location);
+        }
+      });
+      map.fitBounds(bounds);
+    });
+  }
+
+  function geocodePosition(pos) {
+  geocoder.geocode({
+    latLng: pos
+  }, function(responses) {
+    if (responses && responses.length > 0) {
+        addressFromMap=responses[0].formatted_address
+     $('#searchBox').val(addressFromMap)
+
+        //alert(responses[0].formatted_address)
+      //updateMarkerAddress(responses[0].formatted_address);
+    } else {
+        addressFromMap=""
+
+        alert('Cannot determine address at this location.')
+
+     // updateMarkerAddress('Cannot determine address at this location.');
+    }
+  });
+}
+var perviousMaker=null
+function placeMarker(position, map) {
+   
+     if(perviousMaker)perviousMaker.setMap(null);
+    var marker = new google.maps.Marker({
+        position: position,
+        map: map
+    });
+    perviousMaker=marker
+    map.panTo(position);
+}
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDfCcAJOo_cqeIYwKggFlv152B5wVr6iso&libraries=places&callback=initAutocomplete"></script>
+
+    
+

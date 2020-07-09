@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+    <html>
+      
+        <%- include('../partials/header'); -%> 
+   
+    
+        <body style="overflow: hidden;">
+        
+
+
+        <div id="page-wrapper" class="demo-example">
+
+           
+
+           <!-- #page-Sidebar -->
+<%- include('../partials/side_bar')%>
+         
+            <div id="page-content-wrapper">
+                <div id="page-title">
+
+<h3>
+    Dashboard
+    <small>
+        Stats and Revenues
+    </small>
+</h3>
+                    <div class="col-md-8" id="breadcrumb-right">
+                        <div class="form-row col-lg-4 form-vertical font-size-16 bold   dropdown form-label ">
+                            <select   data-placeholder="Choose Company" class="chosen-select" id="compId">
+                                <option value="" > Nothing Selected</option>
+                                <%for(var t=0;t<compData.length;t++){%>
+                                <option value="<%-compData[t].id%>" /><%-compData[t].companyName%> 
+                               
+                        <%}%>
+                       </select>
+                    
+                    
+                    
+                      
+                     
+                    </div>
+
+                    <div id="sidebar-search">
+                        <a onclick="getFilter(1)" href="javascript:;" class="btn medium primary-bg mrg5T" title="" >
+                            <span class="button-content text-center float-none font-size-11 text-transform-upr">
+                                Filter
+                            </span>
+                        </a>                                 
+                            </div>
+                 
+                        
+
+                        <div  id="sidebar-search">
+                    <input type="text" size="10"  placeholder="To Date" class="toDate"  id ="toDate" name="to" />
+                            <i class="glyph-icon icon-calendar"></i>
+                        </div>
+
+                          
+                        <div   id="sidebar-search">
+                            <input type="text" placeholder="From Date"  size="10" class="fromDate"  id ="fromDate" name="from" />
+                            <i class="glyph-icon icon-calendar"></i>
+                        </div>
+
+
+                  
+                        <div  class="form-row col-lg-2" id="sidebar-search" class="mrg2T" >
+                                <select data-placeholder="Choose Status" class="chosen-select font-bold" id="filterName">
+                                <option value="" /> 
+                                <option value="DAY" selected/>Daily 
+                                <option value="WEEK" />Weekly 
+                                <option value="MONTH" />Monthly
+                                <option value="YEAR" />Yearly
+                            
+        
+                       </select>                       
+                            </div> 
+                  
+                         
+        
+                       
+                    </div>
+
+
+                
+                
+
+</div><!-- #page-title -->
+
+    
+
+<div id="page-content">
+
+
+   <div class="example-box">
+    <div class="example-code">
+
+
+      
+        <div class="bg-black pad20A row">
+            <div class="col-md-4">
+                <div class="chart-alt"  id="userPieStat" ><span>55</span>%</div>
+                <div class="text-center pad10T">Users</div>
+            </div>
+            <div class="col-md-4">
+                <div class="chart-alt"   id="orderPieStat"><span>46</span>%</div>
+                <div class="text-center pad10T">Orders</div>
+            </div>
+            <div class="col-md-4">
+                <div class="chart-alt"   id="paymentPieStat" ><span>92</span>%</div>
+                <div class="text-center pad10T">Payments</div>
+            </div>
+           
+        </div>
+
+    </div>
+    
+</div>
+
+
+
+    <div class="row">
+
+        <div class="col-md-8">
+    
+            <div class="dashboard-panel bg-white content-box">
+                <div class="content-box-wrapper">
+                    <div class="header text-left">
+                        <span id="morisDate">November 2013 - December 2013</span>
+                    </div>
+                    <div class="nav-list-horizontal mrg25T">
+                        <ul class="row mrg10T">
+                            <li>
+                                <div class="nav-wrp">
+                                    <h3><i class="glyph-icon icon-caret-up font-green font-size-17 pad5R"></i><span id="totalEarnings"></span></h3>
+                                    <span class="font-gray">Total earnings</span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="nav-wrp">
+                                    <h3><i class="glyph-iconicon-caret-up  font-yellow font-size-17 pad5R"></i><span id="totalOrders"></span></h3>
+                                    <span class="font-gray">Total  Orders</span>
+                                </div>
+                            </li>
+                           
+                        </ul>
+                    </div>
+                    <div id="color-bar1" style="height: 250px;">  </div>
+                   
+                </div>
+               
+            </div>
+    
+            <div class="content-box">
+                <table class="table text-center">
+                  
+                    <tbody id="orderStatListing">
+                       
+                    </tbody>
+                </table>
+            </div>
+    
+           
+          
+         
+    
+        </div>
+        <div class="col-md-4">
+    
+            <div class="row">
+                
+    
+            <div class="dashboard-panel content-box remove-border bg-blue-alt">
+                        <div class="content-box-wrapper">
+                            <div class="header">
+                                Users
+                                <span id="sparkUserDate">August - October 2013</span>
+                            </div>
+
+                        
+                            <div class="sparkline-big" id="userSparksStat"></div>
+
+                        </div>
+                        <div class="button-pane">
+                            <div class="heading medium">
+                                <b id="userTotalHeading"></b>  New Users
+                            </div>
+                            <a href="javascript:;" href="<%-superadminpath%>/users/" class="medium btn bg-blue float-right tooltip-button" data-placement="top" title="Download now!">
+                                <i class="glyph-icon icon-cloud-download"></i>
+                            </a>
+                        </div>
+                    </div>
+    
+               
+
+                    <div class="dashboard-panel content-box remove-border bg-green">
+                        <div class="content-box-wrapper">
+                            <div class="header">
+                                Payment growth
+                                <span id="sparkPaymentDate">2013 - 2014</span>
+                            </div>
+                            <div class="sparkline-big" id="paymentSparksStat" ></div>
+                        </div>
+                        <div class="button-pane">
+                            <div class="heading medium">
+                                <b id="paymentTotalHeading"></b> New payments
+                            </div>
+                            <a href="javascript:;" class="medium btn bg-yellow float-right tooltip-button" data-placement="top" title="Add content">
+                                <i class="glyph-icon icon-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                
+    
+                    <div class="dashboard-panel content-box remove-border bg-yellow">
+                        <div class="content-box-wrapper">
+                            <div class="header">
+                                Product evolution
+                                <span id="sparkCategoryDate">July - December 2013</span>
+                            </div>
+                            <div class="sparkline-big" id="categorySparksStat"></div>
+                        </div>
+                        <div class="button-pane">
+                            <div class="heading medium">
+                                <b id="categoryTotalHeading"></b> New Category Added
+                            </div>
+                            <a href="javascript:;" class="medium btn bg-white float-right tooltip-button" data-placement="top" title="View details">
+                                <i class="glyph-icon icon-link"></i>
+                            </a>
+                        </div>
+                   
+    
+                </div>
+          
+           
+    
+          
+    
+        </div>
+    
+    </div>
+
+
+
+                	</div><!-- #page-content -->
+            </div><!-- #page-main -->
+        </div><!-- #page-wrapper -->
+
+    </body>
+     
+    <script type="text/javascript" src="assets/js/minified/core/raphael.min.js"></script>
+    <script type="text/javascript" src="assets/js/minified/widgets/charts-morris.min.js"></script>
+
+    <script>
+
+var date=new Date()
+$('#toDate').val(date)
+var weekdate=new Date(date.getTime() - (30 * 24 * 60 * 60 * 1000))
+$('#fromDate').val(weekdate)
+var countLoad=0
+getFilter()
+
+        function morisLine(data)
+        {
+            var filterName=$('#filterName').val()
+            $("#color-bar1").empty();
+
+            var graphData=[]
+            var min= Math.min.apply(Math, data.map(function(o) { return o[filterName]; }))
+            var max= Math.max.apply(Math, data.map(function(o) { return o[filterName]; }))
+          
+           if(min==max) min=0
+            var diff=max-min
+
+
+            for(var k=0;k<=diff;k++)
+            {   
+
+
+            const found =data.find( ( filters ) => filters[filterName] ===(min+k) );
+
+
+            if(found)  
+            graphData.push({filterName1:min+k,value:found.count})
+            else graphData.push({filterName1:min+k,value:0})
+
+            }
+
+
+           // if(graphData.length<2)  graphData.splice(0,0,{filterName1:0,value:0})
+
+        new Morris.Line({
+  // ID of the element in which to draw the chart.
+  element: 'color-bar1',
+  // Chart data records -- each entry in this array corresponds to a point on
+  // the chart.
+//   data: [
+//     { day: 'Day1', value: 0 },
+//     { day: '2009', value: 1 },
+//     { day: '2010', value: 3 },
+//     { day: '2011', value: 4},
+//     { day: '2012', value: 20 }
+//   ],
+ data: graphData,
+  // The name of the data record attribute that contains x-values.
+  xkey: 'filterName1',
+  // A list of names of data record attributes that contain y-values.
+  ykeys: ['value'],
+  parseTime: false,
+
+  // Labels for the ykeys -- will be displayed when you hover over the
+  // chart.
+  xLabels: ['Count'],
+  labels: ['Count'],
+
+});
+
+        }
+
+
+
+  
+function getFilter(currentPage)
+    {
+        var filterName=$('#filterName').val();
+        var fromDate=$('#fromDate').val();
+        var toDate=$('#toDate').val();
+        var compId=$('#compId').val();
+
+
+        if(fromDate!="" && toDate!="")
+        {
+            if(countLoad>0)$('#loading1').show()
+            countLoad++;
+
+        //alert(fromDate)
+        $.ajax({
+            type: 'POST',
+            url: '<%-superadminpath%>/dashboard',
+            dataType: 'json',
+            data: {'fromDate':fromDate,'filterName':filterName ,'toDate':toDate,'compId':compId},
+            success: function (response) {
+                $('#loading1').hide()
+
+                console.log(response)
+                if (response.code == '200') {
+                    var data=response.body
+
+morisLine(data.ordersDataStat)
+orderstat(data.ordersDataStat)
+pieStat(data)
+sparkStat(data)
+
+$('#morisDate').html(format(new Date(fromDate)) +' To '+format(new Date(toDate)))
+$('#sparkUserDate').html(format(new Date(fromDate)) +' To '+format(new Date(toDate)))
+$('#sparkPaymentDate').html(format(new Date(fromDate)) +' To '+format(new Date(toDate)))
+$('#sparkCategoryDate').html(format(new Date(fromDate)) +' To '+format(new Date(toDate)))
+$('#totalOrders').html(data.totalStatOrder+"/"+data.mainTotalOrder)
+var earnings=data.ordersDataStat.map(item => item.totalSum).reduce(function(acc, val) { return acc + val; }, 0)
+$('#totalEarnings').html('<%-CURRENCY%>'+earnings.toFixed(2))
+
+                }
+                else{
+                   
+                    showToastError(response.message)
+                }
+            },
+
+            error :function(response)
+            {
+                $('#loading1').hide()
+
+                showToastError(response.message)
+
+            }
+        });
+    }
+    else{
+        showToastError("Please select dates")
+ 
+    }
+    }
+    
+
+
+
+function pieStat(data)
+
+{
+    $("#userPieStat").data("easyPieChart").update(((data.totalStatUser*100)/data.mainTotalUser));
+    $("#orderPieStat").data("easyPieChart").update(((data.totalStatOrder*100)/data.mainTotalOrder));
+    $("#paymentPieStat").data("easyPieChart").update( data.totalStatPayment!=0? ((data.totalStatPayment*100)/data.mainTotalPayment):0)
+
+            // $("#userPieStat").data("data-percent",((data.totalStatUser*100)/data.mainTotalUser).toString());
+            // $("#orderPieStat").attr("data-percent",((data.totalStatorder*100)/data.mainTotalorder));
+            // $("#payemntPieStat").attr("data-percent",((data.totalStatPayment*100)/data.mainTotalPayment));
+
+
+}
+
+function orderstat(data)
+{
+    var appendData=""
+                        var color=["blue","black","red","orange","blue","green"]
+                        var status=["Pending","Confirmed","Cancelled-User","Precessing","Cancelled-Company","Completed"]
+                        var totalCount=[0,0,0,0,0]
+                        var totalSum=[0,0,0,0,0]
+
+                        for(var t=0; t<data.length; t++)
+                        {
+                         
+                            var index=parseInt(data[t].progressStatus)
+                            totalCount[index]=totalCount[index]+ data[t].count
+                            totalSum[index]=totalSum[index]+ data[t].totalSum
+
+                        
+                        
+                        }
+                        for(var k=0;k<5;k++){
+                          
+                      appendData= appendData+'<tr>'+
+                            '<td>'+(k+1)+'</td>'+
+                            '<td class="font-bold text-left">'+status[k]+' Orders</td>'+
+                            '<td class="text-left"><a href="javascript:;" title="">'+totalSum[k].toFixed(2)+' <%-CURRENCY%></a></td>'+
+                            '<td><div class="label bg-'+color[k]+'">+'+totalCount[k]+'</div></td>'+
+                           
+                        '</tr>'
+                       }
+
+                       $('#orderStatListing').html(appendData);
+}
+
+
+function sparkStat(data)
+
+{
+
+var orderStats=[];
+var userStatsActive=[];
+var userStatsLeft=[];
+var paymentStat=[];
+var categoryStat=[];
+
+
+
+// userStatsActive=data.userDataStat.map(item => item.count)
+
+
+
+
+userStatsActive=getDataSpark(data.userDataStat)
+paymentStat=getDataSpark(data.paymentDataStat)
+categoryStat=getDataSpark(data.categoryDataStat)
+
+
+//console.log(userStatsActive)
+$('#userSparksStat').sparkline(userStatsActive,{ type: 'line',width: '100%',height: '55',lineColor: '#fff'});
+$('#paymentSparksStat').sparkline(paymentStat,{ type: 'line',width: '100%',height: '55',lineColor: '#fff'});
+$('#categorySparksStat').sparkline(categoryStat,{ type: 'bar',width: '100%',height: '55',lineColor: '#fff'});
+$('#userTotalHeading').html(data.totalStatUser);
+$('#categoryTotalHeading').html(data.totalStatCategory);
+$('#paymentTotalHeading').html(data.totalStatPayment);
+
+
+
+}
+
+function getDataSpark(data)
+{
+    var arrayActive=[]
+        var filterName=$('#filterName').val()
+
+    var min= Math.min.apply(Math, data.map(function(o) { return o[filterName]; }))
+   var max= Math.max.apply(Math, data.map(function(o) { return o[filterName]; }))
+          
+            if(min==max) min=0
+            var diff=max-min
+            for(var k=0;k<=diff;k++)
+            {   
+            const found =data.find( ( filters ) => filters[filterName] ===(min+k) );
+            if(found)  
+            arrayActive.push(found.count)
+            else arrayActive.push(0)
+            }
+
+            return arrayActive;
+}
+
+
+    </script>
+    
+</html>
+

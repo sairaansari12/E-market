@@ -1,0 +1,190 @@
+
+<script>
+    function showToastSuccess(message)
+    {
+ $.toast({
+                        text: message,
+                        heading: 'Success',
+                        icon: 'success',
+                        showHideTransition: 'slide',
+                        allowToastClose: true,
+                        hideAfter: 5000,
+                        stack: false, // false if there should be only one toast at a time or a number representing the maximum number of toasts to be shown at a time
+                        position: 'top-right', // bottom-left or bottom-right or bottom-center or top-left or top-right or top-center or mid-center or an object representing the left, right, top, bottom values
+                        textAlign: 'left',
+                        loader: false,
+                        loaderBg: '#9EC600'
+                    })
+                }
+
+
+
+function  showToastError(message)
+    {
+ $.toast({
+                        text: message,
+                        heading: 'Error',
+                        icon: 'error',
+                        showHideTransition: 'slide',
+                        allowToastClose: true,
+                        hideAfter: 5000,
+                        stack: false, // false if there should be only one toast at a time or a number representing the maximum number of toasts to be shown at a time
+                        position: 'top-right', // bottom-left or bottom-right or bottom-center or top-left or top-right or top-center or mid-center or an object representing the left, right, top, bottom values
+                        textAlign: 'left',
+                        loader: false,
+                        loaderBg: '#9EC600'
+                    });
+                }
+
+                function getURLParameter(name) {
+                    var url = window.location.href
+                    var regex=(RegExp(name + '=' + '(.+?)(&|$)').exec(url)||[,null])[1]
+                if(regex!=null)
+                {
+                    regex=regex.replace("%20"," ")
+                    regex=regex.replace("%27","'")
+                }
+    return regex
+}
+
+function format(date) {
+
+var strArray=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+var d = date.getDate();
+var m = strArray[date.getMonth()];
+var y = date.getFullYear();
+return '' + (d <= 9 ? '0' + d : d) + '-' + m + '-' + y;
+}
+
+
+function showLoader(){
+
+  $('#loading').slideUp('fast');
+  jQuery('body').css('overflow','auto');
+}
+
+
+
+
+function formatAMPM(date) {
+
+var strArray=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+var d = date.getDate();
+var m = strArray[date.getMonth()];
+var y = date.getFullYear();
+var hours = date.getHours();
+var minutes = date.getMinutes();
+var ampm = hours >= 12 ? 'pm' : 'am';
+hours = hours % 12;
+hours = hours ? hours : 12; // the hour '0' should be '12'
+minutes = minutes < 10 ? '0'+minutes : minutes;
+var strTime = hours + ':' + minutes + ' ' + ampm;
+return '' + (d <= 9 ? '0' + d : d) + '-' + m + '-' + y +" "+strTime;
+}
+
+function readCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+function readURL(input,id) {
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+    
+    reader.onload = function(e) {
+      $('#'+id).attr('src', e.target.result);
+    }
+    
+    reader.readAsDataURL(input.files[0]); // convert to base64 string
+  }
+}
+getNotification();
+var myVar = setInterval(getNotification, 10000);
+
+function getNotification()
+{
+ $.ajax({
+            type: 'POST',
+            url: '<%-superadminpath%>notification/count',
+            dataType: 'json',
+            data: {},
+            success: function (response) {
+                var data=response.body
+                var count=data.length
+                var appendData=""
+                var countData=0
+                if(count>0) {$('#notif_count').html(count) 
+                $('#notif_count').show()}
+                if (response.code == '200') {
+for(var t=0;t<data.length;t++)
+
+{
+    if(countData<5)
+    {
+        countData++;
+                     appendData = appendData+
+                     '<li>'+
+'                            <span class="btn bg-purple icon-notification glyph-icon icon-user small"></span>'+
+'                            <span class="notification-text font-size-12">'+data[t].notificationTitle+'</span>'+
+'                            <div class="notification-time font-size-10">'+
+                              formatAMPM(new Date(data[t].createdAt))+
+'                                <span class="glyph-icon icon-time"></span>'+
+'                            </div>'+
+'                        </li>';
+	
+    }
+}
+if(appendData!="") $('#append_notification').html(appendData)
+else  $('#append_notification').html("<div class='center-div'>No New Notification</div>")
+                }
+                else{
+                   
+                  //  showToastError(response.message)
+                }
+            },
+
+            error :function(response)
+            {
+               // showToastError(response.message)
+
+            }
+        });
+    
+    }
+    function getOrderColor(progressStatus)
+    {
+                 var btnBg="bg-purple"
+                if(progressStatus=="1")btnBg="bg-orange"
+                if(progressStatus=="2")btnBg="bg-red"
+                if(progressStatus=="3") btnBg="primary-bg"
+                if(progressStatus=="4")btnBg="bg-red"
+                if(progressStatus=="5") btnBg="bg-green"
+                return btnBg
+    }
+    
+
+    function getRating(rating)
+    {
+        var avgRating=""
+        for(var k=0;k<5;k++)
+{
+    if(rating-k>1)
+avgRating=  avgRating+'<i class="glyph-icon icon-star font-yellow "></i>'
+
+else{ if (rating-k>0) avgRating=  avgRating+'<i class="glyph-icon icon-star-half-full font-yellow "></i>'
+else  avgRating=  avgRating+'<i class="glyph-icon icon-star font-gray "></i>'
+}
+
+
+    }
+    return avgRating;
+
+}
+
+</script>
+

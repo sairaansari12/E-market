@@ -1,0 +1,161 @@
+<%- include ('../partials/header') %>
+<%- include ('../partials/side_bar') %>
+<section id="content">
+<div class="container">
+<div class="card">
+    <div class="card-header">
+        <h2>Add New User</h2>
+    </div>
+    
+    <div class="card-body card-padding">
+        <form id="addUser" role="form" method="POST">
+            <div class="row">
+                <div class="col-sm-6">                       
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
+                        <div class="fg-line">
+                                <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First Name">
+                        </div>
+                    </div>
+                    
+                    <br/>
+                    
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="zmdi zmdi-local-phone"></i></span>
+                        <div class="fg-line">
+                            <input type="text" class="form-control input-mask" data-mask="000-000-0000" name="phoneNumber" id="phoneNumber" placeholder="Contact Number">
+                        </div>
+                    </div>
+                    
+                    <br/>
+                    
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="zmdi zmdi-email"></i></span>
+                        <div class="fg-line">
+                            <input type="email" name="email" id="email" class="form-control" placeholder="Email Address">
+                        </div>
+                    </div>
+                    
+                </div>
+                
+                <div class="col-sm-6">
+                    <div class="input-group">
+                         <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
+                        <div class="fg-line">
+                                <input type="text" name="lastName" id="lastName" class="form-control" placeholder="last Name">
+                        </div>
+                       
+                    </div>                       
+
+                    <br/>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="zmdi zmdi-pin"></i></span>
+                        <div class="fg-line">    
+                            <input type="text" class="form-control" name="address" id="address" placeholder="Home Address">
+                        </div>
+                    </div>
+                    <br/>
+                    <br/>
+                    
+                </div>
+                
+                <div class="col-sm-6">  
+                    <div class="input-group" style="margin-left: 20px;">                     
+                        <p class="f-500 c-black m-b-20">Image Preview</p>
+                    
+                        <div class="fileinput fileinput-new" data-provides="fileinput">
+                            <div class="fileinput-preview thumbnail" data-trigger="fileinput"></div>
+                                <div>
+                                    <span class="btn btn-info btn-file">
+                                        <span class="fileinput-new">Select image</span>
+                                        <span class="fileinput-exists">Change</span>
+                                        <input type="file" name="image" id="image">
+                                    </span>
+                                    <a href="#" class="btn btn-danger fileinput-exists" data-dismiss="fileinput">Remove</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-t-30">
+                    <button class="btn btn-primary btn-sm waves-effect">Save</button>
+                    <button data-pmb-action="reset" class="btn btn-link btn-sm waves-effect">Cancel</button>
+                </div>
+            </div>
+
+        </form>
+    </section>
+</section>
+<%- include ('../partials/script') %>
+<%- include('../partials/commonJs'); -%>
+<script type="text/javascript">
+$(document).ready(function () {
+
+  $('#addUser').validate({
+    rules: {
+      email: {
+        required: true,
+        email: true,
+      },
+      phoneNumber: {
+        required: true
+      },
+      firstName: {
+        required: true
+      },
+      lastName: {
+        required: true
+      },
+      address: {
+        required: true
+      }
+    },
+    messages: {
+      email: {
+        required: "Please enter a email address",
+        email: "Please enter a vaild email address"
+      },
+      phoneNumber: {
+        required: "Please provide a phoneNumber"
+      },
+      firstName: {
+        required: "Please provide a First Name"
+      },
+      lastName: {
+        required: "Please provide a Last Name"
+      },
+      address: {
+        required: "Please provide a address"
+      }
+    },
+    submitHandler: function (form) {
+    $(".page-loader").show();
+    var tempform = $('#addUser');
+    var form_data = new FormData(tempform[0]);
+      $.ajax({
+            type: 'POST',
+            url: '<%-adminpath%>user/adduser',
+            dataType: 'json',
+            data: form_data,
+            contentType:false,
+            cache:false,
+            processData:false,
+            success: function (response) {
+            console.log(response);
+            if (response.code == '200') {
+                   showToastSuccess( response.message)
+                   //setTimeout(function(){ $("#loading-img").hide(); window.location.reload();},2500);
+                
+            }
+            else{
+               $(".page-loader").hide();
+                showToastError(response.message)
+            }
+          }
+      });
+    }
+  });
+});
+</script>
+ </body>
+</html>

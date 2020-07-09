@@ -1,0 +1,481 @@
+<!-- AUI Framework -->
+<!DOCTYPE html>
+    <html>
+   <%-include ('../partials/header')%>
+    <body style="overflow: hidden;">
+        
+
+
+        <div id="page-wrapper" class="demo-example">
+
+           
+
+            <!-- #page-header -->
+
+            <%-include ('../partials/side_bar')%>
+            <!-- #page-sidebar -->
+            <div id="page-content-wrapper" >
+                <div>
+
+
+    <div class="col-md-4 bg-gray form-bordered  text-transform-upr font-size-18 font-bold font-black pad10A  ">Total payments :<span id="totalPaymentCount">0 </span> &nbsp;&nbsp;&nbsp;</div>
+    <div class="col-md-4 bg-gray form-bordered  text-transform-upr font-size-18 font-bold font-black pad10A  ">Total Payment :  <%-CURRENCY%>&nbsp;<span id="totalPayment">  </span> </div>
+    <div class="col-md-4 bg-gray form-bordered  text-transform-upr font-size-18 font-bold font-black pad10A  ">Escrow Payment :  <%-CURRENCY%> &nbsp;<span id="totalEscrowPayment"> 0 </span> </div>
+    <div class="col-md-6 form-bordered  bg-gray  text-transform-upr font-size-14  font-bold  primary-font pad10A mrg25B">No. of Success payment :<span id="totalSuccessCount">0</span> &nbsp;&nbsp;&nbsp;  Total Payment : &nbsp;<%-CURRENCY%>&nbsp;<span id="totalSuccessSum"> 0  </span> </div>
+    <div class="col-md-6  form-bordered  bg-gray text-transform-upr font-size-14 font-bold  font-red pad10A mrg25B">No. of Failed payment :<span id="totalFailedCount">0</span> &nbsp;&nbsp;&nbsp;Total Payment :  <%-CURRENCY%>&nbsp;<span id="totalFailedSum"> 0 </span> </div>
+
+
+                   
+</div><!-- #page-title -->
+<div id="page-content" >
+
+
+<%-include ('../partials/flashMessage')%>
+
+    <div class="example-box">
+    
+
+        <div class="form-row  col-md-12 float-left form-vertical font-size-12 bold   dropdown form-label mrg10T ">
+            <select   data-placeholder="Choose Company" class="chosen-select" id="compId">
+                <option value="" > Nothing Selected</option>
+                <%for(var t=0;t<compData.length;t++){%>
+                <option value="<%-compData[t].id%>" /><%-compData[t].companyName%> 
+               
+        <%}%>
+       </select>
+    
+         </div>
+
+
+
+            <div class="form-row col-lg-2 float-left form-vertical">
+                <div class="form-label">
+                    <label for="from">
+                        From Date:
+                    </label>
+                </div>
+                <div class="form-input">
+                    <input type="text" size="10" class="fromDate" id="fromDate" name="from" />
+                </div>
+            </div>
+    
+            <div class="form-row col-lg-2 float-left form-vertical">
+                <div class="form-label">
+                    <label for="to">
+                        To Date: 
+                    </label>
+                </div>
+                <div class="form-input">
+                    <input type="text" size="10" class="toDate"  id ="toDate" name="to" />
+                </div>
+            </div>
+
+          
+        
+        <div class="form-row col-lg-3 float-left form-vertical dropdown form-label mrg25T">
+            <select data-placeholder="Choose Status" class="chosen-select" id="status">
+                <option value="" /> 
+                <option value="" />All 
+                <option value="1" />Success
+                <option value="2" />Failed
+
+       </select>
+    
+         </div>
+
+         
+
+         <div class="form-row col-lg-2 float-left form-vertical form-label mrg25T">
+            <a onclick="getFilter(1)" href="javascript:;" class="btn medium primary-bg" title="" >
+                <span class="button-content text-center float-none font-size-11 text-transform-upr">
+                    Filter
+                </span>
+            </a>
+    
+         </div>
+
+         <div class="form-row col-lg-2 float-left form-vertical">
+            <div class="form-label">
+                <label for="to">
+                    Search: 
+                </label>
+            </div>
+            <div class="form-input">
+                <input type="text" size="10" class="search"  id ="search" name="search" />
+            </div>
+        </div>
+         
+         
+        </div>
+
+
+
+<table class="table font-size-13" id="example" style="width:100%">
+
+	<thead>
+		<tr>
+            <th>Customer Name</th>
+            <th>Order No</th>
+            <th>Order Id</th>
+			<th>Order Date</th>
+            <th>Contact</th>
+            <th>Price (<%-CURRENCY%>)</th>
+            <th>Payment Date </th>
+            <th>Action </th>
+
+		</tr>
+    </thead>
+    
+    
+
+  
+    
+    
+	<tbody id="orderData">
+
+	
+
+
+
+
+
+           
+	</tbody>
+	
+</table>
+
+<div class="col-md-4" style="float:right" id="append_pagination">
+     
+</div>
+
+
+
+
+</div>
+
+                	</div><!-- #page-content -->
+            </div><!-- #page-main -->
+        </div><!-- #page-wrapper -->
+
+
+        
+
+
+
+    </body>
+</html>
+
+
+
+
+<script type="text/javascript">
+   
+  
+
+
+    
+
+
+   $('#example').DataTable( {
+        "bPaginate":   false,
+        "bInfo":     false,
+        "bSorting":false,
+        "bFilter":false,
+        "bLengthChangeInfo":false
+    } );
+    $('#example thead th').off('click')
+  
+    </script>
+
+   
+<script>
+
+var dataList=null
+    function changeStatus(id,status,stYpe)
+    {
+
+        if( confirm('Are you sure you want to change status for this order?'))
+        {
+        $.ajax({
+            type: 'POST',
+            url: '<%-superadminpath%>payment/status',
+            dataType: 'json',
+            data: {'id':id,'status':status},
+            success: function (response) {
+                if (response.code == '200') {
+                   // $('#block_status_'+id).html('');
+
+        
+               showToastSuccess( response.message)
+               if(status == "2")
+                    {
+                       $('#block_status_'+id).hide()
+                       $('#unblock_status_'+id).show()
+
+
+
+                    }else{
+                         
+                         $('#block_status_'+id).show()
+                        $('#unblock_status_'+id).hide()
+                       // $('#block_status_'+id).append("<i  class='fa fa-truck'  aria-hidden='true'></i>")
+
+                    }
+                    
+                   
+                    
+                }
+                else{
+                   
+                    showToastError(response.message)
+                }
+            },
+
+            error :function(response)
+            {
+                showToastError(response.message)
+
+            }
+        });
+    }
+    }
+
+    function find( ) {
+        var item=$('#search').val()
+
+var rows=[];
+
+    for(var i = 0; i < dataList.length; ++i) {
+        //if the name is what we are looking for return it
+        if(dataList[i]['amount'].toString().includes(item) ||
+          dataList[i].user.firstName.toString().includes(item) ||
+          dataList[i].user.lastName.toString().includes(item) ||
+          dataList[i].order.orderNo.toString().includes(item) ||
+          dataList[i].createdAt.toString().includes(item) 
+
+
+          
+          )
+            
+        {  
+
+           rows.push(dataList[i]);
+        }
+    }
+
+    setData(rows)
+
+
+}
+
+ 
+$('#search').on( 'keyup', function () {
+       setTimeout(function(){find() },800);
+} );
+
+
+
+
+  
+    
+    function getFilter(currentPage)
+    {
+        currentPage=currentPage
+        var limit=50
+        $('#loading1').show()
+        var status=$('#status').val();
+        var fromDate=$('#fromDate').val();
+        var toDate=$('#toDate').val();
+
+        //alert(fromDate)
+        $.ajax({
+            type: 'POST',
+            url: '<%-superadminpath%>payment/list',
+            dataType: 'json',
+            data: {'fromDate':fromDate,'transactionStatus':status ,'toDate':toDate,'page':currentPage,'limit':limit,'compId':$('#compId').val()},
+            success: function (response) {
+                $('#loading1').hide()
+
+                if (response.code == '200') {
+
+                    $('#orderData').html('')
+                    var data1=response.body.data
+                    var data=response.body.data.rows
+                    dataList=data
+setData(data)
+appendPagination(currentPage,Math.ceil(data1.count/limit))
+appendStat(response.body.counts,response.body.escrow)
+
+                }
+                else{
+                   
+                    showToastError(response.message)
+                }
+            },
+
+            error :function(response)
+            {
+                $('#loading1').hide()
+
+                showToastError(response.message)
+
+            }
+        });
+    }
+    
+  
+    function setData(data)
+    {
+        var row=""
+        for(var t=0;t<data.length;t++)
+{
+    
+
+                    var status="Failed"
+                    var style="display:none" 
+                    var style1="display:block" 
+                if(data[t].transactionStatus=="1") {status="Success"
+                 style="display:block"
+                 style1="display:none"
+                }
+              
+              
+
+row =row+ '<tr>'+
+'			<td>'+data[t].user.firstName+ " "+  data[t].user.lastName+' </td>'+
+'			<td><a href=<%-superadminpath%>orders/view/'+data[t].order.id +' >'+data[t].order.orderNo+' </a></td>'+
+'			<td><a href=<%-superadminpath%>orders/view/'+data[t].order.id +' >'+data[t].order.id+' </a></td>'+
+'			<td>'+format(new Date(data[t].order.createdAt))+' </td>'+
+'            <td>'+data[t].user.countryCode +" "+ data[t].user.phoneNumber+'</td>'+
+'            <td>'+data[t].amount  +'</td>'+
+'            <td>'+format(new Date(data[t].createdAt)) +'</td>              '+
+'              '+
+'            <td>'+
+
+'<a href="javascript:;"   style="'+style+'"  id="block_status_'+data[t].id+'"   onclick="changeStatus(\''+ data[t].id +'\',\'2\')"  class="btn small  bg-green  ">'+
+'                <span class="button-content">'+
+'                    <i class="glyph-icon icon-cog float-left"></i>'+
+'                   Success    '+
+'                </span>'+
+'            </a>'+
+'            <a href="javascript:;"   style="'+style1+'" id="unblock_status_'+data[t].id+'"  onclick="changeStatus(\''+ data[t].id +'\',\'1\')"  class="btn small  bg-red  ">'+
+'                <span class="button-content">'+
+'                    <i class="glyph-icon icon-ban-circle float-left"></i>'+
+'                   Failed '+
+'                </span>'+
+'            </a>'+
+	
+
+'            </td>		'+
+'        </tr>';
+
+}
+
+if(row=="") {$('#orderData').html('&nbsp;&nbsp;&nbsp;No matching records found')
+
+}
+else $('#orderData').html(row);
+    }
+   
+function appendPagination(currentPage,count)
+{
+    var fd="";
+//alert(data.pageCount);
+ if (count > 1) { 
+fd=fd+'<ul class="button-group center-div">'; 
+
+  if (currentPage > 1) {
+      fd=fd+'<a  href="javascript:;" class="btn medium ui-state-default" onclick="getFilter(1)"><i class="glyph-icon icon-chevron-left"></i></a>';
+  }
+  else{
+    fd=fd+'<a  href="javascript:;" class="btn medium ui-state-default disabled"><i class="glyph-icon icon-chevron-left"></i></a>';
+ 
+  }
+  var i = 1;
+  if (currentPage > 5) {
+  i = +currentPage - 4;
+  } 
+ if (i !== 1) { 
+      fd=fd+'<a  class="btn medium disabled ui-state-default" href="javascript:;">...</a>';
+  } 
+                 
+ // alert(fd);
+  
+ 
+ for (i; i<=count; i++) {
+ if (currentPage == i) { 
+      fd=fd+'<li class="btn medium ui-state-default primary-bg"><span><span>'+currentPage+'</span></span></li>';
+    } else {
+        fd=fd+'<a  class="btn medium  ui-state-default" href="javascript:;" onclick="getFilter('+i+')">'+i+'</a>';
+     }
+    if (i == (+currentPage + 4)) {
+        fd=fd+'<a  class="btn medium disabled ui-state-default" href="javascript:;">...</a>';
+     break; } 
+  }
+ 
+  
+  if (currentPage != count) {
+      fd=fd+'<a  class="btn medium ui-state-default"  href="javascript:void(0)" onclick="getFilter('+count+')"> <i class="glyph-icon icon-chevron-right"></i></a>';
+ } 
+ else{
+      fd=fd+'<a  class="btn medium ui-state-default disabled"  href="javascript:void(0)" > <i class="glyph-icon icon-chevron-right"></i></a>';
+ } 
+ 
+fd=fd+'</ul>';  
+ } 
+
+       $("#append_pagination").html(fd)  
+}
+function appendStat(data,escrow)
+{
+    var total=0;
+    var count=0;
+    var escrow=0
+    $('#totalFailedCount').html(0)
+    $('#totalFailedSum').html(0)
+    $('#totalSuccessCount').html(0)
+    $('#totalSuccessSum').html(0)
+
+
+   // alert(total)
+for(var k=0;k<data.length;k++)
+{
+
+    if(data[k].transactionStatus=="2") {
+     $('#totalFailedCount').html(data[k].count)
+    $('#totalFailedSum').html(data[k].totalSum)
+}
+
+if(data[k].transactionStatus=="1") {
+     $('#totalSuccessCount').html(data[k].count)
+    $('#totalSuccessSum').html(data[k].totalSum)
+}
+
+
+
+
+count=count+data[k].count
+ total=total+data[k].totalSum
+}
+
+
+for(var k=0;k<escrow.length;k++)
+{
+
+    if(escrow[k].paymentState=="1")escrow= escrow[k].totalSum
+   
+}
+
+
+
+
+$('#totalPayment').html(total)
+$('#totalPaymentCount').html(count)
+$('#totalEscrowPayment').html(escrow)
+}
+
+
+
+var currentPage=1
+    getFilter(currentPage)
+</script>

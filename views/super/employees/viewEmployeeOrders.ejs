@@ -1,0 +1,542 @@
+<!-- AUI Framework -->
+<!DOCTYPE html>
+    <html>
+   <%-include ('../partials/header')%>
+    <body style="overflow: hidden;">
+        
+
+       
+
+        <div id="page-wrapper" class="demo-example">
+
+           
+
+            <!-- #page-header -->
+
+            <%-include ('../partials/side_bar')%>
+            <!-- #page-sidebar -->
+            <div id="page-content-wrapper">
+                <div id="page-title">
+
+     <a  href="javascript:;" onclick="window.history.back()";> <i class="glyph-icon icon-arrow-left float-left font-size-20 mrg5A pad20R"></i> </a>
+    <div class="bg-gray  text-transform-upr font-size-15 font-bold primary-font pad10A"> Welcome , <%if(data.firstName && data.firstName!=""){ %>   <%-data.firstName%>  <%}else{%> User <% }%></div>
+    <div class="col-md-3  form-bordered  bg-gray text-transform-upr font-size-12 font-bold  font-purple pad10A">Total  ORDERS :<span id="totalOrders">0</span>  </div>
+    <div class="col-md-3  bg-gray  form-bordered text-transform-upr font-size-12 font-bold  primary-font pad10A mrg25B">Total  Payment :<span id="totalPayment">0</span> <%-CURRENCY%> </div>
+    <div class="col-md-3  bg-gray  form-bordered text-transform-upr font-size-12 font-bold  font-purple pad10A mrg25B">Total  Ratings :<span id="totalRatings"><%-ratings.length%></span> </div>
+    <div class="col-md-3  bg-gray form-bordered  text-transform-upr font-size-12  font-bold primary-font pad10A mrg25B">Avg Rating :<span id="avgRating"><%- " ( "+avgRating+"  ) "+ commonMethods.getRating(avgRating)%>    </span> </div>
+
+
+
+  
+    
+
+                </div>
+                   <!-- #page-title -->
+<div id="page-content">
+
+
+<%-include ('../partials/flashMessage')%>
+
+
+<div class="example-box">
+  
+<div class="tabs">
+
+<div class="button-block-justified">
+        <ul >
+
+            <li><a href="#justified-tabs-1" onclick="showTab('justified-tabs-1','justified-tabs-2')"  title="Tab 1">
+           <i class="glyph-icon icon-list float-left opacity-80"></i>Orders</a>
+            </li>
+
+            <li >
+                <a  href="#justified-tabs-2"  onclick="showTab('justified-tabs-2','justified-tabs-1')" title="Tab 2">
+                    <i class="glyph-icon icon-star float-left opacity-80"></i>
+                    Ratings
+                </a>
+            </li>
+        
+        </ul>
+
+</div>
+
+
+ <div id="justified-tabs-1">
+    <div class="example-box">
+    
+
+        <div class="form-row col-lg-2 float-left form-vertical">
+            <div class="form-label">
+                <label for="from">
+                    From Date:
+                </label>
+            </div>
+            <div class="form-input">
+                <input type="text" size="10" class="fromDate" id="fromDate" name="from" />
+            </div>
+        </div>
+
+        <div class="form-row col-lg-2 float-left form-vertical">
+            <div class="form-label">
+                <label for="to">
+                    To Date: 
+                </label>
+            </div>
+            <div class="form-input">
+                <input type="text" size="10" class="toDate"  id ="toDate" name="to" />
+            </div>
+        </div>
+
+      
+    
+    <div class="form-row col-lg-3 float-left form-vertical dropdown form-label mrg25T">
+        <select data-placeholder="Choose Status" class="chosen-select" id="status">
+            <option value="" /> 
+            <option value="" />All 
+            <option value="0" />Pending 
+            <option value="1" />Confirmed
+            <option value="2" />Cancelled-User
+            <option value="3" />Processing 
+            <option value="3" />Cancelled-Company 
+            <option value="5" />Completed 
+
+   </select>
+
+     </div>
+
+     <div class="form-row col-lg-2 float-left form-vertical form-label mrg25T">
+        <a onclick="getFilter(1)" href="javascript:;" class="btn medium primary-bg" title="" >
+            <span class="button-content text-center float-none font-size-11 text-transform-upr">
+                Filter
+            </span>
+        </a>
+
+     </div>
+
+
+     
+    </div>
+
+        <table class="table" id="example" style="width:100%">
+   
+            <thead>
+                <tr>
+                    <th>Order No</th>
+                    <th>Customer Name</th>
+                    <th>Service Date</th>
+                    <th>Contact</th>
+                    <th>Price</th>
+                    <th>address </th>
+                    <th>Order Date </th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            
+            <tbody id="orderData">
+        
+            </tbody>
+            
+        </table>
+
+        <div class="col-md-4" style="float:right" id="append_pagination">
+     
+        </div>
+
+
+
+</div>
+
+
+<div id="justified-tabs-2">
+    <table class="table" id="example" style="width:100%">
+
+        <thead>
+            <tr>
+                <th>OrderNo</th>
+                <th>User Name</th>
+                <th>User Photo</th>
+                <th>Rating</th>
+                <th>Review</th>
+                <th>Review At</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        
+        <tbody id="ratingData">
+    <% 
+    for(var t=0;t<ratings.length; t++){%>
+        <tr>
+            <td><%-ratings[t].order.orderNo%></td>
+
+     <td><%-ratings[t].order.user.firstName%></td>
+<td><img src='<%((ratings[t].order!=null)?ratings[t].order.user.image :"" )%>' alt="" width="90" height="70"/> </td>
+<td> <%-ratings[t].rating +' '+commonMethods.getRating(ratings[t].rating)%></td>
+<td><%-ratings[t].review%></td>
+<td><%-commonMethods.format(new Date(ratings[t].ratingOn))%></td>
+<td>
+
+             <a onclick="deleteReview('<%-ratings[t].userId%>')" href="javascript:;"  class="font-red" title="">
+                                <i class="glyph-icon icon-remove mrg5R"></i>
+                                Delete
+                           </a>
+    
+                </div>
+                </td>
+</tr>
+        <%}%>
+        </tbody>
+        
+    </table>
+
+
+
+
+
+</div>
+
+    </div>
+    
+  
+   
+</div>
+
+
+
+
+
+
+
+
+
+
+                	</div><!-- #page-content -->
+            
+        </div><!-- #page-wrapper -->
+
+    </body>
+</html>
+
+
+<script type="text/javascript">
+
+
+
+ 
+
+//$("#countryCode").intlTelInput("setNumber", $("#countryCode").val());
+
+var currentPage=1
+
+      $('#adduser').submit( function() {
+       
+        var id=$('#empId').val()
+      
+
+            var tempform = $('#adduser');
+           
+            tempform .parsley('validate' );
+
+            if(tempform.parsley('isValid' ))
+{
+
+            var form_data = new FormData(tempform[0]);
+            $(".overlay").show();
+            $.ajax({
+                type: 'POST',
+                url: '<%-superadminpath%>employees/update',
+                dataType: 'json',
+                data: form_data,
+                contentType:false,
+                cache:false,
+                processData:false,
+                success: function (response) {
+                    $(".overlay").hide();
+                    if (response.code == 200) {
+                  
+                        showToastSuccess(response.message)
+
+                         window.location.href="<%-superadminpath%>employees/view/"+id;
+                       
+                    } else {
+                        showToastError(response.message)
+                    }
+                },
+
+                error: function(response)
+                {
+                   var errorResponse=JSON.parse(response.responseText)
+                   showToastError(errorResponse.message)
+
+
+                }
+            });
+
+
+        }
+      });
+    
+  
+
+      
+    </script>
+
+<script>
+    
+    function changeStatus(id,status,stYpe)
+    {
+
+        if( confirm('Are you sure you want to change status for this order?'))
+        {
+            $('#myModal').modal('hide');
+
+        $.ajax({
+            type: 'POST',
+            url: '<%-superadminpath%>orders/status',
+            dataType: 'json',
+            data: {'id':id,'status':status},
+            success: function (response) {
+                if (response.code == '200') {
+                   // $('#block_status_'+id).html('');
+
+
+                       showToastSuccess( response.message)
+//$("#black-modal-60").attr('class','hide ui-dialog-content ui-widget-content'); 
+$('#block_statustext_'+id).html(stYpe)
+$('#block_statusvalue_'+id).val(status)
+//window.location.reload()
+
+                   
+                    
+                }
+                else{
+                   
+                    showToastError(response.message)
+                }
+            },
+
+            error :function(response)
+            {
+
+                showToastError(response.message)
+
+            }
+        });
+    }
+    }
+   
+   
+    
+        function showTab(id1,id2)
+     {
+       $('#'+id1).show();
+       $('#'+id2).hide();
+     }
+
+     function getFilter(currentPage)
+    {
+        currentPage=currentPage
+        var limit=50
+        $('#loading1').show()
+        var status=$('#status').val();
+        var fromDate=$('#fromDate').val();
+        var toDate=$('#toDate').val();
+
+        //alert(fromDate)
+        $.ajax({
+            type: 'POST',
+            url: '<%-superadminpath%>employees/orders',
+            dataType: 'json',
+            data: {'fromDate':fromDate,'progressStatus':status ,'toDate':toDate,'page':currentPage,'limit':limit,'empId':'<%-data.id%>'},
+            success: function (response) {
+                $('#loading1').hide()
+
+                if (response.code == '200') {
+
+                    var row="";
+                    console.log(response)
+                    $('#orderData').html('')
+                    var data1=response.body.data
+                    var data=response.body.data.rows
+for(var t=0;t<data.length;t++)
+{
+    
+
+                    var status="Pending"
+                if(data[t].progressStatus=="1")status="Confirmed"
+                if(data[t].progressStatus=="2")status="Cancelled"
+                if(data[t].progressStatus=="3") status="Processing"
+                if(data[t].progressStatus=="4") status="Cancelled-Comapny"
+                if(data[t].progressStatus=="5") status="Completed"
+
+                var btnBg=getOrderColor(data[t].progressStatus)
+
+row =row+ '<tr>'+
+    '			<td>'+data[t].orderNo+' </td>'+
+'			<td>'+data[t].user.firstName+ " "+  data[t].user.lastName+' </td>'+
+'			<td>'+format(new Date(data[t].serviceDateTime))+' </td>'+
+'            <td>'+data[t].user.countryCode +" "+ data[t].user.phoneNumber+'</td>'+
+'            <td>'+data[t].totalOrderPrice  +'</td>'+
+'            <td>'+data[t].address.houseNo+" "+ data[t].address.addressName +" ,"+data[t].address.city+'</td>'+
+'            <td>'+format(new Date(data[t].createdAt)) +'</td>              '+
+'              '+
+'            <td>'+
+'             <a href="javascript:;"  class="btn '+btnBg+'" data-placement="bottom" id="block_status_'+data[t].id+'" >'+
+    '                <input type="hidden"  value="'+data[t].progressStatus+'" id="block_statusvalue_'+data[t].id+'">'+
+    '                <span class="button-content">'+
+'                    <i class="glyph-icon icon-cog float-left"></i>'+
+                       '<span id="block_statustext_'+data[t].id+'">'+status+' <span>'+  
+'                </span>'+
+'            </a>'+
+'             <div class="dropdown">'+
+'                <a href="javascript:;" title="" class="btn small bg-blue dropdown-toggle" data-toggle="dropdown">'+
+'                    <span class="button-content">'+
+'                        <i class="glyph-icon font-size-11 icon-cog"></i>'+
+'                        <i class="glyph-icon font-size-11 icon-chevron-down"></i>'+
+'                    </span>'+
+'                </a>'+
+'                <ul class="dropdown-menu float-right">'+
+'                    <li>'+
+'                        <a href="<%-superadminpath%>orders/view/'+data[t].id+'" title="">'+
+'                            <i class="glyph-icon icon-edit mrg5R"></i>'+
+'                            View'+
+'                        </a>'+
+'                    </li>'+
+'                    <li class="divider"></li>'+
+'                    <li>'+
+'                        <a onclick="return confirm(\'Are you sure you want to delete this?\');"  href="<%-superadminpath%>orders/delete/'+data[t].id +'" data-id="'+ data[t].id+'" class="font-red" title="">'+
+'                            <i class="glyph-icon icon-archive mrg5R"></i>'+
+'                            Delete'+
+'                        </a>'+
+'                    </li>'+
+'                </ul>'+
+'            </div>'+
+'            </td>		'+
+'        </tr>';
+
+}
+
+if(row=="") {$('#orderData').html('&nbsp;&nbsp;&nbsp;No matching records found')
+
+}
+else $('#orderData').html(row);
+appendPagination(currentPage,Math.ceil(data1.count/limit))
+appendStat(response.body.counts)
+
+                }
+                else{
+                   
+                    showToastError(response.message)
+                }
+            },
+
+            error :function(response)
+            {
+                $('#loading1').hide()
+
+                showToastError(response.message)
+
+            }
+        });
+    } 
+function appendPagination(currentPage,count)
+{
+    var fd="";
+//alert(data.pageCount);
+ if (count > 1) { 
+fd=fd+'<ul class="button-group center-div">'; 
+
+  if (currentPage > 1) {
+      fd=fd+'<a  href="javascript:;" class="btn medium ui-state-default" onclick="getFilter(1)"><i class="glyph-icon icon-chevron-left"></i></a>';
+  }
+  else{
+    fd=fd+'<a  href="javascript:;" class="btn medium ui-state-default disabled"><i class="glyph-icon icon-chevron-left"></i></a>';
+ 
+  }
+  var i = 1;
+  if (currentPage > 5) {
+  i = +currentPage - 4;
+  } 
+ if (i !== 1) { 
+      fd=fd+'<a  class="btn medium disabled ui-state-default" href="javascript:;">...</a>';
+  } 
+                 
+ // alert(fd);
+  
+ 
+ for (i; i<=count; i++) {
+ if (currentPage == i) { 
+      fd=fd+'<li class="btn medium ui-state-default primary-bg"><span><span>'+currentPage+'</span></span></li>';
+    } else {
+        fd=fd+'<a  class="btn medium  ui-state-default" href="javascript:;" onclick="getFilter('+i+')">'+i+'</a>';
+     }
+    if (i == (+currentPage + 4)) {
+        fd=fd+'<a  class="btn medium disabled ui-state-default" href="javascript:;">...</a>';
+     break; } 
+  }
+ 
+  
+  if (currentPage != count) {
+      fd=fd+'<a  class="btn medium ui-state-default"  href="javascript:void(0)" onclick="getFilter('+count+')"> <i class="glyph-icon icon-chevron-right"></i></a>';
+ } 
+ else{
+      fd=fd+'<a  class="btn medium ui-state-default disabled"  href="javascript:void(0)" > <i class="glyph-icon icon-chevron-right"></i></a>';
+ } 
+ 
+fd=fd+'</ul>';  
+ } 
+
+       $("#append_pagination").html(fd)  
+}
+function appendStat(data)
+{
+    console.log(data)
+    var total=0;
+    var count=0
+for(var k=0;k<data.length;k++)
+{
+
+    if(data[k].progressStatus=="0") {
+     $('#totalPendingCount').html(data[k].count)
+    $('#totalPendingSum').html(data[k].totalSum)
+}
+
+if(data[k].progressStatus=="1") {
+     $('#totalConfirmedCount').html(data[k].count)
+    $('#totalConfirmedSum').html(data[k].totalSum)
+}
+
+if(data[k].progressStatus=="2") {
+     $('#totalCancelledCount').html(data[k].count)
+    $('#totalCancelledSum').html(data[k].totalSum)
+}
+
+
+if(data[k].progressStatus=="3") {
+     $('#totalProcessingCount').html(data[k].count)
+    $('#totalProcessingSum').html(data[k].totalSum)
+}
+
+
+
+if(data[k].progressStatus=="5") {
+     $('#totalCompletedCount').html(data[k].count)
+    $('#totalCompletedSum').html(data[k].totalSum)
+}
+
+
+    total=total+data[k].totalSum
+    count=count+data[k].count
+}
+
+$('#totalPayment').html(total)
+$('#totalOrders').html(count)
+
+}
+
+
+</script>
+<script>
+    showTab('justified-tabs-1','justified-tabs-2')
+    getFilter(currentPage)
+   
+</script>

@@ -1,0 +1,569 @@
+<!-- AUI Framework -->
+<!DOCTYPE html>
+    <html>
+   <%-include ('../partials/header')%>
+    <body style="overflow: hidden;">
+        
+
+       
+
+        <div id="page-wrapper" class="demo-example">
+
+           
+
+            <!-- #page-header -->
+
+            <%-include ('../partials/side_bar')%>
+            <!-- #page-sidebar -->
+            <div id="page-content-wrapper">
+                <div id="page-title">
+
+    <a  href="javascript:;" onclick="window.history.back()";> <i class="glyph-icon icon-arrow-left float-left font-size-20 mrg5A pad20R"></i> </a>
+    <div class="bg-gray text-transform-upr font-size-15 font-bold primary-font pad10A">Order Detail</div>
+
+    
+
+                </div>
+                   <!-- #page-title -->
+<div id="page-content">
+
+
+<%-include ('../partials/flashMessage')%>
+<% 
+if(data==undefined || data==null || data=='{}' || data.length==0) {%>
+
+    <%-include ('../partials/norecord')%>
+
+
+<%}else {
+    console.log(JSON.parse(JSON.stringify(data)))
+    %>
+
+    
+
+    <div class="large-box col-md-12">
+            
+                <!-- <form id="demo-form" action=""  method="" /> -->
+
+                <button  type="button"  onclick="openModal()" class="btn small bg-green tooltip-button black-modal-60 mrg10B float-right">
+                    <span class="button-content">Assignment</span>
+                </button>
+
+
+
+                 <div  class="form-wizard">
+                          <ul>
+
+                            
+
+
+                            <li  >
+                                <a onclick="changeStatus('<%-data.id%>',0,'Not Confirmed')">
+                                  <label  <% if(parseInt(data.progressStatus)==0) {%> class="wizard-step" <%} else %> class="wizard-step bg-gray">1</label>
+                                  <span class="wizard-description">
+                                     Not Confirmed
+                                     <small>Order is not confirmed yet</small>
+                                  </span>
+                                </a>
+                            </li>
+
+                            
+
+                                <li  >
+                                    <a onclick="changeStatus('<%-data.id%>',2,'Cancel')" >
+                                      <label  <% if(parseInt(data.progressStatus)==2) {%> class="wizard-step bg-red" <%} else %> class="wizard-step bg-gray">2</label>
+                                      <span class="wizard-description ">
+                                         Cancelled
+                                         <small>Order is cancelled by user</small>
+                                      </span>                   
+                                    </a>
+                                </li>
+
+<li>
+                                <a  onclick="changeStatus('<%-data.id%>',1,'Confirmed')" >
+                                  <label   <%if(parseInt(data.progressStatus)==1) {%> class="wizard-step" <%}else %>class="wizard-step bg-gray "  >3</label>
+                                  <span class="wizard-description">
+                                     Confirmed
+                                     <small>Order is confirmed</small>
+                                  </span>
+                                </a>
+                            </li>
+                          
+
+                           
+
+                            <li>
+                                <a  onclick="changeStatus('<%-data.id%>',3,'Processing')" >
+                                    <label   <%if(parseInt(data.progressStatus)==3) {%> class="wizard-step" <%}else %>class="wizard-step bg-gray "  >4</label>
+                                    <span class="wizard-description">
+                                     Precessing
+                                     <small>Order is in processing</small>
+                                  </span>                   
+                                </a>
+                            </li>
+
+                            <li >
+                                <a   onclick="changeStatus('<%-data.id%>',4,'Cancelled-company')" >
+                                  <label  <% if(parseInt(data.progressStatus)==4) {%> class="wizard-step" <%} else %> class="wizard-step bg-gray">5</label>
+                                  <span class="wizard-description">
+                                     Cancelled by Company
+                                     <small>Order is cancelled by company</small>
+                                  </span>                   
+                                </a>
+                            </li>
+
+
+                            <li>
+                                <a  onclick="changeStatus('<%-data.id%>',5,'Completed')" >
+                             
+                                    <label  <% if(parseInt(data.progressStatus)==5) {%> class="wizard-step" <%} else %> class="wizard-step bg-gray">6</label>
+                                    <span class="wizard-description">
+                                     Completed
+                                     <small>Order has been completed</small>
+                                  </span>                   
+                                </a>
+                            </li>
+                          </ul>
+                        
+                
+                
+                </div>
+           
+
+
+
+                <div class="form-input col-md-9 drop-shadow center-div">
+                    <div class="form-label  font-size-18 pad15L">
+
+                        <label for="">
+                           Order Details:<br>
+                        </label>
+                    </div>
+
+
+<table class="table">
+                            
+                                <tr>
+                                    <td><b>Order Date</b></td>
+                                    <td> <%-commonMethods.format(new Date(data.createdAt))%>
+                                    </tr>
+            
+                                <tr>
+                                    <td><b>Service Date</b></td>
+                                    <td><%-commonMethods.format(data.serviceDateTime)%> </td>
+                                </tr>
+                                
+
+                            </table>
+
+                        </div>
+
+                        <div class="form-input col-md-9 drop-shadow center-div">
+                           
+                            <div class="form-label font-size-18 pad15L">
+
+                                <label for="">
+                                    Customer  Details:<br>
+                                </label>
+                            </div>
+                           
+                           
+                             <table class="table font-size-13">
+                                       
+                                       
+                                        <tr>
+                                            <td><b>Customer Photo</b></td>
+                                            <td> <img src="<%-data.user.image %>" style="border-radius:50%" alt="" width="80" height="80"/>
+                                            </tr>
+                    
+                                        <tr>
+                                            <td><b>Customer Name</b></td>
+                                            <td><%-data.user.firstName +' '+ data.user.lastName%> </td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Customer Contact</b></td>
+                                            <td><%-data.user.countryCode +' ' + data.user.phoneNumber%> </td>
+                                        </tr>
+                
+                
+                                      
+
+                                        <tr>
+                                            <td><b>Customer Address</b></td>
+                                            <td><%-(data.address!=null?data.address.addressName:"")%> </td>
+                                        </tr>
+                                      
+                
+                                
+                                    </table>
+                                
+            
+                  
+                        </div>
+                       
+                         
+                        <div class="form-input col-md-9 drop-shadow center-div">
+                           
+                       
+                            <div class="form-label font-size-18 pad15L">
+
+                                <label for="">
+                                    Price Details:<br>
+                                </label>
+                            </div>
+
+
+                                    <table class="table">
+                                       
+                                       
+                    
+                                        <tr>
+                                            <td><b>Service Price</b></td>
+                                            <td> <%-CURRENCY +' '+data.orderPrice%>  </td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Service Charges</b></td>
+                                            <td> <%-CURRENCY +' '+data.serviceCharges%> </td>
+                                        </tr>
+                
+                
+                                        <tr>
+                                            <td><b>Promo Code</b></td>
+                                            <td><%-data.promoCode%> </td>
+                                        </tr>
+                
+                                       
+                                        <tr>
+                                            <td><b>Discount Price</b></td>
+                                            <td> <%-CURRENCY +' '+ data.offerPrice%> </td>
+                                        </tr>
+                                      
+                
+                                        <tr>
+                                            <td><b>Total Price</b></td>
+                                            <td> <%-CURRENCY +' '+ data.totalOrderPrice%> </td>
+                                        </tr>
+                                    </table>
+                               
+                
+                
+                              
+                        </div>
+                       
+
+
+
+                        <div class="form-input col-md-9 center-div pad10L" >
+
+                                <div class="form-label font-size-18 pad20L">
+            
+                                    <label for="">
+                                       Included Services Details:<br>
+                                    </label>
+                                </div>
+            
+            
+                                   
+                                <% for(var t=0;t<data.suborders.length ;t ++)
+                                {%> 
+                               
+                            
+                                    <div class="content-box ">
+                                        <h3 class="content-box-header ui-state-default">
+                                            <span class="float-left">Sevice <%-t+1%> Details:</span>
+                                           
+                                        </h3>
+                                      
+                                            
+                                            <table class="table font-size-12">
+                                                <tr>
+                                                    <td> <img src="<%-data.suborders[t].service.icon %>" alt="" width="50" height="50"/>
+                                                    <td> <%-data.suborders[t].service.name %>
+                                                    </tr>
+                            
+                                                <tr>
+                
+                
+                                         
+                                            <tr>
+                                                <td><b>Quantity</b></td>
+                                                <td><%-data.suborders[t].quantity %> </td>
+                                            </tr>
+            
+                                            </table>
+            
+                                           
+                                        
+                                  
+                    
+                                  
+                                </div>
+                                <%}%>
+            
+                            </div>
+ 
+               
+               
+               
+                          
+
+        
+        <div class="form-input col-md-9 center-div ">
+            <div class="form-label font-size-18 pad15L">
+
+                <label for="">
+                   Employee Details:<br>
+                </label>
+            </div>
+            
+        <% 
+        var empDatat=data.assignedEmployees!=null?data.assignedEmployees :[] 
+               for(var t=0;t<empDatat.length ;t ++)
+       
+        {%> 
+       
+            
+            <div class="content-box ">
+                <h3 class="content-box-header ui-state-default">
+                    <span class="float-left">Employee <%-t+1%> Details:</span>
+                   
+                </h3>
+              
+                    
+                    <table class="table small font-size-11">
+                        <tr>
+                            <td> <img  style="border-radius:50%" src="<%-empDatat[t].employee.image %>" alt="" width="60" height="60"/>
+                            <td> <b><%-empDatat[t].employee.firstName +' '+ empDatat[t].employee.lastName +' ,' +empDatat[t].employee.countryCode +empDatat[t].employee.phoneNumber  %></b>
+                            </tr>
+    
+                        <tr>
+
+
+                  
+
+                   
+
+                    </table>
+
+                   
+                
+               
+          
+
+          
+        </div>
+        <%}%>
+
+    </div>
+   
+      
+   
+
+       
+              
+                  
+
+</div>
+
+<%}%>
+
+
+<div class="hide" id="black-modal-60"  title="Assign Employees">
+    <div class="pad20A">
+
+        <div class="infobox notice-bg">
+            <div class="bg-azure large btn info-icon">
+                <i class="glyph-icon icon-cog"></i>
+            </div>
+            <h4 class="infobox-title">Assignment</h4>
+            <p>To Assign order to employee, choose employee from below and click on asssign button </p>
+        </div>  
+       
+        <div class="form-wizard" id="assignEmployee">
+            <input type="hidden" id="assignOrderId" value="<%-data.id%>"/>
+            <select data-placeholder="Choose Employees..." class="chosen-select heading-1 mrg20T clearfix" id="assignedEmp" multiple>
+                <%var exists=data.assignedEmployees.map(item => item.employee.id)
+                %>
+                
+                <%for(var t=0;t<empData.length;t++){%>
+                    <option value="<%-empData[t].id%>" <%if(exists.includes(empData[t].id)){%> selected <%}%>   /><%-empData[t].firstName+' '+empData[t].lastName%> 
+                   
+            <%}%>
+
+       </select>
+        </div>
+            <div class="divider"></div>
+       
+        <button type="submit" onclick="updateAssignemnt()" class="btn primary-bg large float-right">Assign</button>
+  </div>
+</div>
+
+
+
+                	</div><!-- #page-content -->
+            </div><!-- #page-main -->
+        </div><!-- #page-wrapper -->
+
+    </body>
+</html>
+
+
+<script type="text/javascript">
+
+$("#black-modal-60").dialog({
+         autoOpen: false,
+        resizable: true,
+        modal: true,
+        height:'auto'
+ })
+ function openModal()
+ {
+    $("#black-modal-60").dialog('open');
+
+ }
+    
+      $('#adduser').submit( function() {
+       
+       
+            var tempform = $('#adduser');
+           
+            tempform .parsley('validate' );
+
+            if(tempform.parsley('isValid' ))
+            {
+                var ext = $('#icon').val().split('.').pop().toLowerCase();
+                if(ext==null || ext=="") ext=$('#myIcon').attr('src').split('.').pop().toLowerCase();
+                var ext1 = $('#thumbnail').val().split('.').pop().toLowerCase();
+                if(ext1==null || ext1=="") ext1=$('#myThumbnail').attr('src').split('.').pop().toLowerCase();
+
+
+                if($.inArray(ext, ['gif','png','jpg','jpeg']) == -1    ||  $.inArray(ext1, ['gif','png','jpg','jpeg']) == -1     ) {
+                    showToastError('Please select only jpg and png files for image!')
+                return false;
+            }
+
+
+            var form_data = new FormData(tempform[0]);
+            $(".overlay").show();
+            var id=$('#serviceId').val()
+
+            $.ajax({
+                type: 'POST',
+                url: '<%-adminpath%>service/update',
+                dataType: 'json',
+                data: form_data,
+                contentType:false,
+                cache:false,
+                processData:false,
+                success: function (response) {
+                    $(".overlay").hide();
+                    if (response.code == 200) {
+                  
+                        showToastSuccess(response.message)
+
+                        window.location.href="<%-adminpath%>service/view/"+id;
+                       
+                    } else {
+                        showToastError(response.message)
+                    }
+                },
+
+                error: function(response)
+                {
+                   var errorResponse=JSON.parse(response.responseText)
+                   showToastError(errorResponse.message)
+
+
+                }
+            });
+        }
+      });
+    
+   function updateAssignemnt()
+   {
+  // $('#black-modal-60').hide();
+   $("#black-modal-60").dialog('close');
+   //$("#black-modal-60").dialog('open');
+
+    //$(this)('.ui-dialog').dialog('close')
+
+   
+   var orderId= $('#assignOrderId').val();
+    var employees= $('#assignedEmp').val();
+$('#loading1').show();
+    $.ajax({
+            type: 'POST',
+            url: '<%-adminpath%>orders/updateAssignment',
+            dataType: 'json',
+            data: {'orderId':orderId,'employees':employees},
+            success: function (response) {
+                $('#loading1').hide();
+
+                if (response.code == '200') {
+                   // $('#block_status_'+id).html('');
+
+                   
+                       showToastSuccess( response.message)
+//$("#black-modal-60").attr('class','hide ui-dialog-content ui-widget-content'); 
+window.location.reload()
+
+                   
+                    
+                }
+                else{
+                   
+                    showToastError(response.message)
+                }
+            },
+
+            error :function(response)
+            {$('#loading1').hide();
+
+                showToastError(response.message)
+
+            }
+        });
+    }
+
+    function changeStatus(id,status,stYpe)
+    {
+
+        if( confirm('Are you sure you want to change status for this order?'))
+        {
+
+        $.ajax({
+            type: 'POST',
+            url: '<%-adminpath%>orders/status',
+            dataType: 'json',
+            data: {'id':id,'status':status},
+            success: function (response) {
+                if (response.code == '200') {
+                   // $('#block_status_'+id).html('');
+
+
+                showToastSuccess( response.message)
+                      
+window.location.reload()
+
+                   
+                    
+                }
+                else{
+                   
+                    showToastError(response.message)
+                }
+            },
+
+            error :function(response)
+            {
+
+                showToastError(response.message)
+
+            }
+        });
+    }
+    }
+
+  
+    </script>
+

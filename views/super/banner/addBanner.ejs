@@ -1,0 +1,200 @@
+<!-- AUI Framework -->
+<!DOCTYPE html>
+    <html>
+   <%-include ('../partials/header')%>
+    <body style="overflow: hidden;">
+        
+
+       
+
+        <div id="page-wrapper" class="demo-example">
+
+           
+
+            <!-- #page-header -->
+
+            <%-include ('../partials/side_bar')%>
+            <!-- #page-sidebar -->
+            <div id="page-content-wrapper">
+                <div id="page-title">
+
+
+    <div class="bg-gray text-transform-upr font-size-15 font-bold primary-font pad10A">Add Banner</div>
+
+    
+
+                </div>
+                   <!-- #page-title -->
+<div id="page-content">
+
+
+<%-include ('../partials/flashMessage')%>
+
+
+
+    <div class="large-box col-md-8">
+        <div class="pad10A">
+            
+
+                <!-- <form id="demo-form" action=""  method="" /> -->
+                <form  role="form" onsubmit="return false"  class="col-md-12"  id="adduser" >
+
+
+
+                    <div class="form-row">
+                        <div class="form-label col-md-4">
+                            <label for="">
+                                 Name:
+                                <span class="required">*</span>
+                            </label>
+                        </div>
+                        <div class="form-input col-md-8">
+                            <input type="text" id="name" name="name"  data-trigger="change" data-required="true" class="parsley-validated" />
+                        </div>
+                    </div>
+
+                    
+
+                    <div class="form-row">
+
+                        <div class="form-label col-md-4">
+                            <label for="">
+                                Upload Banner Image:
+                                <span class="required">*</span>
+                            </label>
+                        </div>
+                       
+
+                        <div class="form-input col-md-8">
+                            <input type="file"  id="banner" name="banner"  />
+                        </div>
+            
+            
+                    </div>
+
+
+                    <div class="form-row">
+                        <div class="form-label col-md-4">
+                            <label for="">
+                                 Order by :
+                                <span class="required">*</span>
+                            </label>
+                        </div>
+                        <div class="form-input col-md-8">
+                           
+                            <select data-placeholder="Choose Priority Level" data-required="true" name="order" class="chosen-select" id="order">
+                                <option value="1" />1 
+                                <option value="2" />2
+                                <option value="3" />3
+                                <option value="4" />4
+                                <option value="5" />5
+                                <option value="6" />6
+                                <option value="7" />7
+                                <option value="8" />8
+                                <option value="9" />9
+                                <option value="10" />10
+
+                
+                       </select>  
+                           
+                        </div>
+                    </div>
+                  
+                   
+                    <div class="divider"></div>
+                    <div class="form-row">
+                        <input type="hidden" name="superhidden" id="superhidden" />
+                        <div class="form-input col-md-8 col-md-offset-6">
+                            <!-- //onclick="javascript:$(&apos;#demo-form&apos;).parsley( &apos;validate&apos; );" -->
+                            <!-- onclick="javascript:$('#adduser').parsley('validate' );"  -->
+                            <button  type="button" onclick="window.history.back();"   class="btn ui-state-default medium bg-red mrg15R">
+                                <span class="button-content">Cancel</span>
+                            </button>
+                            <button  type="submit" class="btn ui-state-default medium  primary-bg">
+                                <span class="button-content">Submit</span>
+                            </button>
+                            </div>
+                    </div>
+
+                </form>
+
+        </div>
+
+       
+    </div>
+
+
+
+                	</div><!-- #page-content -->
+            </div><!-- #page-main -->
+        </div><!-- #page-wrapper -->
+
+    </body>
+</html>
+
+
+<script type="text/javascript">
+
+$( "#dob" ).datepicker({ maxDate: 1});
+$('#adduser').submit( function() {
+
+var tempform = $('#adduser');
+
+tempform .parsley('validate' );
+
+if(tempform.parsley('isValid' ))
+{
+
+    
+var form_data = new FormData(tempform[0]);
+
+var ext = $('#banner').val().split('.').pop().toLowerCase();
+if($.inArray(ext, ['gif','png','jpg','jpeg']) == -1) {
+ showToastError('<%-appstrings.image_errro%>')
+  return false;
+}
+
+
+
+$('#loading1').show()
+$.ajax({
+    type: 'POST',
+    url: '<%-superadminpath%>banner/addBanner',
+    dataType: 'json',
+    data: form_data,
+    contentType:false,
+    cache:false,
+    processData:false,
+    success: function (response) {
+        $('#loading1').hide()
+        if (response.code == 200) {
+      
+            showToastSuccess(response.message)
+
+             window.location.href="<%-superadminpath%>banner";
+           
+        } else {
+            showToastError(response.message)
+        }
+    },
+
+    error: function(response)
+    {
+        $('#loading1').hide()
+       var errorResponse=JSON.parse(response.responseText)
+       showToastError(errorResponse.message)
+
+
+    }
+});
+}
+});
+
+
+
+
+
+
+
+
+    </script>

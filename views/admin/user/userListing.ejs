@@ -1,0 +1,71 @@
+<%- include ('../partials/header') %>
+<%- include ('../partials/side_bar') %>
+	<section id="content">
+        <div class="container">
+            <div class="block-header">
+                <h2>User Listing</h2>
+            </div>
+            <div class="card">
+             	<div class="card-header">
+                    <h2>User Listing</h2>
+
+                </div>
+                <table id="data-table-command" class="table table-striped table-vmiddle">
+                    <thead>
+                        <tr>
+                            <th data-column-id="id" data-visible="false">ID</th>
+                            <th data-column-id="name">Name</th>
+                            <th data-column-id="phoneNumber" data-order="desc">Phone Number</th>
+                            <th data-column-id="email" data-order="desc">Email</th>
+                            <th data-column-id="commands" data-formatter="commands" data-sortable="false">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for(var t=0;t<data.length;t++) { %>
+							<tr>
+								<td><%-data[t].id %></td>
+					            <td><%-data[t].firstName %> <%-data[t].lastName%> </td>
+								<td><%-data[t].countryCode %> <%-data[t].phoneNumber %>  </td>
+								<td><%-data[t].email %> </td>
+					        </tr>
+						<%}%>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</section>
+<%- include ('../partials/script') %>
+
+        <script type="text/javascript">
+            $(document).ready(function(){
+
+                               //Command Buttons
+                var grid = $("#data-table-command").bootgrid({
+                    css: {
+                        icon: 'zmdi icon',
+                        iconColumns: 'zmdi-view-module',
+                        iconDown: 'zmdi-expand-more',
+                        iconRefresh: 'zmdi-refresh',
+                        iconUp: 'zmdi-expand-less'
+                    },
+                    formatters: {
+                        "commands": function(column, row) {
+                        console.log(row);
+                            return "<button type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" data-row-id=\"" + row.id + "\"><span class=\"zmdi zmdi-edit\"></span></button> " + 
+                                "<button type=\"button\" class=\"btn btn-icon command-delete waves-effect waves-circle\" data-row-id=\"" + row.id + "\"><span class=\"zmdi zmdi-delete\"></span></button>";
+                        }
+                    }
+                }).on("loaded.rs.jquery.bootgrid", function()
+			{
+			    /* Executes after data is loaded and rendered */
+			    grid.find(".command-edit").on("click", function(e)
+			    {
+			        alert("You pressed edit on row: " + $(this).data("row-id"));
+			    }).end().find(".command-delete").on("click", function(e)
+			    {
+			        alert("You pressed delete on row: " + $(this).data("row-id"));
+			    });
+			})
+            });
+        </script>

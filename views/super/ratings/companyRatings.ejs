@@ -1,0 +1,407 @@
+<!-- AUI Framework -->
+<!DOCTYPE html>
+    <html>
+   <%-include ('../partials/header')%>
+  
+    <body style="overflow: hidden;">
+        
+        
+       
+
+        <div id="page-wrapper" class="demo-example">
+
+           
+
+            <!-- #page-header -->
+
+            <%-include ('../partials/side_bar')%>
+            <!-- #page-sidebar -->
+            <div id="page-content-wrapper">
+                <div id="page-title">
+
+    <div class="bg-gray text-transform-upr col-md-12 font-size-15 font-bold primary-font pad10A" id="heading">Ratings & Reviews</div>
+    <div class="bg-gray text-transform-upr col-md-4 font-size-20 font-bold primary-font pad10A" id="compName">Ratings & Reviews</div>
+    <div class="bg-gray text-transform-upr col-md-8 font-size-16 font-bold font-black  pad10A"> Avg Rating : <span  id="avgRating"></span>
+   
+    
+    </div>
+
+
+
+                    <div id="breadcrumb-right">
+                        
+                        <div class="float-right">
+                           
+
+                            <!-- <div class="dropdown">
+                                <a href="<%-superadminpath%>subcategory/add" class="btn medium primary-bg " title="Example dropdown" >
+                                    <span class="button-content">
+                                        <i class="glyph-icon icon-plus float-left"></i>
+                                        Add New 
+                                
+                                    </span>
+                                </a>
+                               
+                            </div> -->
+                        </div>
+
+                        
+                    </div>
+</div><!-- #page-title -->
+<div id="page-content">
+
+
+<%-include ('../partials/flashMessage')%>
+
+<div class="example-box">
+    
+    <div class="form-row col-lg-3 float-left form-vertical font-size-12 bold  float-left dropdown form-label mrg20T ">
+        <select   data-placeholder="Choose Company" class="chosen-select" id="compId">
+            <option value="" > Nothing Selected</option>
+            <%for(var t=0;t<compData.length;t++){%>
+            <option value="<%-compData[t].id%>" /><%-compData[t].companyName%> 
+           
+    <%}%>
+   </select>
+
+     </div>
+    <div class="form-row col-lg-2 float-left form-vertical">
+        <div class="form-label">
+            <label for="from">
+                From Date:
+            </label>
+        </div>
+        <div class="form-input">
+            <input type="text" size="10" class="fromDate" id="fromDate" name="from" />
+        </div>
+    </div>
+
+    <div class="form-row col-lg-2 float-left form-vertical">
+        <div class="form-label">
+            <label for="to">
+                To Date: 
+            </label>
+        </div>
+        <div class="form-input">
+            <input type="text" size="10" class="toDate"  id ="toDate" name="to" />
+        </div>
+    </div>
+
+
+
+    <div class="form-row col-lg-2 float-left form-vertical form-label mrg25T">
+        <a onclick="getList(1)" href="javascript:;" class="btn medium primary-bg" title="" >
+            <span class="button-content text-center float-none font-size-11 text-transform-upr">
+                Filter
+            </span>
+        </a>
+
+     </div>
+
+ 
+     <div class="form-row col-lg-3 mrg5B float-right">
+        <div class="form-label">
+            <label for="to">
+                Search: 
+            </label>
+        </div>
+        <div class="form-input">
+            <input type="text" size="10" class="search"  id ="search" name="search" />
+        </div>
+    </div>
+
+</div>  
+
+    
+
+<table id="example" class="table" style="width:100%">
+	<thead>
+		<tr>
+            <th>User Name</th>
+            <th>User Photo</th>
+            <th>Rating</th>
+            <th>Review</th>
+            <th>Review At</th>
+			<th>Action</th>
+		</tr>
+	</thead>
+	<tbody id="appendData">
+        
+
+		
+
+
+		
+	</tbody>
+	
+</table>
+
+
+<div class="col-md-4" style="float:right" id="append_pagination">
+     
+</div>
+
+
+
+
+                    </div><!-- #page-content -->
+                    
+                 
+            </div><!-- #page-main -->
+        </div><!-- #page-wrapper -->
+
+    </body>
+</html>
+
+
+
+
+
+<script>
+    $(document).ready(function() {
+    $('#example').DataTable( {
+        "bPaginate":   false,
+        "bInfo":     false,
+        "bFilter":false,
+        "bLengthChangeInfo":false
+    } );
+    $('#example thead th').off('click')
+} );
+</script>
+
+<script>
+ var currentPage=1
+ var dataList=[]
+
+getList(currentPage)
+
+    
+
+  
+
+
+   function getList(currentPage,catId)
+   {
+    currentPage=currentPage
+    var limit=100
+    var fromDate=$('#fromDate').val();
+        var toDate=$('#toDate').val();
+    $('#loading1').show()
+    $.ajax({
+            type: 'POST',
+            url: '<%-superadminpath%>ratings/company/getData',
+            dataType: 'json',
+            data: {'page':currentPage,'limit':limit,'fromDate':fromDate,'toDate':toDate,'compId':$('#compId').val()},
+            success: function (response) {
+                $('#loading1').hide()
+                var myvar=""
+                $("#appendData").html('<h3>No data avialable in table/</h3>')             
+
+                if (response.code == '200') {
+                   // $('#block_status_'+id).html(''
+var data1=response.body.ratingData
+var data=data1.rows
+dataList=data
+
+setData(data)   
+var avgRating=""
+var rating=response.body.avgRating
+
+
+var ratingData =getRating(rating)
+
+$('#compName').html($('#compId option:selected').text());
+$('#avgRating').html(" ("+rating+") "+ ratingData)
+
+
+appendPagination(currentPage,Math.ceil(data1.count/limit))
+
+
+
+
+
+
+                    
+                            
+                }
+                else{
+                   
+                    showToastError(response.message)
+                }
+            },
+
+            error :function(response)
+            {
+
+                $('#loading1').hide()
+
+                showToastError(response.message)
+
+            }
+        });
+    }
+    function find( ) {
+        var item=$('#search').val().toLowerCase()
+//console.log(dataList)
+var rows=[];
+
+    for(var i = 0; i < dataList.length; ++i) {
+        var name= dataList[i].user!=null?dataList[i].user.firstName.toString().toLowerCase() :""
+
+
+        //if the name is what we are looking for return it
+        if(dataList[i]['rating'].toString().includes(item) ||
+          dataList[i].review.toString().includes(item) ||
+          name.includes(item) ||
+          dataList[i].createdAt.toString().includes(item) 
+
+
+          
+          )
+            
+        {  
+
+           rows.push(dataList[i]);
+        }
+    }
+
+    setData(rows)
+
+
+}
+
+ 
+$('#search').on( 'keyup', function () {
+       setTimeout(function(){find() },800);
+} );
+
+
+
+    function setData(data)
+    {
+        var myvar=""
+        for(var t=0;t<data.length;t++) {
+
+        
+myvar = myvar+
+'		<tr>'+
+'            <td>'+((data[t].user!=null)?data[t].user.firstName :"" ) +'</td>'+
+'			<td><img src="'+((data[t].user!=null)?data[t].user.image :"" )+'" alt="" width="90" height="90"/> </td>'+
+'            <td>'+ data[t].rating +'   '+getRating(data[t].rating) +'</td>'+
+'            <td>'+data[t].review +'</td>'+
+'            <td>'+format(new Date(data[t].createdAt)) +'</td>'+
+
+'            <td>'+
+
+'         <a onclick="deleteReview(\''+data[t].userId+'\')" href="javascript:;" data-id="'+data[t].id +'"  class="font-red" title="">'+
+'                            <i class="glyph-icon icon-remove mrg5R"></i>'+
+'                            Delete'+
+'                        </a>'+
+
+'            </div>'+
+'            </td>'+
+'        </tr>';
+}
+
+
+if(data.length>0)$("#appendData").html(myvar)    
+else $("#appendData").html('<div class="pad10A button-pane button-pane-alt text-center">No data avialable in table</div>')             
+
+    }
+
+    function deleteReview(userId)
+    {
+
+        if( confirm('Are you sure you want to delete this review ?'))
+        {
+        $.ajax({
+            type: 'POST',
+            url: '<%-superadminpath%>ratings/company/delete',
+            dataType: 'json',
+            data: {'userId':userId},
+            success: function (response) {
+                if (response.code == '200') {
+
+                    showToastSuccess(response.message)
+                    getList(currentPage,categoryId)
+                    
+                }
+                else{
+                   
+                    showToastError(response.message)
+                }
+            },
+
+            error :function(response)
+            {
+                showToastError(response.message)
+
+            }
+        });
+    }
+    }
+   
+
+
+
+function appendPagination(currentPage,count)
+{
+    var fd="";
+//alert(data.pageCount);
+ if (count > 1) { 
+fd=fd+'<ul class="button-group center-div">'; 
+
+  if (currentPage > 1) {
+      fd=fd+'<a  href="javascript:;" class="btn medium ui-state-default" onclick="getList(1)"><i class="glyph-icon icon-chevron-left"></i></a>';
+  }
+  else{
+    fd=fd+'<a  href="javascript:;" class="btn medium ui-state-default disabled"><i class="glyph-icon icon-chevron-left"></i></a>';
+ 
+  }
+  var i = 1;
+  if (currentPage > 5) {
+  i = +currentPage - 4;
+  } 
+ if (i !== 1) { 
+      fd=fd+'<a  class="btn medium disabled ui-state-default" href="javascript:;">...</a>';
+  } 
+                 
+ // alert(fd);
+  
+ 
+ for (i; i<=count; i++) {
+ if (currentPage == i) { 
+      fd=fd+'<li class="btn medium ui-state-default primary-bg"><span><span>'+currentPage+'</span></span></li>';
+    } else {
+        fd=fd+'<a  class="btn medium  ui-state-default" href="javascript:;" onclick="getList('+i+')">'+i+'</a>';
+     }
+    if (i == (+currentPage + 4)) {
+        fd=fd+'<a  class="btn medium disabled ui-state-default" href="javascript:;">...</a>';
+     break; } 
+  }
+ 
+  
+  if (currentPage != count) {
+      fd=fd+'<a  class="btn medium ui-state-default"  href="javascript:void(0)" onclick="getList('+count+')"> <i class="glyph-icon icon-chevron-right"></i></a>';
+ } 
+ else{
+      fd=fd+'<a  class="btn medium ui-state-default disabled"  href="javascript:void(0)" > <i class="glyph-icon icon-chevron-right"></i></a>';
+ } 
+ 
+fd=fd+'</ul>';  
+ } 
+
+       $("#append_pagination").html(fd)  
+}
+
+
+
+  
+
+   
+  
+
+  
+    
+
+</script>

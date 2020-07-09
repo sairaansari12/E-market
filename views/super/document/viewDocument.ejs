@@ -1,0 +1,589 @@
+<!-- AUI Framework -->
+<!DOCTYPE html>
+    <html>
+   <%-include ('../partials/header')%>
+    <body style="overflow: hidden;">
+        
+
+       
+
+        <div id="page-wrapper" class="demo-example">
+
+           
+
+            <!-- #page-header -->
+
+            <%-include ('../partials/side_bar')%>
+            <!-- #page-sidebar -->
+            <div id="page-content-wrapper">
+                <div id="page-title">
+
+                   <div class="bg-gray text-transform-upr font-size-15 font-bold primary-font pad10A">Document  Details</div>
+                    
+                     </div>
+                   <!-- #page-title -->
+<div id="page-content">
+
+
+<%-include ('../partials/flashMessage')%>
+
+
+<div class="example-box medium">
+    <div class="example-code">
+
+        <div id="form-wizard" class="form-wizard">
+          <ul>
+
+            <li>
+                <a href="#step-1">
+                  <label class="wizard-step">1</label>
+                  <span class="wizard-description">
+                     General Settings
+                     <small>Gather the general details</small>
+                  </span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#step-2">
+                  <label class="wizard-step">2</label>
+                  <span class="wizard-description">
+                     About Us Details
+                     <small>Gather the about us details</small>
+                  </span>
+                </a>
+            </li>
+            <li>
+                <a href="#step-3">
+                  <label class="wizard-step">3</label>
+                  <span class="wizard-description">
+                     Privacy  information
+                     <small>Confirm privacy details</small>
+                  </span>
+                </a>
+            </li>
+            <li>
+                <a href="#step-4">
+                  <label class="wizard-step">4</label>
+                  <span class="wizard-description">
+                     Terms & Condition Information 
+                     <small>Establish Terms & Condition Information description</small>
+                  </span>                   
+                </a>
+            </li>
+            <li>
+                <a href="#step-5">
+                  <label class="wizard-step">5</label>
+                  <span class="wizard-description">
+                     Final steps
+                     <small>Confirm Social link details</small>
+                  </span>                   
+                </a>
+            </li>
+          </ul>
+
+          <div id="step-1" class="example-box col-md-8 ">
+
+            <form  id="generalForm" onsubmit="return false" class="col-md-10 center-margin " method="" />
+            <input type="hidden"  name="documentId" id="documentId"   <%if(data ){%> value="<%-data.id%>"  <%}%>/>
+
+            <div class="form-row">
+                <div class="form-label col-md-4">
+                    <label for="">
+                        Currency:
+                        <span class="required">*</span>
+                    </label>
+                </div>
+                <div class="form-input col-md-8">
+                    <input type="text" id="currency" data-required="true"  <%if(data && data!=null){%>  value="<%-data.currency%>" <%}%> name="currency"   data-trigger="change"  />
+
+    
+                </div>
+               
+            </div>
+
+           
+            <div class="form-row">
+                <div class="form-label col-md-4">
+                    <label for="" >
+                        Language:
+                        <span class="required">*</span>
+                    </label>
+                </div>
+                <div class="form-input col-md-8">
+                    <select data-placeholder="Choose Language"  name="language" class="chosen-select" id="language">
+                        <option <%if(data && data.language=='EN'){%> selected <%}%>  value="EN" />ENGLISH 
+                        <option  <%if(data && data.language=='FR'){%> selected <%}%>  value="FR" />SPANISH
+                        
+        
+               </select>                                                      
+              </div>
+            </div>
+ 
+
+
+            <div class="form-row">
+                <div class="form-label col-md-4">
+                    <label for="">
+                       Order Auto Assignment:
+                    </label>
+                </div>
+
+                
+                <div class="form-checkbox-radio col-md-8" id="subservice">
+                   <input type="radio" value="yes"    <%if(data && data.autoAssign=='yes'){%> checked <%}%>   class="custom-checkbox" name="autoAssign" />
+                  <label for="">Yes</label>
+
+                  <input type="radio"   <%if(data && data.autoAssign=='no'){%> checked <%}%>  value="no" class="custom-checkbox" name="autoAssign"  />
+                  <label for="">No</label>
+
+                </div>
+            </div>
+
+
+
+            </form>
+
+          </div>
+
+
+          <div id="step-2" class="example-box ">
+
+            <form  id="aboutusForm" onsubmit="return false" class="col-md-12 center-margin " method="" />
+            <input type="hidden"  name="documentId" id="documentId"   <%if(data && data!=null){%> value="<%-data.id%>"  <%}%>/>
+
+         
+            <div class="form-row">
+                <div class="form-label col-md-12">
+                    <label for="" class="label-description">
+                        <span>About Us Link</span>
+                    </label>
+                    <input type="text" id="aboutusLink"   <%if(data && data!=null){%>  value="<%-data.aboutusLink%>" <%}%> name="aboutusLink" autocomplete="off"  data-rangelength="[10,200]"  data-trigger="change"  />
+
+                   
+                </div>
+               
+            </div>
+
+            <div class="form-row">
+                <div class="form-label col-md-12">
+
+                <label for="" class="label-description">
+                    <span>About Us Content</span>
+                </label>
+                    <textarea id="aboutusTiny"     data-trigger="keyup"  class="parsley-validated" > <%if(data && data!=null){%> <%-data.aboutus%> <%}%> </textarea>
+                    <input type="hidden"  id="aboutus"  name="aboutus"  />
+
+                </div>
+            </div>
+
+
+            
+ 
+            </form>
+
+          </div>
+          <div id="step-3" class="example-box ">
+
+            <form  id="privacyForm" onsubmit="return false" class="col-md-12 center-margin " method="" />
+            <input type="hidden"  name="documentId" id="documentId"   <%if(data && data!=null){%> value="<%-data.id%>"  <%}%>/>
+
+         
+            <div class="form-row">
+                <div class="form-label col-md-12">
+                    <label for="" class="label-description">
+                        <span>Privacy Link</span>
+                    </label>
+                    <input type="text" id="privacyLink"   <%if(data && data!=null){%>  value="<%-data.privacyLink%>" <%}%> name="privacyLink" autocomplete="off"  data-rangelength="[10,200]"  data-trigger="change"  />
+
+                   
+                </div>
+               
+            </div>
+
+            <div class="form-row">
+                <div class="form-label col-md-12">
+
+                <label for="" class="label-description">
+                    <span>Privacy Content</span>
+                </label>
+                    <textarea id="privacyTiny"     data-trigger="keyup"  class="parsley-validated" > <%if(data && data!=null){%> <%-data.privacyContent%> <%}%> </textarea>
+                    <input type="hidden"  id="privacy"  name="privacyContent"  />
+
+                </div>
+            </div>
+
+
+
+ 
+            </form>
+
+          </div>                     
+          <div id="step-4" class="example-box ">
+
+            <form  id="termsForm" onsubmit="return false" class="col-md-12 center-margin " method="" />
+            <input type="hidden"  name="documentId" id="documentId"   <%if(data && data!=null){%> value="<%-data.id%>"  <%}%>/>
+
+         
+            <div class="form-row">
+                <div class="form-label col-md-12">
+                    <label for="" class="label-description">
+                        <span>Terms & Condition Link</span>
+                    </label>
+                    <input type="text" id="termsLink"   <%if(data && data!=null){%>  value="<%-data.termsLink%>" <%}%> name="termsLink" autocomplete="off"  data-rangelength="[10,200]"  data-trigger="change"  />
+
+                   
+                </div>
+               
+            </div>
+
+            <div class="form-row">
+                <div class="form-label col-md-12">
+
+                <label for="" class="label-description">
+                    <span>Terms & Condition Content</span>
+                </label>
+                    <textarea id="termsTiny"  data-trigger="keyup"  class="parsley-validated" > <%if(data && data!=null){%> <%-data.termsContent%> <%}%></textarea>
+                    <input type="hidden"  id="terms"  name="termsContent"  />
+
+                </div>
+            </div>
+
+
+           
+
+ 
+            </form>
+
+          </div> 
+          <div id="step-5" class="example-box ">
+
+            <form  id="linkForm" onsubmit="return false" class="col-md-12 center-margin " method="" />
+            <input type="hidden"  name="documentId" id="documentId"   <%if(data && data!=null){%> value="<%-data.id%>"  <%}%>/>
+
+         
+            <div class="form-row">
+                <div class="form-label col-md-2">
+                    <label for="">
+                        Website Link
+                    </label>
+                </div>
+                <div class="form-input col-md-9">
+                    <div class="input-append-wrapper">
+                        <div class="input-append bg-orange">
+                            <i class="glyph-icon icon-dashboard"></i>
+                        </div>
+                        <div class="append-left">
+                            <input type="text" placeholder="Website link" name="websiteLink" <%if(data && data!=null){%> value="<%-data.websiteLink%>"  <%}%>  id="websiteLink" />
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+
+            <div class="form-row">
+                <div class="form-label col-md-2">
+                    <label for="">
+                        Facebook Link
+                    </label>
+                </div> 
+                <div class="form-input col-md-9">
+                    <div class="input-append-wrapper">
+                        <div class="input-append primary-bg">
+                            <i class="glyph-icon icon-facebook"></i>
+                        </div>
+                        <div class="append-left">
+                            <input type="text" placeholder="Facebook link"  <%if(data && data!=null){%> value="<%-data.facebookLink%>"  <%}%> name="facebookLink" id="facebookLink" />
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+
+            <div class="form-row">
+                <div class="form-label col-md-2">
+                    <label for="">
+                        Gmail Link
+                    </label>
+                </div> 
+                <div class="form-input col-md-9">
+                    <div class="input-append-wrapper">
+                        <div class="input-append bg-red">
+                            <i class="glyph-icon icon-google-plus"></i>
+                        </div>
+                        <div class="append-left">
+                            <input type="text" placeholder="Gmail link" <%if(data && data!=null){%> value="<%-data.gmailLink%>"  <%}%>  name="gmailLink" id="gmailLink" />
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+
+            <div class="form-row">
+                <div class="form-label col-md-2">
+                    <label for="">
+                        Linkedin Link
+                    </label>
+                </div> 
+                <div class="form-input col-md-9">
+                    <div class="input-append-wrapper">
+                        <div class="input-append primary-bg">
+                            <i class="glyph-icon icon-linkedin"></i>
+                        </div>
+                        <div class="append-left">
+                            <input type="text" placeholder="Linkedin link" <%if(data && data!=null){%> value="<%-data.linkedinLink%>"  <%}%>  name="linkedinLink" id="linkedinLink" />
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+
+
+            <div class="form-row">
+                <div class="form-label col-md-2">
+                    <label for="">
+                        Twitter Link 
+                    </label>
+                </div> 
+                <div class="form-input col-md-9">
+                    <div class="input-append-wrapper">
+                        <div class="input-append bg-twitter">
+                            <i class="glyph-icon icon-twitter"></i>
+                        </div>
+                        <div class="append-left">
+                            <input type="text" <%if(data && data!=null){%> value="<%-data.twitterLink%>"  <%}%>  placeholder="Twitter link" name="twitterLink" id="twitterLink" />
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+
+
+
+
+             <div class="form-row">
+                <div class="form-label col-md-2">
+                    <label for="">
+                        Instagram Link
+                    </label>
+                </div> 
+                <div class="form-input col-md-9">
+                    <div class="input-append-wrapper">
+                        <div class="input-append bg-red">
+                            <i class="glyph-icon icon-instagram"></i>
+                        </div>
+                        <div class="append-left">
+                            <input type="text" placeholder="Instagram link"  <%if(data && data!=null){%> value="<%-data.instaLink%>"  <%}%> name="instaLink" id="instaLink" />
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+
+           
+
+ 
+            </form>
+
+          </div> 
+        </div>
+
+
+    </div>
+    
+</div>
+
+       
+    </div>
+
+
+
+                	</div><!-- #page-content -->
+            </div><!-- #page-main -->
+        </div><!-- #page-wrapper -->
+
+    </body>
+</html>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js"></script>
+
+<script>
+var count=0
+ 
+$(document).ready(function(){
+  $(function(event){
+    $(".buttonFinish").on("click", function(){
+
+
+       if(count==4)
+       { 
+        callUpdateAPI("linkForm")
+    }
+
+    
+    });
+    $(".buttonNext").on("click", function(){
+        if(count==0) callUpdateAPI("generalForm")
+        if(count==1) callUpdateAPI("aboutusForm")
+        if(count==2) callUpdateAPI("privacyForm")
+        if(count==3) callUpdateAPI("termsForm")
+        count++;
+        
+    });
+
+    $(".buttonPrevious").on("click", function(){
+        count--;
+        
+    });
+
+  });
+});
+
+
+</script>
+
+
+<script>
+    tinymce.init({
+      selector: '#aboutusTiny',plugins: "autoresize"
+    });
+    tinymce.init({
+      selector: '#privacyTiny',
+      plugins: "autoresize"
+
+    });
+    tinymce.init({
+      selector: '#termsTiny',
+      plugins: "autoresize"
+    });
+  </script>
+<script type="text/javascript">
+
+    //   $('#aboutusForm').submit( function() {
+    //     var temp =tinymce.get('aboutusTiny').getContent();
+    //     $('#aboutus').val(temp)
+    //         var tempform = $('#aboutusForm');
+
+    //         tempform .parsley('validate' );
+
+    //         if(tempform.parsley('isValid' ))
+    //         {
+
+    //         var form_data = new FormData(tempform[0]);
+    //         callUpdateAPI(form_data)
+           
+    //         }
+    //   });
+
+    //   $('#privacyForm').submit( function() {
+    //     var temp =tinymce.get('privacyTiny').getContent();
+    //     $('#privacy').val(temp)
+    //         var tempform = $('#privacyForm');
+    //         tempform .parsley('validate' );
+
+    //         if(tempform.parsley('isValid' ))
+    //         {
+
+    //         var form_data = new FormData(tempform[0]);
+    //         callUpdateAPI(form_data)
+           
+    //         }
+    //   });
+
+    //   $('#termsForm').submit( function() {
+    //     var temp =tinymce.get('termsTiny').getContent();
+    //     $('#terms').val(temp)
+    //         var tempform = $('#termsForm');
+    //         tempform .parsley('validate' );
+
+    //         if(tempform.parsley('isValid' ))
+    //         {
+
+    //         var form_data = new FormData(tempform[0]);
+    //         callUpdateAPI(form_data)
+           
+    //         }
+    //   });
+
+    //   $('#linkForm').submit( function() {
+       
+    //   callUpdateAPI("linkForm")
+           
+    //         }
+    //   });
+
+
+
+function callUpdateAPI(formName)
+{
+
+if(formName=="aboutusForm")
+{
+    var temp =tinymce.get('aboutusTiny').getContent();
+       $('#aboutus').val(temp)
+}
+
+
+if(formName=="privacyForm")
+{
+    var temp =tinymce.get('privacyTiny').getContent();
+       $('#privacy').val(temp)
+}
+
+
+
+if(formName=="termsForm")
+{
+    var temp =tinymce.get('termsTiny').getContent();
+       $('#terms').val(temp)
+}
+
+
+
+
+    var tempform = $('#'+formName);
+       tempform .parsley('validate' );
+      if(tempform.parsley('isValid' ))
+            {
+
+      var form_data = new FormData(tempform[0]);
+    $("#loading1").show();
+    $.ajax({
+                type: 'POST',
+                url: '<%-superadminpath%>document/update',
+                dataType: 'json',
+                data:form_data ,
+                contentType:false,
+                cache:false,
+                processData:false,
+                success: function (response) {
+                    $("#loading1").hide();
+                    if (response.code == 200) {
+                  
+                        showToastSuccess(response.message)
+
+                //  window.location.reload()                       
+                    } else {
+                        showToastError(response.message)
+                    }
+                },
+
+                error: function(response)
+                {
+                    $("#loading1").hide();
+                   var errorResponse=JSON.parse(response.responseText)
+                   showToastError(errorResponse.message)
+
+
+                }
+            });
+        }
+
+
+    }
+
+
+
+
+    </script>
+

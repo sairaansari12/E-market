@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+    <html>
+        <%- include('../partials/header'); -%> 
+    <body style="overflow: hidden;">
+        
+
+      
+
+        <div id="login-page" class="mrg25B">
+
+
+    
+          
+
+        
+
+        </div>
+<img src="/assets/images/login-bg.png" class="login-img" alt="" />
+<div class="ui-widget-overlay bg-black opacity-60"></div>
+        <div class="pad20A mrg25T">
+            <div class="row mrg25T">
+
+                <form role="form" class="col-md-4 center-margin form-vertical mrg25T"  enctype="application/x-www-form-urlencoded" action="<%-adminpath%>/login" method="POST">
+
+                    <div class="ui-dialog modal-dialog mrg25T" id="login-form" style="position: relative !important;">
+                        <div class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix">
+                            <span class="ui-dialog-title">Login page</span>
+                        </div>
+                        <div class="pad20A pad0B ui-dialog-content ui-widget-content">
+
+
+
+                            <% if (typeof successMessage != 'undefined' && successMessage && successMessage.length>0) { %>
+
+                                <div class="infobox clearfix infobox-close-wrapper success-bg mrg20B">
+                                    <a href="#" title="Close Message" class="glyph-icon infobox-close icon-remove"></a>
+                                    <p><%- successMessage %></p>
+                                </div>
+                                <div class="alert alert-success"></div>
+                                <% }%>
+
+
+
+                            <% if (typeof errorMessage != 'undefined' && errorMessage && errorMessage.length>0) { %>
+
+                                <div class="infobox clearfix infobox-close-wrapper error-bg mrg20B">
+                                    <a href="#" title="Close Message" class="glyph-icon infobox-close icon-remove"></a>
+                                    <p><%- errorMessage %></p>
+                                </div>
+                                <div class="alert alert-success"></div>
+                                <% }%>
+
+
+                           
+                            <div class="form-row">
+                                <div class="form-label col-md-2">
+                                    <label for="">
+                                        Username:
+                                    </label>
+                                </div>
+                                <div class="form-input col-md-10">
+                                    <div class="form-input-icon">
+                                        <i class="glyph-icon icon-envelope-alt ui-state-default"></i>
+                                        <input placeholder="Email address" type="email" name="email"  required id="email" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-label col-md-2">
+                                    <label for="">
+                                        Password:
+                                    </label>
+                                </div>
+                                <div class="form-input col-md-10">
+                                    <div class="form-input-icon">
+                                        <i class="glyph-icon icon-unlock-alt ui-state-default"></i>
+                                        <input placeholder="Password" name="password" required  type="password" name="" id="password" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-checkbox-radio col-md-6">
+                                    <input type="checkbox" id="checkbox1" class="custom-checkbox" name="remember-password" id="remember-password" />
+                                    <label for="remember-password" class="pad5L">Remember password?</label>
+                                </div>
+                                <div class="form-checkbox-radio text-right col-md-6">
+                                    <a href="#" class="toggle-switch" switch-target="#login-forgot" switch-parent="#login-form" title="Recover password">Forgot your password?</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui-dialog-buttonpane text-center">
+                            <button type="submit" class="btn large primary-bg text-transform-upr font-bold font-size-11 radius-all-4" id="demo-form-valid" title="Validate!">
+                                <span class="button-content">
+                                    Login
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <form  id="forgotForm"  onsubmit="return false" role="form" class="col-md-4 center-margin form-vertical mrg25T"  enctype="application/x-www-form-urlencoded" method="POST">
+
+                    <div class="ui-dialog mrg15T hide" id="login-forgot" style="position: relative !important;">
+                        <div class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix">
+                            <span class="ui-dialog-title">Recover password</span>
+                        </div>
+                        <div class="pad20A ui-dialog-content ui-widget-content">
+                            <div class="form-row">
+                                <div class="form-label col-md-2">
+                                    <label for="">
+                                        Email address:
+                                    </label>
+                                </div>
+                                <div class="form-input col-md-10">
+                                    <div class="form-input-icon">
+                                        <i class="glyph-icon icon-envelope-alt ui-state-default"></i>
+                                        <input placeholder="Email address"  data-required="true" type="text" name="forgotEmail" id="forgotEmail" />
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="ui-dialog-buttonpane text-center">
+                            <button type="submit"  class="btn large primary-bg radius-all-4" id="demo-form-valid"  title="Validate!">
+                                <span class="button-content">
+                                    Recover Password
+                                </span>
+                            </button>
+                            <a href="javascript:;" switch-target="#login-form" switch-parent="#login-forgot" class="btn large transparent no-shadow toggle-switch font-bold font-size-11 radius-all-4" id="demo-form-valid" onclick="javascript:$(&apos;#demo-form&apos;).parsley( &apos;validate&apos; );" title="Validate!">
+                                <span class="button-content">
+                                    Cancel
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+
+             </form>
+
+            </div>
+
+        </div>
+
+
+       
+
+    </body>
+</html>
+<%- include('../partials/commonJs'); -%> 
+
+<script>
+
+if (localStorage.chkbox && localStorage.chkbox != '') {
+        $('#checkbox1').attr('checked', 'checked');
+        $('#email').val(localStorage.username);
+        $('#password').val(localStorage.pass);
+    } else {
+        $('#checkbox1').removeAttr('checked');
+        $('#email').val('');
+        $('#password').val('');
+    }
+
+$('#checkbox1').change(function() {
+
+        if(this.checked) {
+            localStorage.username = $('#email').val();
+            localStorage.pass = $('#password').val();
+            localStorage.chkbox = $('#checkbox1').val();        }
+            else{
+                localStorage.username = '';
+            localStorage.pass = '';
+            localStorage.chkbox = '';
+            }
+              
+    });
+
+    $('#forgotForm').submit( function() {
+       
+      
+           var tempform = $('#forgotForm');
+          
+           tempform .parsley('validate' );
+
+           if(tempform.parsley('isValid' ))
+           {
+           var form_data = new FormData(tempform[0]);
+           $(".overlay").show();
+           $.ajax({
+               type: 'POST',
+               url: '<%-adminpath%>forgotPassword',
+               dataType: 'json',
+               data: form_data,
+               contentType:false,
+               cache:false,
+               processData:false,
+               success: function (response) {
+        
+                if (response.code == '200') {
+                   // $('#block_status_'+id).html('');
+
+                       showToastSuccess( response.message)
+                       setTimeout(function(){ window.history.back();},2500);
+                    
+                }
+                else{
+                   
+                    showToastError(response.message)
+                }
+            },
+
+            error :function(response)
+            {
+
+                showToastError(response.message)
+
+            }
+        });
+    
+    }
+
+
+    }
+);
+</script>

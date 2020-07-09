@@ -1,0 +1,1023 @@
+{
+   "swagger": "2.0",
+   "info": {
+     "title": "E-Market",
+     "description": "<b>RESPONSES</b>::\n 200-> OK\n   401->Not Authorized\n   201->No Record\n 400->Bad Request \n 500->Internal Server Error",
+     
+       "version": "1.0"
+   },
+   "produces": ["application/json"],
+   "paths": {
+     "/api/mobile/auth/login": {
+       "post": {
+         "x-swagger-router-controller": "api/mobile/auth/login",
+         "operationId": "index",
+         "tags": ["Login"],
+         "description": "Authentication",
+         "parameters": [
+       { "name": "phoneNumber",   "in": "formData",  "required":"true",  "type": "string" },
+       { "name": "countryCode",  "in": "formData", "required":"true", "type": "string" },
+       { "name": "companyId",   "value":"25cbf58b-46ba-4ba2-b25d-8f8f653e9f13" ,"in": "formData",  "required":"true",  "type": "string" },
+       { "name": "deviceToken", "in": "formData", "type": "string" },
+       { "name": "platform",  "in": "Input", "required":"true", "type": "string" }
+      
+      
+      
+      ],
+      "responses": {
+        
+        "200": {
+          "description": "Successfully returns the response"
+        },
+        "400": {
+          "description": "Invalid input Parameters or Bad request"
+        },
+        "401": {
+          "description": "Invalid Access Token"
+        },
+        "204": {
+          "description": "No data found"
+        },
+        "500": {
+          "description": "Internal Server Error"
+        }
+      }
+       }
+     },
+
+
+     "/api/mobile/profile/getProfile": {
+      "get": {
+        "x-swagger-router-controller": "/api/mobile/profile/getProfile",
+        "operationId": "index",
+        "tags": ["Get Profile"],
+        "description": "Get Profile",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":"true" ,"type":"string"}
+
+     
+
+     ],
+
+   
+    
+    
+        "responses": {}
+      }
+    },
+
+    "/api/mobile/profile/updateProfile": {
+      "post": {
+        "x-swagger-router-controller": "/api/mobile/profile/updateProfile",
+        "operationId": "index",
+        "tags": ["Update Profile"],
+        "description": "Update Profile",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":"true" ,"type":"string"},
+          { "name": "firstName",  "in": "formData",  "required":true },
+          { "name": "lastName",  "in": "formData"},
+          { "name": "email",  "in": "formData",  "required":true },
+          { "name": "profileImage",  "in": "formData",  "required":true ,"type":"file"},
+          { "name": "address",  "in": "formData",  "required":true ,"type":"string"}
+     
+
+     ],
+
+   
+    
+    
+        "responses": {}
+      }
+    },
+
+     
+
+    "/api/mobile/services/checkAvailability": {
+      "post": {
+        "x-swagger-router-controller": "/api/mobile/services/checkAvailability",
+        "operationId": "index",
+        "tags": ["Check Availability"],
+        "description": "Check Availability using pincode",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":"true" ,"type":"string"},
+          { "name": "country",  "in": "formData",  "required":"true" ,"type":"string"},
+          { "name": "zipCode",  "in": "formData",  "required":"true" ,"type":"string"},
+          { "name": "companyId",  "in": "formData",  "required":"true" ,"type":"string"}
+
+     
+
+     ],
+
+   
+    
+    
+        "responses": {}
+      }
+    },
+
+
+
+
+
+
+     "/api/mobile/services/getHome": {
+      "get": {
+        "x-swagger-router-controller": "/api/mobile/services/getHome",
+        "operationId": "index",
+        "tags": ["Home"],
+        "description": "Home",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":"true" ,"type":"string"}
+
+     
+
+     ],
+
+   
+    
+    
+        "responses": {}
+      }
+    },
+
+    "/api/mobile/services/getFilters": {
+      "post": {
+        "x-swagger-router-controller": "/api/mobile/services/getFilters",
+        "operationId": "index",
+        "tags": ["Home"],
+        "description": "Type will be search/sales/cat",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":"true" ,"type":"string"},
+          { "name": "type",  "in": "formData",  "required":"true" ,"type":"string"},
+          { "name": "search",  "in": "formData" ,"type":"string"},
+          { "name": "category",  "in": "formData","type":"array"  ,   "collectionFormat": "multi",
+            "items": {
+              "type": "string"
+             }}
+     
+
+     ],
+
+   
+    
+    
+        "responses": {}
+      }
+    },
+
+
+    "/api/mobile/services/getSubcat": {
+      "get": {
+        "x-swagger-router-controller": "/api/mobile/services/getSubcat",
+        "operationId": "Subcategoeis",
+        "tags": ["Get Subcategories"],
+        "description": "",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":"true" ,"type":"string"},
+          { "name": "categoryId",  "in": "query",  "required":"true" ,"type":"string"}
+     ],
+
+  
+        "responses": {}
+      }
+    },
+
+
+
+    "/api/mobile/services/getSuggested": {
+      "get": {
+        "x-swagger-router-controller": "/api/mobile/services/getSuggested",
+        "operationId": "index",
+        "tags": ["Get Suggested items"],
+        "description": "Get Suggested items",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":"true" ,"type":"string"},
+          { "name": "search",  "in": "query",  "required":"true" ,"type":"string"}
+
+     
+
+     ],
+
+   
+    
+    
+        "responses": {}
+      }
+    },
+
+
+    "/api/mobile/services/getSales": {
+      "post": {
+        "x-swagger-router-controller": "/api/mobile/services/getSales",
+        "operationId": "index",
+        "tags": ["Sales Listing"],
+        "description": "get Prduct sales",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":"true" ,"type":"string"},
+          { "name": "brandArray",  "in": "formData","type":"array"  ,   "collectionFormat": "multi",
+            "items": {
+              "type": "string"
+             }},
+          { "name": "catArray",  "in": "formData"  ,"type":"array" , "collectionFormat": "multi",
+            "items": {
+              "type": "string"
+             }},
+          { "name": "priceRange",  "in": "formData"   ,"type":"object" , "description":"{start:100,end:500}"},
+            { "name": "orderByInfo",  "in": "formData", "type":"object" ,"description":"{orderby:name/offer/rating/price/createdAt,orderType:DESC/ASC}"},
+          
+          { "name": "page",  "in": "query" ,"type":"string"},
+          { "name": "limit",  "in": "query" ,"type":"string"}
+     
+
+     ],
+
+   
+    
+    
+        "responses": {}
+      }
+    },
+
+
+
+
+
+
+    "/api/mobile/services/getParentCategories": {
+      "get": {
+        "x-swagger-router-controller": "/api/mobile/services/getParentCategories",
+        "operationId": "index",
+        "tags": ["All Parent Categories Listing"],
+        "description": "get Category listing",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":"true" ,"type":"string"}
+
+     
+
+     ],
+
+   
+    
+    
+        "responses": {}
+      }
+    },
+
+    "/api/mobile/services/getServices": {
+      "post": {
+        "x-swagger-router-controller": "/api/mobile/services/getHome",
+        "operationId": "index",
+        "tags": ["Product Listing"],
+        "description": "get Prduct listing by Category ID",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":"true" ,"type":"string"},
+          { "name": "category",  "in": "formData", "type":"string"},
+          { "name": "search",  "in": "formData" ,"type":"string"},
+          { "name": "brandArray",  "in": "formData","type":"array"  ,   "collectionFormat": "multi",
+            "items": {
+              "type": "string"
+             }},
+          { "name": "catArray",  "in": "formData"  ,"type":"array" , "collectionFormat": "multi",
+            "items": {
+              "type": "string"
+             }},
+          { "name": "priceRange",  "in": "formData"   ,"type":"object" , "description":"{start:100,end:500}"},
+            { "name": "orderByInfo",  "in": "formData", "type":"object" ,"description":"{orderby:name/offer/rating/price/createdAt,orderType:DESC/ASC}"},
+          
+          { "name": "page",  "in": "query" ,"type":"string"},
+          { "name": "limit",  "in": "query" ,"type":"string"}
+
+    
+     ],
+
+   
+    
+    
+        "responses": {}
+      }
+    },
+
+  
+
+    "/api/mobile/services/detail": {
+      "get": {
+        "x-swagger-router-controller": "/api/mobile/services/detail",
+        "operationId": "index",
+        "tags": ["Product Detail"],
+        "description": "get Prduct detail by service ID",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":"true" ,"type":"string"},
+          { "name": "serviceId",  "in": "query",  "required":"true" ,"type":"string"},
+          { "name": "addressId",  "in": "query" ,"type":"string"}
+
+     
+
+     ],
+
+   
+    
+    
+        "responses": {}
+      }
+    },
+
+
+
+    "/api/mobile/cart/list": {
+      "get": {
+        "x-swagger-router-controller": "/api/mobile/cart/list",
+        "operationId": "index",
+        "tags": ["Cart Listing"],
+        "description": "get cart listing",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":"true" ,"type":"string"}
+
+
+     ],
+
+   
+    
+    
+        "responses": {}
+      }
+    },
+
+    "/api/mobile/cart/add": {
+      "post": {
+        "x-swagger-router-controller": "/api/mobile/cart/add",
+        "operationId": "index",
+        "tags": ["Add to Cart"],
+        "description": "Add Item to Cart",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":true,"type":"string"},
+          { "name": "serviceId",  "in": "formData",  "required":true ,"type":"string"},
+          { "name": "addressId",  "in": "formData",  "required":true ,"type":"string"},
+          { "name": "companyId",  "in": "formData",  "required":true ,"type":"string"},
+          { "name": "orderPrice",  "in": "formData",  "required":true ,"type":"string"},
+          { "name": "serviceCharges",  "in": "formData",  "required":true ,"type":"string"},
+          { "name": "estimateDelivery",  "in": "formData",  "required":true ,"type":"string"},
+          { "name": "quantity",  "in": "formData",  "required":true ,"type":"string" },
+          { "name": "color",  "in": "formData",  "required":true ,"type":"string" },
+          { "name": "size",  "in": "formData" ,"type":"string" },
+          { "name": "orderTotalPrice",  "in": "formData",  "required":true ,"type":"string"}
+
+
+
+     ],
+
+   
+    
+    
+        "responses": {}
+      }
+    },
+
+    "/api/mobile/cart/update": {
+      "put": {
+        "x-swagger-router-controller": "/api/mobile/cart/update",
+        "operationId": "index",
+        "tags": ["Update Cart"],
+        "description": "",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":true,"type":"string"},
+          { "name": "cartId",  "in": "formData",  "required":true ,"type":"string"},
+          { "name": "addressId",  "in": "formData",  "required":true ,"type":"string"},
+          { "name": "serviceId",  "in": "formData",  "required":true ,"type":"string"},
+          { "name": "companyId",  "in": "formData",  "required":true ,"type":"string"},
+          { "name": "orderPrice",  "in": "formData",  "required":true ,"type":"string"},
+          { "name": "quantity",  "in": "formData",  "required":true ,"type":"string" },
+          { "name": "color",  "in": "formData",  "required":true ,"type":"string" },
+          { "name": "size",  "in": "formData" ,"type":"string" },
+          { "name": "orderTotalPrice",  "in": "formData",  "required":true ,"type":"string"}
+          
+
+     ],
+
+   
+    
+    
+        "responses": {}
+      }
+    },
+
+    "/api/mobile/cart/detail": {
+      "get": {
+        "x-swagger-router-controller": "/api/mobile/cart/detail",
+        "operationId": "index",
+        "tags": ["Cart Detail"],
+        "description": "",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":true,"type":"string"},
+          { "name": "cartid",  "in": "path",  "required":true ,"type":"string"},
+          { "name": "addressId",  "in": "path" ,"type":"string"}
+
+
+
+     ],
+
+   
+    
+    
+        "responses": {}
+      }
+    },
+
+
+    "/api/mobile/cart/remove": {
+      "delete": {
+        "x-swagger-router-controller": "/api/mobile/cart/remove",
+        "operationId": "index",
+        "tags": ["Remove Item from Cart"],
+        "description": "get Prduct listing by Category ID",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":"true"},
+          { "name": "cartId",  "in": "query",  "required":"true"}
+
+
+     ],
+
+  
+        "responses": {}
+      }
+    },
+
+    "/api/mobile/cart/clear": {
+      "delete": {
+        "x-swagger-router-controller": "/api/mobile/cart/clear",
+        "operationId": "index",
+        "tags": ["Clear Cart"],
+        "description": "get Prduct listing by Category ID",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":"true"}
+
+
+     ],
+
+   
+    
+    
+        "responses": {}
+      }
+    },
+
+    "/api/mobile/address/list": {
+      "get": {
+        "x-swagger-router-controller": "/api/mobile/address/list",
+        "operationId": "index",
+        "tags": ["Address Listing"],
+        "description": "get Prduct listing by Category ID",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":"true" ,"type":"string"}
+
+
+     ],
+
+   
+    
+    
+        "responses": {}
+      }
+    },
+    "/api/mobile/address/add": {
+      "post": {
+        "x-swagger-router-controller": "/api/mobile/address/list",
+        "operationId": "index",
+        "tags": ["Add New Address"],
+        "description": "get Prduct listing by Category ID",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":true,"type":"string"},
+          { "name": "addressName",  "in": "formData",  "required":true ,"type":"string"},
+          { "name": "latitude",  "in": "formData",  "required":true ,"type":"string"},
+          { "name": "longitude",  "in": "formData",  "required":true ,"type":"string" },
+          { "name": "city",  "in": "formData",  "required":true ,"type":"string"},
+          { "name": "default",  "in": "formData","type":"integer"},
+          { "name": "addressType",  "in": "formData"},
+          { "name": "town",  "in": "formData"},
+          { "name": "landmark",  "in": "formData"},
+          { "name": "houseNo",  "in": "formData"}
+
+
+     ],
+
+   
+    
+    
+        "responses": {}
+      }
+    },
+
+    "/api/mobile/address/detail": {
+      "get": {
+        "x-swagger-router-controller": "/api/mobile/address/detail",
+        "operationId": "index",
+        "tags": [" Address Detail"],
+        "description": "Address Detail",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":true,"type":"string"},
+          { "name": "addressId",  "in": "query",  "required":true ,"type":"string"}
+
+
+     ],
+
+   
+    
+    
+        "responses": {}
+      }
+    },
+
+    "/api/mobile/address/update": {
+      "put": {
+        "x-swagger-router-controller": "/api/mobile/address/list",
+        "operationId": "index",
+        "tags": ["Update Address"],
+        "description": "Update Address",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":true,"type":"string"},
+          { "name": "addressId",  "in": "formData",  "required":true ,"type":"string"},
+          { "name": "addressName",  "in": "formData",  "required":true ,"type":"string"},
+          { "name": "latitude",  "in": "formData",  "required":true ,"type":"string"},
+          { "name": "longitude",  "in": "formData",  "required":true ,"type":"string" },
+          { "name": "city",  "in": "formData",  "required":true ,"type":"string"},
+          { "name": "default",  "in": "formData","type":"integer"},
+          { "name": "addressType",  "in": "formData"},
+          { "name": "town",  "in": "formData"},
+          { "name": "landmark",  "in": "formData"},
+          { "name": "houseNo",  "in": "formData"}
+
+
+     ],
+
+   
+    
+    
+        "responses": {}
+      }
+    },
+    "/api/mobile/address/delete": {
+      "delete": {
+        "x-swagger-router-controller": "/api/mobile/address/list",
+        "operationId": "index",
+        "tags": ["Address Delete"],
+        "description": "get Prduct listing by Category ID",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":"true"},
+          { "name": "addressId",  "in": "query",  "required":"true"}
+
+
+     ],
+
+   
+    
+    
+        "responses": {}
+      }
+    },
+
+
+
+    "/api/mobile/favourite/list": {
+      "get": {
+        "x-swagger-router-controller": "/api/mobile/favourite/list",
+        "operationId": "index",
+        "tags": ["Favourite Listing"],
+        "description": "get cart listing",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":"true" ,"type":"string"},
+          { "name": "search",  "in": "query" ,"type":"string"}
+
+
+     ],
+
+   
+    
+    
+        "responses": {}
+      }
+    },
+
+
+    "/api/mobile/favourite/add": {
+      "post": {
+        "x-swagger-router-controller": "/api/mobile/favourite/add",
+        "operationId": "index",
+        "tags": ["Add to Favourite"],
+        "description": "get cart listing",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":"true" ,"type":"string"},
+          { "name": "serviceId",  "in": "formData",  "required":"true" ,"type":"string"},
+          { "name": "companyId",  "in": "formData",  "required":true ,"type":"string"}
+
+
+
+     ],
+
+   
+    
+    
+        "responses": {}
+      }
+    },
+
+
+    "/api/mobile/favourite/remove": {
+      "delete": {
+        "x-swagger-router-controller": "/api/mobile/favourite/remove",
+        "operationId": "index",
+        "tags": ["Remove from Favourites"],
+        "description": "Remove from Favourites",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":"true" ,"type":"string"},
+          { "name": "favId",  "in": "query",  "required":"true" ,"type":"string"}
+
+
+     ],
+
+   
+    
+    
+        "responses": {}
+      }
+    },
+
+
+
+
+    "/api/mobile/wishlist/list": {
+      "get": {
+        "x-swagger-router-controller": "/api/mobile/wishlist/list",
+        "operationId": "index",
+        "tags": ["Wishlist Listing"],
+        "description": "get wishlist listing",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":"true" ,"type":"string"},
+          { "name": "search",  "in": "query" ,"type":"string"}
+
+
+     ],
+
+   
+    
+    
+        "responses": {}
+      }
+    },
+
+
+    "/api/mobile/wishlist/add": {
+      "post": {
+        "x-swagger-router-controller": "/api/mobile/wishlist/add",
+        "operationId": "index",
+        "tags": ["Add to wishlist"],
+        "description": "",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":"true" ,"type":"string"},
+          { "name": "serviceId",  "in": "formData",  "required":"true" ,"type":"string"},
+          { "name": "companyId",  "in": "formData",  "required":true ,"type":"string"}
+
+
+
+     ],
+
+   
+    
+    
+        "responses": {}
+      }
+    },
+
+
+    "/api/mobile/wishlist/remove": {
+      "delete": {
+        "x-swagger-router-controller": "/api/mobile/wishlist/remove",
+        "operationId": "index",
+        "tags": ["Remove from wishlist"],
+        "description": "Remove from wishlist",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":"true" ,"type":"string"},
+          { "name": "wishId",  "in": "query",  "required":"true" ,"type":"string"}
+
+
+     ],
+
+   
+    
+    
+        "responses": {}
+      }
+    },
+
+    "/api/mobile/wishlist/clearAll": {
+      "delete": {
+        "x-swagger-router-controller": "/api/mobile/wishlist/clearAll",
+        "operationId": "index",
+        "tags": ["Remove All from wishlist"],
+        "description": "Remove all from wishlist",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":"true" ,"type":"string"}
+     ],
+
+   
+    
+    
+        "responses": {}
+      }
+    },
+
+
+
+    
+    "/api/mobile/coupan/getPromoList": {
+      "get": {
+        "x-swagger-router-controller": "/api/mobile/coupan/getPromoList",
+        "operationId": "index",
+        "tags": ["Get Promo Listing"],
+        "description": "Promo Listing",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":"true" ,"type":"string"}
+
+
+     ],
+
+   
+    
+    
+        "responses": {}
+      }
+    },
+
+    "/api/mobile/coupan/applyCoupan": {
+      "post": {
+        "x-swagger-router-controller": "/api/mobile/coupan/applyCoupan",
+        "operationId": "index",
+        "tags": ["Apply Coupon"],
+        "description": "Apply Coupon",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":"true" ,"type":"string"},
+          { "name": "promoCode",  "in": "formData",  "required":"true" ,"type":"string"}
+
+
+     ],
+
+        "responses": {}
+      }
+    },
+
+
+    "/api/mobile/coupan/removeCoupan": {
+      "post": {
+        "x-swagger-router-controller": "/api/mobile/coupan/removeCoupan",
+        "operationId": "index",
+        "tags": ["Remove applied  Coupon"],
+        "description": "Remove applied Coupon",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":"true" ,"type":"string"},
+          { "name": "promoCode",  "in": "formData",  "required":"true" ,"type":"string"}
+
+
+     ],
+
+        "responses": {}
+      }
+    },
+
+
+
+    "/api/mobile/schedule/getSchedule": {
+      "get": {
+        "x-swagger-router-controller": "/api/mobile/schedule/getSchedule",
+        "operationId": "index",
+        "tags": ["Get Schedule by date"],
+        "description": "",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":true,"type":"string"},
+          { "name": "serviceDate",  "in": "query",  "required":true ,"type":"string" ,"description ":"4-30-2020"},
+          { "name": "companyId",  "in": "query",  "required":true ,"type":"string" }
+
+        ],
+        "responses": {
+        
+          "1": {
+            "description": "Slots Available"
+          },
+          "2": {
+            "description": "All Slots Full"
+          },
+          "0": {
+            "description": "Past Slots"
+          }
+         
+        }
+      }
+    },
+
+
+    "/api/mobile/orders/getCancelReasons": {
+      "get": {
+        "x-swagger-router-controller": "/api/mobile/orders/getCancelReasons",
+        "operationId": "index",
+        "tags": ["Get Cancelation Reason Order"],
+        "description": "",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":true,"type":"string"}
+        
+     ],
+        "responses": {}
+      }
+    },
+
+
+
+    "/api/mobile/orders/create": {
+      "post": {
+        "x-swagger-router-controller": "/api/mobile/orders/create",
+        "operationId": "index",
+        "tags": ["Create Order"],
+        "description": "Create New Order",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":true,"type":"string"},
+          { "name": "serviceDateTime",  "in": "formData",  "required":true ,"type":"string" ,"description": "eg. 2020-06-05 14:45:00" },
+          { "name": "serviceCharges",  "in": "formData",  "required":true ,"type":"string"}
+        
+     ],
+        "responses": {}
+      }
+    },
+
+    "/api/mobile/orders/list": {
+      "get": {
+        "x-swagger-router-controller": "/api/mobile/orders/list",
+        "operationId": "index",
+        "tags": ["Orders Listing"],
+        "description": "Orders Listing",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":true,"type":"string"},
+          { "name": "progressStatus",  "in": "query",  "required":true ,"type":"string"}
+        
+     ],
+        "responses": {}
+      }
+    },
+
+    "/api/mobile/orders/detail/{id}": {
+      "get": {
+        "x-swagger-router-controller": "/api/mobile/orders/detail/{id}",
+        "operationId": "index",
+        "tags": ["Order Info"],
+        "description": "Orders Detail",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":true,"type":"string"},
+          { "name": "id",  "in": "path",  "required":true ,"type":"string"}
+
+     ],
+        "responses": {}
+      }
+    },
+
+
+
+
+    
+    "/api/mobile/orders/cancel": {
+      "post": {
+        "x-swagger-router-controller": "/api/mobile/orders/cancel",
+        "operationId": "index",
+        "tags": ["Cancel Order"],
+        "description": "Orders Cancellation",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":true,"type":"string"},
+          { "name": "orderId",  "in": "formData",  "required":true ,"type":"string"},
+          { "name": "cancellationReason",  "in": "formData",  "required":true ,"type":"string"},
+          { "name": "otherReason",  "in": "formData","type":"string"}
+
+     ],
+        "responses": {}
+      }
+    },
+
+
+
+    "/api/mobile/orders/status": {
+      "post": {
+        "x-swagger-router-controller": "/api/mobile/orders/status",
+        "operationId": "index",
+        "tags": ["Change Order Status"],
+        "description": "Order Status  5->Complete",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":true,"type":"string"},
+          { "name": "id",  "in": "formData",  "required":true ,"type":"string"},
+          { "name": "status",  "in": "formData",  "required":true ,"type":"string"}
+
+     ],
+        "responses": {}
+      }
+    },
+
+    "/api/mobile/orders/paymentStatus": {
+      "post": {
+        "x-swagger-router-controller": "/api/mobile/orders/paymentStatus",
+        "operationId": "index",
+        "tags": ["Change Payment Status"],
+        "description": "Order Payment  1->Success ,2 ->Failed",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":true,"type":"string"},
+          { "name": "orderId",  "in": "formData",  "required":true ,"type":"string"},
+          { "name": "status",  "in": "formData",  "required":true ,"type":"string"},
+          { "name": "transactionId",  "in": "formData",  "required":true ,"type":"string"},
+          { "name": "paymentMode",  "in": "formData",  "required":true ,"type":"string"},
+          { "name": "amount",  "in": "formData",  "required":true ,"type":"string"}
+
+         
+
+
+     ],
+        "responses": {}
+      }
+    },
+
+
+    "/api/mobile/rating/serviceRatings": {
+      "get": {
+        "x-swagger-router-controller": "/api/mobile/rating/serviceRatings",
+        "operationId": "index",
+        "tags": ["Get Products all ratings"],
+        "description": "",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":true,"type":"string"},
+          { "name": "serviceId",  "in": "query",  "required":true ,"type":"string"},
+          { "name": "filterRating",  "in": "query", "type":"string"},
+          { "name": "page",  "in": "query", "type":"string"},
+          { "name": "limit",  "in": "query", "type":"string"}
+     ],
+        "responses": {}
+      }
+    },
+
+
+    "/api/mobile/rating/addRating": {
+      "post": {
+        "x-swagger-router-controller": "/api/mobile/rating/addRating",
+        "operationId": "index",
+        "tags": ["Add Prodcut and Emp Rating"],
+        "description": "Multiple Product Images Array of images will be like images#serviceId suppose,there are 2 prodcuts A & B then 2 array of images images#A, images#B multipart will be there ",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":true,"type":"string"},
+          { "name": "orderId",  "in": "formData", "type":"string"},
+          { "name": "serviceId",  "in": "formData", "type":"string","required":true},
+          { "name": "rating",  "in": "formData",  "required":true },
+          { "name": "review",  "in": "formData" },
+         { "name": "images",  "in": "formData", "type":"file"}
+     ],
+        "responses": {}
+      }
+    },
+
+
+    "/api/mobile/rating/addCompanyRating": {
+      "post": {
+        "x-swagger-router-controller": "/api/mobile/rating/addCompanyRating",
+        "operationId": "index",
+        "tags": ["Add Rating to Brand"],
+        "description": "",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":true,"type":"string"},
+          { "name": "companyId",  "in": "formData", "type":"string","required":true},
+          { "name": "rating",  "in": "formData", "type":"string","required":true},
+          { "name": "review",  "in": "formData", "type":"string"}
+
+         ],
+        "responses": {}
+      }
+    },
+
+
+    "/api/mobile/notification/": {
+      "get": {
+        "x-swagger-router-controller": "/api/mobile/notification/",
+        "operationId": "index",
+        "tags": ["Notification Listing"],
+        "description": "",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":true,"type":"string"}
+         ],
+        "responses": {}
+      }
+    },
+
+
+    "/api/mobile/notification/clearAll": {
+      "delete": {
+        "x-swagger-router-controller": "/api/mobile/notification/clearAll",
+        "operationId": "index",
+        "tags": ["Clear All Notifications"],
+        "description": "",
+        "parameters": [
+          { "name": "authorization",  "in": "header",  "required":true,"type":"string"}
+         ],
+        "responses": {}
+      }
+    }
+
+
+   }
+}

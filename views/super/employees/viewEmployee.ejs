@@ -1,0 +1,438 @@
+<!-- AUI Framework -->
+<!DOCTYPE html>
+    <html>
+   <%-include ('../partials/header')%>
+    <body style="overflow: hidden;">
+        
+
+       
+
+        <div id="page-wrapper" class="demo-example">
+
+           
+
+            <!-- #page-header -->
+
+            <%-include ('../partials/side_bar')%>
+            <!-- #page-sidebar -->
+            <div id="page-content-wrapper">
+                <div id="page-title">
+
+<h3>
+    <div class="bg-gray text-transform-upr col-md-9 font-size-15 font-bold primary-font pad10A"> Welcome , <%if(data.firstName && data.firstName!=""){ %>   <%-data.firstName%>  <%}else{%> User <% }%></div>
+        <a  class="col-md-3 float-right btn ui-state-default primary-bg  medium font-size-12"  href="<%-superadminpath%>employees/orders?id=<%-data.id%>">
+            <i class="glyph-icon icon-reorder"></i>
+            &nbsp;&nbsp; Orders and Ratings
+        </a>  
+    
+
+  
+    
+</h3>
+                </div>
+                   <!-- #page-title -->
+<div id="page-content">
+
+
+<%-include ('../partials/flashMessage')%>
+
+
+
+<div class="example-box">
+    <div class="example-code clearfix">
+
+      <form  role="form" onsubmit="return false"  class="form-bordered"  id="adduser" >
+
+        <input type="hidden"  name="empId" id="empId"  value="<%-data.id%>"  />
+       
+        
+            <div class="form-row">
+                <div class="form-label col-md-2">
+                    <label for="">
+                        Profile Image:
+                        <span class="required">*</span>
+                    </label>
+                </div>
+
+                <div class="form-input col-md-4">
+                    <input type="file" id="image" name="image"  />
+                </div> 
+                       
+                <div class="form-group col-md-4" <% if (data.image =="") {%> style="display :none"  <%}%>  > 
+                    <div class="fm-admin-file">
+                            <img id="myIcon1" src="<%=data.image%>"  style="border-radius:50%;width:50%;max-width:100px">
+
+                    </div>
+                </div>
+
+                
+                        
+            </div>
+
+
+            <div class="form-row">
+                <div class="form-label col-md-2">
+                    <label for="">
+                        First Name<span class="required">*</span>
+                    </label>
+                </div>
+                <div class="form-input col-md-10">
+                    <input type="text" id="firstName"  value="<%-data.firstName%>"  name="firstName"  data-trigger="change" data-required="true" class="parsley-validated" />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-label col-md-2">
+                    <label for="">
+                        Last Name:
+                    </label>
+                </div>
+                <div class="form-input col-md-10">
+                    <input type="text" id="lastName"  value="<%-data.lastName%>"  name="lastName"  data-trigger="change"  class="parsley-validated" />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-label col-md-2">
+                    <label for="">
+                        Email <span class="required">*</span>
+                    </label>
+                </div>
+                <div class="form-input col-md-10">
+                    <input type="text" id="email"  value="<%-data.email%>"  name="email" data-type="email" data-trigger="change" data-required="true" class="parsley-validated" />
+                </div>
+            </div>
+
+
+            <div class="form-row pad0B">
+                <div class="form-label col-md-2">
+                    <label for="">
+                        &nbsp;Phone Number<span class="required">*</span>
+                    </label>
+                </div>
+                <div class="form-input col-md-2">
+                    <input type="text" id="countryCode" value="<%-data.countryCode%>"    name="countryCode"   placeholder="91" data-trigger="change"    data-required="true"  class="parsley-validated" />
+                </div>
+                <div class="form-input col-md-8">
+
+                    <input type="text" id="phoneNumber" name="phoneNumber"  value="<%-data.phoneNumber%>"   data-trigger="change" data-type="phone" data-required="true"  class="parsley-validated" />
+               
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-label col-md-2">
+                    <label for="">
+                        DOB:
+                        <span class="required">*</span>
+                    </label>
+                </div>
+                <div class="form-input col-md-10">
+                    <input type="text" id="dob" name="dob" autocomplete="off"  data-trigger="change" data-required="true"   value="<%-data.dob%>" class="datepicker" />
+                </div>
+            </div>
+
+
+
+            <div class="form-row">
+                <div class="form-label col-md-2">
+                    <label for="">
+                        Role:  <span class="required">*</span>
+                    </label>
+                </div>
+                <div class="form-input col-md-10">
+                  
+                    <select data-placeholder="Choose Type" data-required="true"  data-required="true" name="role" class="chosen-select" id="role">
+                        <option value="0" >Nothing Selected </option> 
+                        <%for(var p=0;p<role.length;p++){%>
+                           
+                            <option   <%if(role[p].id==data.role){%> selected <%}%>  value="<%-role[p].id%>" ><%-role[p].userType%></option> 
+
+                           
+                           <%}%>
+        
+
+               </select>  
+                  
+                </div>
+            </div>
+
+            <!-- <div class="form-row">
+                <div class="form-label col-md-2">
+                    <label for="">
+                        Assigned Services:
+                    </label>
+                </div>
+
+
+                <div class="form-row col-lg-2 float-left form-vertical dropdown form-label  col-md-4">
+                    <select data-placeholder="Choose Service"  name="service" id="service" onchange="getSubService()"  data-required="true" class="chosen-select">
+                        <option value="" /> 
+                        <% for(var k=0;k<services.length;k++){ %>
+                        <option value="<%-services[k].id%>" <%if(data.assignedServices.includes(services[k].id)){%> selected<%}%>> <%-services[k].name%> </option>
+                      <%}%>
+        
+               </select>
+            
+                 </div>
+                <div class="form-checkbox-radio col-md-8 mrg10T" id="subservice">
+                  
+                   
+
+                   
+                </div>
+            </div> -->
+
+
+
+
+
+            <div class="form-row">
+                <div class="form-label col-md-2">
+                    <label for="" class="label-description">
+                        Address:
+                        <span>10 chars min, 200 max</span>
+                    </label>
+                </div>
+                <div class="form-input col-md-10">
+                    <textarea id="address" name="address" data-trigger="keyup" data-rangelength="[10,200]" class="parsley-validated"><%-data.address%></textarea>
+                </div>
+            </div>
+
+
+            <div class="form-row">
+                <div class="form-label col-md-2">
+                    <label for="">
+                       Cover Image:
+                        <span class="required">*</span>
+                    </label>
+                </div>
+                <div class="form-input col-md-4">
+                    <input type="file" id="coverImage"   name="coverImage"  />
+                </div>         
+                <div class="form-group col-md-6" <% if (data.coverImage =="") {%> style="display :none"  <%}%>  > 
+                    <label>Uploaded Cover </label>
+                    <div class="fm-admin-file">
+                            <img id="myIcon2" src="<%=data.coverImage%>" alt="Icon" style="width:50%;max-width:100px">
+
+                    </div>
+                </div>
+                        
+            </div>
+
+
+
+
+            <div class="form-row">
+                <div class="form-label col-md-2">
+                    <label for="">
+                        Id Proof Type:
+                    
+                    </label>
+                </div>
+                <div class="form-input col-md-10">
+                    <input type="text" id="idProofName"  value="<%-data.idProofName%>" name="idProofName"  data-trigger="change"  class="parsley-validated" />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-label col-md-2">
+                    <label for="">
+                        ID Proof:
+                        <span class="required">*</span>
+                    </label>
+                </div>
+                <div class="form-input col-md-4">
+                    <input type="file" id="idProof"   name="idProof"  />
+                </div>         
+                <div class="form-group col-md-6" <% if (data.idProof =="") {%> style="display :none"  <%}%>  > 
+                    <label>Uploaded Proof </label>
+                    <div class="fm-admin-file">
+                            <img id="myIcon" src="<%=data.idProof%>" alt="Icon" style="width:50%;max-width:100px">
+
+                    </div>
+                </div>
+                        
+            </div>
+
+
+        </div>
+
+
+
+            <div class="form-row">
+                <input type="hidden" name="superhidden" id="superhidden" />
+                <div class="form-input col-md-4 col-md-offset-5">
+                    <!-- //onclick="javascript:$(&apos;#demo-form&apos;).parsley( &apos;validate&apos; );" -->
+                    <!-- onclick="javascript:$('#adduser').parsley('validate' );"  -->
+                     
+                    <button  type="button" onclick="window.history.back();"   class="btn ui-state-default medium bg-red mrg15R">
+                        <span class="button-content">Cancel</span>
+                    </button>
+                    <button  type="submit" class="btn ui-state-default medium  primary-bg">
+                        <span class="button-content">Submit</span>
+                    </button>
+                    
+                    
+                   
+            </div>
+
+        </form>
+
+    </div>
+    
+</div>
+
+
+
+
+
+
+
+
+
+                	</div><!-- #page-content -->
+            </div><!-- #page-main -->
+        </div><!-- #page-wrapper -->
+
+    </body>
+</html>
+
+
+<script type="text/javascript">
+
+$( "#dob" ).datepicker({ maxDate: 1});
+
+$("#countryCode").intlTelInput({ initialCountry:"in",
+ });
+var input = document.querySelector("#countryCode");
+input.addEventListener("countrychange",function() {
+$("#countryCode").val($("#countryCode").intlTelInput("getSelectedCountryData").dialCode);
+ 
+});
+
+ 
+
+//$("#countryCode").intlTelInput("setNumber", $("#countryCode").val());
+
+    
+      $('#adduser').submit( function() {
+       
+        var id=$('#empId').val()
+      
+
+            var tempform = $('#adduser');
+           
+            tempform .parsley('validate' );
+
+            if(tempform.parsley('isValid' ))
+{
+
+            var form_data = new FormData(tempform[0]);
+            $("#loading1").show();
+            $.ajax({
+                type: 'POST',
+                url: '<%-superadminpath%>employees/update',
+                dataType: 'json',
+                data: form_data,
+                contentType:false,
+                cache:false,
+                processData:false,
+                success: function (response) {
+                    $("#loading1").hide();
+                    if (response.code == 200) {
+                  
+                        showToastSuccess(response.message)
+
+                         window.location.href="<%-superadminpath%>employees/view/"+id;
+                       
+                    } else {
+                        showToastError(response.message)
+                    }
+                },
+
+                error: function(response)
+                { $("#loading1").hide();
+                   var errorResponse=JSON.parse(response.responseText)
+                   showToastError(errorResponse.message)
+
+
+                }
+            });
+
+
+        }
+      });
+    
+  
+
+      
+    </script>
+
+<script>
+    
+    function getSubService()
+      {
+
+        var category=$('#service').val();
+
+       
+        $.ajax({
+                type: 'POST',
+                url: '<%-superadminpath%>employees/subservice',
+                dataType: 'json',
+                data:  JSON.stringify({'category':category}),
+                contentType:'application/json',
+                cache:false,
+                processData:false,
+                success: function (response) {
+                    $(".overlay").hide();
+                    $('#subservice').html('')
+
+                    if (response.code == 200) {
+                  var data=response.body;
+                //  console.log(response)
+                  var subservices="";
+
+                 
+var assignedServices='<%-data.assignedServices%>'
+                        for(var k=0; k<data.length;k++)
+                        {
+                    if(assignedServices.includes(data[k].id))
+                    {
+                        subservices=subservices+ '<input type="checkbox"  value="'+data[k].id+'" class="custom-checkbox" name="subcat"  checked id="" />';
+                    }
+                    else{
+                        subservices=subservices+ '<input type="checkbox"  value="'+data[k].id+'" class="custom-checkbox" name="subcat" id="" />';
+
+                    }
+                   
+                    subservices=subservices+ '<label for="">'+data[k].name+'</label>';
+
+
+                        }
+                 $('#subservice').html(subservices)
+                       
+                    } else {
+                        showToastError(response.message)
+                    }
+                },
+
+                error: function(response)
+                {
+                   var errorResponse=JSON.parse(response.responseText)
+                   //showToastError(errorResponse.message)
+
+
+                }
+            });
+
+
+        }
+     
+
+
+</script>
+
+<script>
+    getSubService()
+
+</script>

@@ -1,0 +1,333 @@
+<!-- AUI Framework -->
+<!DOCTYPE html>
+    <html>
+   <%-include ('../partials/header')%>
+    <body style="overflow: hidden;">
+        
+
+       
+
+        <div id="page-wrapper" class="demo-example">
+
+           
+
+            <!-- #page-header -->
+
+            <%-include ('../partials/side_bar')%>
+            <!-- #page-sidebar -->
+            <div id="page-content-wrapper">
+                <div id="page-title">
+
+<h3>
+    <div class="bg-gray text-transform-upr font-size-15 font-bold primary-font pad10A"> Welcome , <%if(data.firstName && data.firstName!=""){ %>   <%-data.firstName%>  <%}else{%> User <% }%></div>
+
+
+  
+    
+</h3>
+                </div>
+                   <!-- #page-title -->
+<div id="page-content">
+
+
+<%-include ('../partials/flashMessage')%>
+
+
+
+<div class="large-box col-md-12">
+    <div class="example-code clearfix">
+
+      <form  role="form" onsubmit="return false"  class="form-bordered"  id="adduser" >
+
+        <input type="hidden"  name="userId" id="userId"  value="<%-data.id%>"  />
+
+        <div class="form-row">
+            <div class="form-label col-md-4">
+                <label for="">
+                    Profile Image:
+                    <span class="required">*</span>
+                </label>
+            </div>
+
+            <div class="form-input col-md-4">
+                <input type="file" id="image" name="image"  />
+            </div> 
+                   
+            <div class="form-group col-md-4" <% if (data.image =="") {%> style="display :none"  <%}%>  > 
+                <div class="fm-admin-file">
+                        <img id="myIcon1" src="<%=data.image%>"  style="border-radius:50%;width:50%;max-width:100px">
+
+                </div>
+            </div>
+
+            
+                    
+        </div>
+
+
+
+            <div class="form-row">
+                <div class="form-label col-md-4">
+                    <label for="">
+                        First Name<span class="required">*</span>
+                    </label>
+                </div>
+                <div class="form-input col-md-8">
+                    <input type="text" id="firstName"  value="<%-data.firstName%>"  name="firstName"  data-trigger="change" data-required="true" class="parsley-validated" />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-label col-md-4">
+                    <label for="">
+                        Last Name:
+                    </label>
+                </div>
+                <div class="form-input col-md-8">
+                    <input type="text" id="lastName"  value="<%-data.lastName%>"  name="lastName"  data-trigger="change"  class="parsley-validated" />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-label col-md-4">
+                    <label for="">
+                        Email <span class="required">*</span>
+                    </label>
+                </div>
+                <div class="form-input col-md-8">
+                    <input type="text" id="email"  value="<%-data.email%>"  name="email" data-type="email" data-trigger="change" data-required="true" class="parsley-validated" />
+                </div>
+            </div>
+
+
+            <div class="form-row pad0B">
+                <div class="form-label col-md-4">
+                    <label for="">
+                        &nbsp;Phone Number<span class="required">*</span>
+                    </label>
+                </div>
+                <div class="form-input col-md-2">
+                    <input type="text" id="countryCode" value="<%-data.countryCode%>"    name="countryCode"   placeholder="91" data-trigger="change"    data-required="true"  class="parsley-validated" />
+                </div>
+                <div class="form-input col-md-6">
+
+                    <input type="text" id="phoneNumber" name="phoneNumber"  value="<%-data.phoneNumber%>"   data-trigger="change" data-type="phone" data-required="true"  class="parsley-validated" />
+               
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-label col-md-4">
+                    <label for="" class="label-description">
+                        Address:
+                        <span>10 chars min, 200 max</span>
+                    </label>
+                </div>
+                <div class="form-input col-md-8">
+                    <textarea id="address" name="address" data-trigger="keyup" data-rangelength="[10,200]" class="parsley-validated"><%-data.address%></textarea>
+                </div>
+            </div>
+
+
+            <div class="form-row">
+                <input type="hidden" name="superhidden" id="superhidden" />
+                <div class="form-input col-md-12 col-md-offset-5">
+                    <!-- //onclick="javascript:$(&apos;#demo-form&apos;).parsley( &apos;validate&apos; );" -->
+                    <!-- onclick="javascript:$('#adduser').parsley('validate' );"  -->
+                     
+                    <button  type="button" onclick="window.history.back();"   class="btn ui-state-default medium bg-red mrg15R">
+                        <span class="button-content">Cancel</span>
+                    </button>
+                    <button  type="submit" class="btn ui-state-default medium  primary-bg">
+                        <span class="button-content">Submit</span>
+                    </button>
+                    
+                    
+                   
+            </div>
+
+        </form>
+
+    </div>
+    
+</div>
+
+
+<div class="bg-gray text-transform-upr font-size-13 font-bold primary-font pad10A"> Total ORDERS : <%-orders.length%> &nbsp;&nbsp;&nbsp;Total Payment : &nbsp;<span id="totalPayment">  </span></div>
+
+
+<table class="table" id="example" style="width:100%">
+   
+	<thead>
+		<tr>
+			<th>Customer Name</th>
+			<th>Service Date</th>
+            <th>Contact</th>
+            <th>Price</th>
+            <th>address </th>
+            <th>Order Date </th>
+			<th>Action</th>
+		</tr>
+    </thead>
+    
+    
+
+  
+    
+    
+	<tbody id="orderData">
+<% var total=0%>
+		<%for(var t=0;t<orders.length;t++) {
+            total=total+parseFloat(orders[t].totalOrderPrice)
+            %>
+		<tr>
+			<td><%-orders[t].user.firstName+ " "+  orders[t].user.lastName %>  </td>
+			<td><%-commonMethods.format(new Date(orders[t].serviceDateTime)) %></td>
+            <td><%-orders[t].user.countryCode +" "+ orders[t].user.phoneNumber %> </td>
+            <td><%-orders[t].totalOrderPrice %> </td>
+            <td><%-orders[t].address.houseNo+" "+ orders[t].address.addressName +" ,"+orders[t].address.city %> </td>
+            <td><%-commonMethods.format(new Date(orders[t].createdAt)) %> </td>
+
+
+            
+
+                
+              
+            <td>
+                <% var status="Pending"
+                if(orders[t].progressStatus=="1") status="Confirmed"
+                if(orders[t].progressStatus=="2") status="Cancelled"
+                if(orders[t].progressStatus=="3") status="Processing"
+                if(orders[t].progressStatus=="4") status="Cancelled by comapny"
+                if(orders[t].progressStatus=="5") status="Completed"
+
+                
+                %>
+                      
+
+
+
+                <a href="javascript:;"   onclick="showModal('<%-orders[t].id%>','<%-orders[t].progressStatus%>')" class="btn small bg-green tooltip-button black-modal-60 mrg5R" data-placement="bottom" title="Open modal window">
+                    <span class="button-content">
+                        <i class="glyph-icon icon-cog float-left"></i>
+                       <%-status%> &nbsp;&nbsp;&nbsp;
+                    </span>
+                </a>
+
+
+           
+
+             <div class="dropdown">
+                <a href="javascript:;" title="" class="btn small bg-blue" data-toggle="dropdown">
+                    <span class="button-content">
+                        <i class="glyph-icon font-size-11 icon-cog"></i>
+                        <i class="glyph-icon font-size-11 icon-chevron-down"></i>
+                    </span>
+                </a>
+                <ul class="dropdown-menu float-right">
+
+                    <li>
+                        <a href="<%-superadminpath%>orders/view/<%-orders[t].id%>"  title="">
+                            <i class="glyph-icon icon-edit mrg5R"></i>
+                            View
+                        </a>
+                    </li>
+                    
+                   
+                    <li class="divider"></li>
+                    <li>
+                        <a onclick="return confirm('Are you sure you want to delete this?');"  href="<%-superadminpath%>orders/delete/<%= orders[t].id %>" data-id="<%= orders[t].id %>" class="font-red" title="">
+                            <i class="glyph-icon icon-archive mrg5R"></i>
+                            Delete
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+ 
+            </td>		
+        </tr>
+		<%}%>
+		
+	</tbody>
+	
+</table>
+
+                	</div><!-- #page-content -->
+            </div><!-- #page-main -->
+        </div><!-- #page-wrapper -->
+
+    </body>
+</html>
+
+
+<script type="text/javascript">
+
+//alert('<%-total%>')
+$('#totalPayment').html("<%-total%>")
+
+
+$("#countryCode").intlTelInput({ initialCountry:"in",
+ });
+var input = document.querySelector("#countryCode");
+input.addEventListener("countrychange",function() {
+$("#countryCode").val($("#countryCode").intlTelInput("getSelectedCountryData").dialCode);
+ 
+$("#image").change(function() {
+    alert()
+  readURL(this,"previewImage");
+});
+
+
+});
+
+ 
+
+//$("#countryCode").intlTelInput("setNumber", $("#countryCode").val());
+    
+    
+      $('#adduser').submit( function() {
+       
+        var id=$('#userId').val()
+       
+            var tempform = $('#adduser');
+           
+            tempform .parsley('validate' );
+
+            if(tempform.parsley('isValid' ))
+            {
+            var form_data = new FormData(tempform[0]);
+            $(".overlay").show();
+            $.ajax({
+                type: 'POST',
+                url: '<%-superadminpath%>users/update',
+                dataType: 'json',
+                data: form_data,
+                contentType:false,
+                cache:false,
+                processData:false,
+                success: function (response) {
+                    $(".overlay").hide();
+                    if (response.code == 200) {
+                  
+                        showToastSuccess(response.message)
+
+                         window.location.href="<%-superadminpath%>users/view/"+id;
+                       
+                    } else {
+                        showToastError(response.message)
+                    }
+                },
+
+                error: function(response)
+                {
+                   var errorResponse=JSON.parse(response.responseText)
+                   showToastError(errorResponse.message)
+
+
+                }
+            });
+        }
+      });
+    
+  
+    </script>
+

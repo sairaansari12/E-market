@@ -1,0 +1,155 @@
+<!-- AUI Framework -->
+<!DOCTYPE html>
+    <html>
+   <%-include ('../partials/header')%>
+    <body style="overflow: hidden;">
+        
+
+       
+
+        <div id="page-wrapper" class="demo-example">
+
+           
+
+            <!-- #page-header -->
+
+            <%-include ('../partials/side_bar')%>
+            <!-- #page-sidebar -->
+            <div id="page-content-wrapper">
+                <div id="page-title">
+
+<h3>
+    <div class="bg-gray text-transform-upr font-size-15 font-bold primary-font pad10A">chat Listing</div>
+    
+</h3>
+         
+
+<div id="breadcrumb-right">
+                        
+    <div class="float-right">
+       
+
+        <div class="dropdown">
+            <a href="<%-superadminpath%>banner/add" class="btn medium primary-bg " title="Example dropdown" >
+                <span class="button-content">
+                    <i class="glyph-icon icon-plus float-left"></i>
+                    New Thread
+                   
+                </span>
+            </a>
+           
+        </div>
+    </div>
+</div>
+</div><!-- #page-title -->
+<div id="page-content">
+    
+
+<%-include ('../partials/flashMessage')%>
+
+
+<div class="scrollable-content col-md-11 scrollable">
+
+    <ul class="no-border messages-box">
+
+<%for (var t=0;t<15;t++){%>
+
+        <li onclick="getHistory()">
+            <div class="messages-img">
+                <img width="32" src="assets/images/gravatar.jpg" alt="" />
+            </div>
+            <div class="messages-content">
+                <div class="messages-title">
+                    <i class="glyph-icon icon-warning-sign font-red"></i>
+                    <a href="javascript:;" title="Message title">Important message</a>
+                    <div class="messages-time">
+                        3 hr ago
+                        <span class="glyph-icon icon-time"></span>
+                    </div>
+                </div>
+                <div class="messages-text">
+                    This message must be read immediately because of it's high importance...
+                </div>
+            </div> 
+        </li>
+      
+        
+<%}%>
+
+      
+    </ul>
+
+</div>
+
+                	</div><!-- #page-content -->
+            </div><!-- #page-main -->
+        </div><!-- #page-wrapper -->
+
+    </body>
+</html>
+
+
+
+
+<script>
+
+
+function getHistory()
+{
+
+  window.location.href="<%-superadminpath%>chat/chathistory"
+
+}
+
+    function StatusChange(id,status)
+    {
+
+        var confirm1= (status=="1") ? "Inactive" : "Active"
+        if( confirm('Are you sure you want to '+confirm1+' this?'))
+        {
+        $.ajax({
+            type: 'POST',
+            url: '<%-superadminpath%>banner/status',
+            dataType: 'json',
+            data: {'id':id,'status':status},
+            success: function (response) {
+                if (response.code == '200') {
+                   // $('#block_status_'+id).html('');
+
+                    if(status == "1")
+                    {
+                       $('#block_status_'+id).hide()
+                       $('#unblock_status_'+id).show()
+                       showToastSuccess( "Banner inactive successfully")
+
+
+                    }else{
+                         
+                         $('#block_status_'+id).show()
+                        $('#unblock_status_'+id).hide()
+                       // $('#block_status_'+id).append("<i  class='fa fa-truck'  aria-hidden='true'></i>")
+                       showToastSuccess( "banner active successfully")
+
+                    }
+                    
+                }
+                else{
+                   
+                    showToastError(response.message)
+                }
+            },
+
+            error :function(response)
+            {
+                showToastError(response.message)
+
+            }
+        });
+    }
+    }
+   
+    $('#compId').val(getURLParameter('compId'))
+
+    
+
+</script>

@@ -1,0 +1,324 @@
+<!-- AUI Framework -->
+<!DOCTYPE html>
+    <html>
+   <%-include ('../partials/header')%>
+    <body style="overflow: hidden;">
+        
+
+       
+
+        <div id="page-wrapper" class="demo-example">
+
+           
+
+            <!-- #page-header -->
+
+            <%-include ('../partials/side_bar')%>
+            <!-- #page-sidebar -->
+            <div id="page-content-wrapper">
+                <div id="page-title">
+
+<h3>
+    <div class="bg-gray text-transform-upr font-size-15 font-bold primary-font pad10A">Faqs Listing</div>
+    
+</h3>
+                    <div id="breadcrumb-right">
+                        
+                        <div class="float-right">
+                           
+
+                            <div class="dropdown">
+                                <a href="javascript:;" class="btn medium primary-bg " title="Example dropdown" data-toggle="dropdown">
+                                    <span class="button-content">
+                                        <i class="glyph-icon icon-plus float-left"></i>
+                                        Add New 
+                                       
+                                    </span>
+                                </a>
+                                <div class="dropdown-menu pad0A float-right">
+                                    <div class="large-box">
+                                        <div class="bg-gray text-transform-upr font-size-12 font-bold font-gray-dark pad10A">Add Faq</div>
+                                        <div class="pad10A">
+                                            
+
+                                                <!-- <form id="demo-form" action=""  method="" /> -->
+                                                <form  role="form" onsubmit="return false"  class="col-md-12"  id="adduser" >
+
+
+                                                
+
+                                                <div class="form-row">
+                                                        <div class="form-label col-md-4">
+                                                            <label for="">
+                                                                Question:<span class="required">*</span>
+
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-input col-md-8">
+                                                            <textarea id="question" name="question" data-trigger="keyup" data-required="true"  data-rangelength="[10,1000]" class="parsley-validated"></textarea>
+
+                                                        </div>
+                                                    </div>
+
+    
+            
+
+
+                    
+                                                    <div class="form-row">
+                                                        <div class="form-label col-md-4">
+                                                            <label for="" >
+                                                                Answer:
+                                                                <span class="required">*</span>
+
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-input col-md-8">
+                                                            <textarea id="answer" name="answer" data-trigger="keyup" data-required="true" data-rangelength="[10,1000]" class="parsley-validated"></textarea>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-row">
+                                                        <div class="form-label col-md-4">
+                                                            <label for="" >
+                                                                Language:
+                                                                <span class="required">*</span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-input col-md-8">
+                                                            <select data-placeholder="Choose Language"  name="language" class="chosen-select" id="language">
+                                                                <option value="EN" />ENGLISH 
+                                                                <option value="FR" />SPANISH
+                                                                
+                                                
+                                                       </select>                                                      
+                                                      </div>
+                                                    </div>
+
+
+
+                                                    <div class="divider"></div>
+                                                    <div class="form-row">
+                                                        <input type="hidden" name="superhidden" id="superhidden" />
+                                                        <div class="form-input col-md-8 col-md-offset-6">
+                                                            <!-- //onclick="javascript:$(&apos;#demo-form&apos;).parsley( &apos;validate&apos; );" -->
+                                                            <!-- onclick="javascript:$('#adduser').parsley('validate' );"  -->
+                                                            <button  type="reset"   class="btn ui-state-default medium bg-red mrg15R">
+                                                                <span class="button-content">Reset</span>
+                                                            </button>
+                                                            <button  type="submit" class="btn ui-state-default medium  primary-bg">
+                                                                <span class="button-content">Submit</span>
+                                                            </button>
+                                                            </div>
+                                                    </div>
+
+                                                </form>
+
+                                        </div>
+
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+</div><!-- #page-title -->
+<div id="page-content">
+
+
+<%-include ('../partials/flashMessage')%>
+
+<table class="table" id="example1">
+	<thead>
+		<tr>
+            <th>Question</th>
+            <th>Answer</th>
+			<th>Language</th>
+            <th> Created At</th>
+			<th>Action</th>
+		</tr>
+	</thead>
+	<tbody>
+
+		<%for(var t=0;t<data.length;t++) {
+            
+            %>
+		<tr>
+            <td><%-data[t].question%> </td>
+			<td><%-data[t].answer %>  </td>
+			<td><%-data[t].language %> </td>
+			<td><%-commonMethods.format(new Date(data[t].createdAt)) %> </td>
+
+
+            
+            <td>
+            
+             <a href="javascript:;"   <%if(data[t].status==0){%> style="display:none" <%}%>  id="block_status_<%-data[t].id%>"   onclick="StatusChange('<%= data[t].id %>','1')"  class="btn small  bg-green  ">
+                <span class="button-content">
+                    <i class="glyph-icon icon-cog float-left"></i>
+                   Inactive &nbsp;&nbsp;&nbsp;
+                </span>
+            </a>
+
+
+         
+            
+            <a href="javascript:;"   <%if(data[t].status==1){%> style="display:none" <%}%>  id="unblock_status_<%-data[t].id%>"   onclick="StatusChange('<%= data[t].id %>','0')"  class="btn small  bg-red  ">
+                <span class="button-content">
+                    <i class="glyph-icon icon-ban-circle float-left"></i>
+                   Active 
+                </span>
+            </a>
+
+
+            <div class="dropdown">
+                <a href="javascript:;" title="" class="btn small bg-blue" data-toggle="dropdown">
+                    <span class="button-content">
+                        <i class="glyph-icon font-size-11 icon-cog"></i>
+                        <i class="glyph-icon font-size-11 icon-chevron-down"></i>
+                    </span>
+                </a>
+                <ul class="dropdown-menu float-right">
+
+                    <li>
+                        <a href="<%-superadminpath%>faq/view/<%= data[t].id %>" title="">
+                            <i class="glyph-icon icon-edit mrg5R"></i>
+                            Edit
+                        </a>
+                    </li>
+                   
+                   
+                    <li class="divider"></li>
+                    <li>
+                        <a onclick="return confirm('Are you sure you want to delete this?');"  href="<%-superadminpath%>faq/delete/<%= data[t].id %>"  class="font-red" title="">
+                            <i class="glyph-icon icon-remove mrg5R"></i>
+                            Delete
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+
+            </td>		
+        </tr>
+		<%}%>
+		
+	</tbody>
+	
+</table>
+
+
+                	</div><!-- #page-content -->
+            </div><!-- #page-main -->
+        </div><!-- #page-wrapper -->
+
+    </body>
+</html>
+
+
+<script type="text/javascript">
+   
+ 
+
+
+      $('#adduser').submit( function() {
+
+            var tempform = $('#adduser');
+            
+            tempform .parsley('validate' );
+
+            if(tempform.parsley('isValid' ))
+            {
+            var form_data = new FormData(tempform[0]);
+            $('#loading1').show()
+            $.ajax({
+                type: 'POST',
+                url: '<%-superadminpath%>faq/addFaq',
+                dataType: 'json',
+                data: form_data,
+                contentType:false,
+                cache:false,
+                processData:false,
+                success: function (response) {
+                    $('#loading1').hide()
+                    if (response.code == 200) {
+                  
+                        showToastSuccess(response.message)
+
+                         window.location.href="<%-superadminpath%>faq";
+                       
+                    } else {
+                        showToastError(response.message)
+                    }
+                },
+
+                error: function(response)
+                {
+                    $('#loading1').hide()
+                   var errorResponse=JSON.parse(response.responseText)
+                   showToastError(errorResponse.message)
+
+
+                }
+            });
+        }
+      });
+    
+  
+    </script>
+
+<script>
+
+
+    function StatusChange(id,status)
+    {
+
+        var confirm1= (status=="1") ? "Active" : "Inactive"
+        if( confirm('Are you sure you want to '+confirm1+' this?'))
+        {
+        $.ajax({
+            type: 'POST',
+            url: '<%-superadminpath%>faq/status',
+            dataType: 'json',
+            data: {'id':id,'status':status},
+            success: function (response) {
+                if (response.code == '200') {
+                   // $('#block_status_'+id).html('');
+
+                    if(status == "1")
+                    {
+                       $('#block_status_'+id).hide()
+                       $('#unblock_status_'+id).show()
+                       showToastSuccess( "Faq inactive successfully")
+
+
+                    }else{
+                         
+                         $('#block_status_'+id).show()
+                        $('#unblock_status_'+id).hide()
+                       // $('#block_status_'+id).append("<i  class='fa fa-truck'  aria-hidden='true'></i>")
+                       showToastSuccess( "Faq active successfully")
+
+                    }
+                    
+                }
+                else{
+                   
+                    showToastError(response.message)
+                }
+            },
+
+            error :function(response)
+            {
+                showToastError(response.message)
+
+            }
+        });
+    }
+    }
+   
+ 
+    
+
+</script>
