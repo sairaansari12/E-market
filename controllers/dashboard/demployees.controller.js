@@ -1,9 +1,10 @@
 
 const express = require('express');
 const app     = express();
-
+const moment   = require('moment');
 const EMPLOYEE= db.models.employees
 const Op = require('sequelize').Op;
+const roletypes = db.models.roleTypes;
 //PRODUCTS.belongsTo(PRODUCTS,{as: 'category',foreignKey: 'parentId'})
 
 
@@ -179,7 +180,8 @@ app.post('/add',adminAuth,async (req, res) => {
     var profileImage="",idProof="",coverImage=""
     var assignedServices=[]
 
-
+    console.log(data);
+    console.log(req.files);
     let responseNull= commonMethods.checkParameterMissing([data.phoneNumber,data.countryCode,data.firstName,data.email])
     if(responseNull) return responseHelper.post(res, appstrings.required_field,null,400);
 
@@ -201,8 +203,14 @@ app.post('/add',adminAuth,async (req, res) => {
 
     if (!user) {
 
-
-
+      var eightYearsAgo = moment().subtract("years", 18);
+      var birthday = moment(data.dob);
+       if (!eightYearsAgo.isAfter(birthday)){
+        return res.json({
+            status: 201,
+            message: 'Employee Age should not be Less than 18 Years'
+          });
+       }
       if (req.files) {
 
         ImageFile = req.files.image;    
@@ -250,7 +258,9 @@ app.post('/add',adminAuth,async (req, res) => {
 
       
       const users = await EMPLOYEE.create({
+        role: data.roletype,
         firstName: data.firstName,
+        lastName: data.lastName,
         email: data.email,
         dob: data.dob,
         address: data.address,
@@ -299,9 +309,12 @@ app.get('/add',adminAuth, async (req, res, next) => {
       order: [
         ['orderby','ASC']
       ],
-    })
+    });
+ 
+    //Select Role
+    const roles = await roletypes.findAll();
 
-    return res.render('admin/employees/addEmployee.ejs',{services: servicesData});
+    return res.render('admin/employees/addEmployee.ejs',{services: servicesData,roles});
 
     } catch (e) {
       return responseHelper.error(res, e.message, 400);
@@ -410,7 +423,9 @@ if(data.service) assignedServices.push(data.service)
 
       
       const users = await EMPLOYEE.update({
+        role: data.roletype,
         firstName: data.firstName,
+        lastName: data.lastName,
         email: data.email,
         address: data.address,
         dob: data.dob,
@@ -494,9 +509,10 @@ app.get('/view/:id',adminAuth,async(req,res) => {
         ],
       })
 
+      //Select Role
+      const roles = await roletypes.findAll();
 
-
-      return res.render('admin/employees/viewEmployee.ejs',{data:findData,services:servicesData});
+      return res.render('admin/employees/viewEmployee.ejs',{data:findData,services:servicesData,roles});
 
 
 
@@ -687,11 +703,13 @@ app.post('/orders',adminAuth,async(req,res) => {
 
 app.get('/delete/:id',adminAuth,async(req,res,next) => { 
    
-
+  console.log(req.params.id)
   let responseNull=  common.checkParameterMissing([req.params.id])
   if(responseNull) 
-  { req.flash('errorMessage',appstrings.required_field)
-  return res.redirect(adminpath+"employees");
+  { 
+    return responseHelper.noData(res, appstrings.required_field);
+    //req.flash('errorMessage',appstrings.required_field)
+  //return res.redirect(adminpath+"employees");
 }
 
   try{
@@ -704,20 +722,23 @@ app.get('/delete/:id',adminAuth,async(req,res,next) => {
             
           if(numAffectedRows>0)
           {
-           req.flash('successMessage',appstrings.delete_success)
-          return res.redirect(adminpath+"employees");
+            return responseHelper.post(res, appstrings.delete_success, null,200);
+           //eq.flash('successMessage',appstrings.delete_success)
+         // return res.redirect(adminpath+"employees");
 
           }
 
           else {
-            req.flash('errorMessage',appstrings.no_record)
-            return res.redirect(adminpath+"employees");
+             return responseHelper.noData(res, appstrings.no_record);
+            //req.flash('errorMessage',appstrings.no_record)
+            //return res.redirect(adminpath+"employees");
           }
 
         }catch (e) {
+          return responseHelper.noData(res, appstrings.no_record);
           //return responseHelper.error(res, e.message, 400);
-          req.flash('errorMessage',appstrings.no_record)
-          return res.redirect(adminpath+"employees");
+         // req.flash('errorMessage',appstrings.no_record)
+          //return res.redirect(adminpath+"employees");
         }
 });
 

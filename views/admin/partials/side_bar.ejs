@@ -15,12 +15,7 @@
 
       <li class="pull-right">
           <ul class="top-menu">
-              <li id="toggle-width">
-                  <div class="toggle-switch">
-                      <input id="tw-switch" type="checkbox" hidden="hidden">
-                      <label for="tw-switch" class="ts-helper"></label>
-                  </div>
-              </li>
+              <input id="tw-switch" type="checkbox" hidden="hidden" checked>
 
               <li id="top-search">
                   <a href=""><i class="tm-icon zmdi zmdi-search"></i></a>
@@ -287,11 +282,11 @@
     <div class="profile-menu">
         <a href="">
             <div class="profile-pic">
-                <img src="<%- config.BASEURL %>img/profile-pics/1.jpg" alt="">
+                <img src="<%= userData.logo1 %>" alt="">
             </div>
 
             <div class="profile-info">
-                Malinda Hollaway
+                <%= userData.companyName %>
 
                 <i class="zmdi zmdi-caret-down"></i>
             </div>
@@ -314,15 +309,11 @@
     </div>
 
     <ul class="main-menu">
-        <li class="active">
-            <a href="index.html"><i class="zmdi zmdi-home"></i> Home</a>
+         <li id="hometab">
+            <a href="<%- adminpath %>"><i class="zmdi zmdi-home"></i> Home</a>
         </li>
-        <li class="sub-menu">
-            <a href=""><i class="zmdi zmdi-accounts-list"></i>Users</a>
-            <ul>
-                <li><a href="<%- adminpath %>user/addNewUser">Add User</a></li>
-                <li><a href="<%- adminpath %>user">User Listing</a></li>
-            </ul>
+        <li id="employeeTab">
+            <a href="<%- adminpath %>employees"><i class="zmdi zmdi-accounts-list"></i> Staff</a>
         </li>
         <li><a href="typography.html"><i class="zmdi zmdi-format-underlined"></i> Typography</a></li>
         <li class="sub-menu">
