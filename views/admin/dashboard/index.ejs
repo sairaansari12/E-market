@@ -640,3 +640,9 @@
             </section>
         </section>
         <%- include ('../partials/script') %>
+        <script>
+        $(function() {
+        $('#hometab').addClass('active');
+        $('#hometab a[href^="<%- adminpath %>"]').addClass('active');
+    });
+        </script>
