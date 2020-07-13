@@ -28,7 +28,7 @@ app.get('/',adminAuth, async (req, res, next) => {
    
    
       const servicesData = await CATEGORY.findAll({
-        attributes: ['id','name','description','icon','thumbnail','createdAt','status','parentId','level'],
+        attributes: ['id','name','description','icon','thumbnail','createdAt','status','parentId','level','minPriceRange','maxPriceRange'],
         where: where,
                include:[ {
                 model: CATEGORY,
