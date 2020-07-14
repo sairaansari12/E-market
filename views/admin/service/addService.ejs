@@ -1,40 +1,14 @@
-<!-- AUI Framework -->
-<!DOCTYPE html>
-    <html>
-   <%-include ('../partials/header')%>
-    <body style="overflow: hidden;">
-        
 
-       
-
-        <div id="page-wrapper" class="demo-example">
-
-           
-
-            <!-- #page-header -->
-
-            <%-include ('../partials/side_bar')%>
-            <!-- #page-sidebar -->
-            <div id="page-content-wrapper">
-                <div id="page-title">
-
-
-    <div class="bg-gray text-transform-upr font-size-15 font-bold primary-font pad10A">Add Menu</div>
-
+<%- include ('../partials/header') %>
+<%- include ('../partials/side_bar') %>
+            <section id="content">
+<div class="container">
+<div class="card">
+    <div class="card-header">
+        <h2>Add Staff</h2>
+    </div>
     
-
-                </div>
-                   <!-- #page-title -->
-<div id="page-content">
-
-
-<%-include ('../partials/flashMessage')%>
-
-
-
-    <div class="large-box">
-        <div class="pad10A">                                                                                                                                                                                                                                                                                               
-            
+    <div class="card-body card-padding">
 
                 <!-- <form id="demo-form" action=""  method="" /> -->
                 <form  role="form" onsubmit="return false"  class="col-md-12"  id="adduser" >
@@ -260,23 +234,17 @@
                     </div>
 
                 </form>
-
-        </div>
-
-       
-    </div>
-
-
-
-                	</div><!-- #page-content -->
-            </div><!-- #page-main -->
-        </div><!-- #page-wrapper -->
-
-    </body>
-</html>
-
-
+                </div>
+</section>
+</section>
+ 
+<%- include ('../partials/script') %>
+<%- include('../partials/commonJs'); -%>
 <script type="text/javascript">
+    $(function() {
+        $('#serviceTab').addClass('active');
+        $('#serviceTab a[href^="<%- adminpath %>service"]').addClass('active');
+    });
 
      
     
@@ -472,4 +440,6 @@ if($('#subcat3Div').is(':visible'))
 
   
     </script>
+   </body>
+</html>
 

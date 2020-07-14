@@ -42,7 +42,10 @@ module.exports = function(sequelize, DataTypes) {
       defaultValue: 1,
       allowNull: true, 
     },
-
+    mcategoryId: {
+      type: DataTypes.UUID,
+      allowNull: true
+    },
     categoryId: {
       type: DataTypes.STRING(100),
       defaultValue: "",

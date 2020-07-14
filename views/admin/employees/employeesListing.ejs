@@ -46,7 +46,7 @@
         <script type="text/javascript">
         $(function() {
             $('#employeeTab').addClass('active');
-            $('#employeeTab a[href^="<%- adminpath %>employees"]').addClass('active');
+            $('#employeeTab a[href^="<%- adminpath %>coupans"]').addClass('active');
         });
             $(document).ready(function(){
 
@@ -100,7 +100,6 @@
                                 url: '<%-adminpath%>employees/delete/'+id,
                                 dataType: 'json',
                                 success: function (response) {
-                                    console.log(response);
                                     if (response.code == '200') {
                                            showToastSuccess( response.message);
                                            //$(".page-loader").hide();
@@ -123,7 +122,6 @@
                         data: {'id': id,'status': '1'},
                         dataType: 'json',
                         success: function (response) {
-                            console.log(response);
                             if (response.code == '200') {
                                    showToastSuccess( response.message);
                                    //$(".page-loader").hide();
@@ -145,7 +143,6 @@
                         data: {'id': id,'status': '0'},
                         dataType: 'json',
                         success: function (response) {
-                            console.log(response);
                             if (response.code == '200') {
                                    showToastSuccess( response.message);
                                    //$(".page-loader").hide();

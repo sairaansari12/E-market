@@ -4,7 +4,7 @@
 <div class="container">
 <div class="card">
     <div class="card-header">
-        <h2>Edit Staff</h2>
+        <h2>Add Staff</h2>
     </div>
     
     <div class="card-body card-padding">
@@ -15,33 +15,33 @@
                     <div class="input-group">
                         <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
                         <div class="fg-line">
-                                <input type="text" class="form-control" maxlength="30" id="firstName" name="firstName" placeholder="First Name">
+                                <input type="text" class="form-control" maxlength="30" id="firstName" name="firstName" placeholder="First Name*">
                         </div>
                     </div>
                     <br/>
                     <div class="input-group">
                         <span class="input-group-addon"><i class="zmdi zmdi-local-phone"></i></span>
                         <div class="fg-line">
-                            <input type="text" class="form-control input-mask" data-mask="0000000000" name="phoneNumber" id="phoneNumber" placeholder="Contact Number">
+                            <input type="text" class="form-control input-mask" data-mask="0000000000" name="phoneNumber" id="phoneNumber" placeholder="Contact Number*">
                         </div>
                     </div>
                     <br/>
                     <div class="input-group">
                         <span class="input-group-addon"><i class="zmdi zmdi-email"></i></span>
                         <div class="fg-line">
-                            <input type="email" name="email" maxlength="60" id="email" class="form-control" placeholder="Email Address">
+                            <input type="email" name="email" maxlength="60" id="email" class="form-control" placeholder="Email Address*">
                         </div>
                     </div>
                     <br/>
                     <div class="input-group">
                          <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
                         <div class="fg-line">
-                                <input type="text"  maxlength="30" name="idProofName" id="idProofName" class="form-control" placeholder="idProof Name">
+                                <input type="text"  maxlength="30" name="idProofName" id="idProofName" class="form-control" placeholder="idProof Name*">
                         </div>
                     </div>
                      <br/>  
                     <div class="input-group"  style="margin-left: 37px;">
-                        <p class="f-500 c-black m-b-20">Upload Id Proof</p>
+                        <p class="f-500 c-black m-b-20">Upload Id Proof*</p>
                         <div class="fileinput fileinput-new" data-provides="fileinput">
                             <span class="btn btn-primary btn-file m-r-10">
                                 <span class="fileinput-new">Select file</span>
@@ -55,7 +55,7 @@
                     <br/>
                     <br/>  
                     <div class="input-group"  style="margin-left: 37px;">
-                        <p class="f-500 c-black m-b-20">Cover Image</p>
+                        <p class="f-500 c-black m-b-20">Cover Image*</p>
                         <div class="fileinput fileinput-new" data-provides="fileinput">
                             <span class="btn btn-primary btn-file m-r-10">
                                 <span class="fileinput-new">Select file</span>
@@ -71,14 +71,14 @@
                     <div class="input-group">
                          <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
                         <div class="fg-line">
-                                <input type="text" name="lastName" maxlength="30" id="lastName" class="form-control" placeholder="last Name">
+                                <input type="text" name="lastName" maxlength="30" id="lastName" class="form-control" placeholder="last Name*">
                         </div>
                     </div>          
                     <br/>
                     <div class="input-group">
                         <span class="input-group-addon"><i class="zmdi zmdi-pin"></i></span>
                         <div class="fg-line">    
-                            <input type="text" class="form-control" maxlength="255" name="address" id="address" placeholder="Home Address">
+                            <input type="text" class="form-control" maxlength="255" name="address" id="address" placeholder="Home Address*">
                         </div>
                     </div>
                     <br/>
@@ -86,7 +86,7 @@
                         <span class="input-group-addon"><i class="zmdi zmdi-calendar"></i></span>
                         <div class="fg-line">    
                             <div class="dtp-container fg-line">
-                                <input type='text' class="form-control" autocomplete="off" name="dob" id="dob" placeholder="DOB">
+                                <input type='text' class="form-control" autocomplete="off" name="dob" id="dob" placeholder="DOB*">
                             </div>
                         </div>
                     </div>
@@ -94,8 +94,8 @@
                     <div class="input-group">
                       <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
                         <div class="fg-line">  
-                        <select class="selectpicker" name="roletype" id="roletype" class="form-control" placeholder="Select Role">
-                            <option value="" selected disabled>Select Role</option>
+                        <select class="selectpicker" required  name="roletype" id="roletype" class="form-control" placeholder="Select Role">
+                            <option value="" selected disabled>Select Role*</option>
                             <% for(var i=0;i<roles.length;i++) { %>
                             <option value="<%= roles[i].id %>"><%= roles[i].userType %></option>
                             <% } %>
@@ -107,7 +107,7 @@
                 <div class="col-sm-6"> 
                     <br/>  
                     <div class="input-group" style="margin-left: 20px;">                     
-                        <p class="f-500 c-black m-b-20">Profile Image</p>
+                        <p class="f-500 c-black m-b-20">Profile Image*</p>
                     
                         <div class="fileinput fileinput-new" data-provides="fileinput">
                             <div class="fileinput-preview thumbnail" data-trigger="fileinput"></div>
@@ -123,9 +123,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="m-t-30">
+                <div class="m-t-30 text-center">
                     <button class="btn btn-primary btn-sm waves-effect">Save</button>
-                    <button data-pmb-action="reset" class="btn btn-link btn-sm waves-effect">Cancel</button>
+                    <a href="<%- adminpath %>employees"><button type="button" class="btn btn-link btn-sm waves-effect">Cancel</button></a>
                 </div>
             </div>
 
@@ -150,6 +150,7 @@ var todayDate = new Date().getDate();
     });
 
   $('#addUser').validate({
+    ignore: ":hidden:not(select)",
     rules: {
       email: {
         required: true,

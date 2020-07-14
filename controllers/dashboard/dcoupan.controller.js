@@ -4,7 +4,7 @@ const app     = express();
 const Op = require('sequelize').Op;
 
 
-COUPAN.hasMany(CATEGORY,{as: 'category',foreignKey: 'categoryId'})
+COUPAN.belongsTo(CATEGORY,{as: 'category',foreignKey: 'categoryId'})
 
 
 
@@ -175,6 +175,7 @@ app.post('/add',adminAuth,async (req, res) => {
         thumbnail: thumbnail,
         description:data.description,
         companyId: req.companyId,
+        mcategoryId:data.McategoryId,
         categoryId:data.categoryId,
         minimumAmount:data.minimumAmount
 
@@ -273,8 +274,8 @@ app.post('/update',adminAuth,async (req, res) => {
         companyId: req.companyId,
         validupto:data.validupto,
         minimumAmount:data.minimumAmount,
-        categoryId:data.categoryId
-
+        categoryId:data.categoryId,
+        mcategoryId:data.McategoryId
 
 
 
@@ -333,11 +334,18 @@ app.get('/view/:id',adminAuth,async(req,res,next) => {
       const findData = await COUPAN.findOne({
       where :{companyId :req.companyId, id: id }
       });
-   
+      console.log(findData)
       var cdata= await commonMethods.getAllCategories(req.companyId)
       var types=await commonMethods.getUserTypes(req.companyId) 
-
-      return res.render('admin/coupans/viewCoupan.ejs',{data:findData,catData:cdata,types:types});
+      var subCategoryList = await CATEGORY.findAll({
+         attributes: ['id','name','description','icon','thumbnail','createdAt','status','parentId','level'],
+         where: {
+          parentId: findData.dataValues.mcategoryId,
+        companyId :req.companyId
+         }
+        
+      }) 
+      return res.render('admin/coupans/viewCoupan.ejs',{data:findData,catData:cdata,types:types,subCategoryList});
 
 
 
@@ -357,8 +365,7 @@ app.get('/delete/:id',adminAuth,async(req,res,next) => {
 
   let responseNull=  common.checkParameterMissing([req.params.id])
   if(responseNull) 
-  { req.flash('errorMessage',appstrings.required_field)
-  return res.redirect(adminpath+"coupans");
+  { return responseHelper.noData(res, appstrings.required_field);
 }
 
   try{
@@ -371,20 +378,17 @@ app.get('/delete/:id',adminAuth,async(req,res,next) => {
             
           if(numAffectedRows>0)
           {
-           req.flash('successMessage',appstrings.delete_success)
-          return res.redirect(adminpath+"coupans");
+           return responseHelper.post(res, appstrings.delete_success, null,200);
 
           }
 
           else {
-            req.flash('errorMessage',appstrings.no_record)
-            return res.redirect(adminpath+"coupans");
+             return responseHelper.noData(res, appstrings.no_record);
           }
 
         }catch (e) {
           //return responseHelper.error(res, e.message, 400);
-          req.flash('errorMessage',appstrings.no_record)
-          return res.redirect(adminpath+"coupans");
+           return responseHelper.noData(res, appstrings.no_record);
         }
 });
 

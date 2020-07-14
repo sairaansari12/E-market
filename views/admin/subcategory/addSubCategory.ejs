@@ -302,11 +302,7 @@ function getSubCat(id,dataA)
                       dataAppend=dataAppend+'<option value="'+data[k].id+'" >'+data[k].name+'</option>';
 
                 }
-                $('#'+dataA).html(dataAppend)
-                $('.chosen-select').trigger("chosen:updated");
-                if(data.length>0 && dataA=='subcat1')$('#subcatDiv').show()
-                else $('#subcatDiv').hide()
-                showCatmodal()
+                $('#'+dataA).html(dataAppend);
                     }
 
                    
