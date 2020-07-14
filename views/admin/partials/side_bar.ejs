@@ -315,6 +315,48 @@
         <li id="employeeTab">
             <a href="<%- adminpath %>employees"><i class="zmdi zmdi-accounts-list"></i> Staff</a>
         </li>
+
+        <li class="sub-menu">
+
+         
+            <a href="javascript:;"><i class="zmdi zmdi-accounts-list"></i>Categories</a>
+            <ul>
+                <li>
+
+
+                    <a href="<%-adminpath%>category/parent"  title="catList">
+                        <i class="glyph-icon icon-list"></i>
+                        All Categories
+                    </a>
+                
+                </li>
+    
+                <li>
+                    <a href="<%-adminpath%>category/add"  title="Add Category">
+                         New Category
+                    </a>
+                </li>
+
+                <li>
+
+
+                    <a href="<%-adminpath%>subcategory/"  title="SubcatList">
+                        All Sub-Categories
+                    </a>
+                
+                </li>
+    
+                <li>
+                    <a href="<%-adminpath%>subcategory/add"  title="Add SubCategory">
+                         Sub Category
+                    </a>
+                </li>
+               
+
+            </ul>
+        </li>
+
+
         <li id="serviceTab">
             <a href="<%- adminpath %>service"><i class="zmdi zmdi-view-carousel"></i> Services</a>
         </li>
@@ -324,4 +366,6 @@
         
     </ul>
 </aside>
+<%- include ('../partials/script') %>
 
+<%- include('../partials/commonJs'); -%>

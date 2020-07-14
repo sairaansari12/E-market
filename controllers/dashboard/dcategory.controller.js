@@ -3,6 +3,8 @@ const express = require('express');
 const app     = express();
 const Op = require('sequelize').Op;
 
+const CATEGORY = db.models.categories
+const FAVOURITES = db.models.favourites
 
 
 
@@ -52,7 +54,7 @@ app.get('/',adminAuth, async (req, res, next) => {
 
   try {
     const servicesData = await CATEGORY.findAll({
-      attributes: ['id','name','description','icon','thumbnail','createdAt','status','colorCode'],
+      attributes: ['id','name','description','icon','thumbnail','createdAt','status','colorCode','parentId'],
       where:where,     
       order: [
         ['orderby','ASC']
@@ -73,6 +75,27 @@ app.get('/',adminAuth, async (req, res, next) => {
 
 
 });
+
+
+app.get('/parent',adminAuth, async (req, res, next) => {
+  try {
+    
+    var cdata= await commonMethods.getAllParentCategories(req.companyId)
+
+      return res.render('admin/category/pcategoriesListing.ejs',{data :cdata});
+
+
+
+    } catch (e) {
+      return responseHelper.error(res, e.message, 400);
+    }
+
+
+});
+
+
+
+
 
 app.get('/add',adminAuth, async (req, res, next) => {
     
@@ -98,6 +121,7 @@ app.post('/status',adminAuth,async(req,res,next) => {
       
 
        const userData = await CATEGORY.findOne({
+         attributes:['id','parentId','name'],
          where: {
            id: params.id }
        });
@@ -138,6 +162,7 @@ app.post('/status',adminAuth,async(req,res,next) => {
 
          }
            catch (e) {
+             console.log(e)
              return responseHelper.error(res, e.message, 400);
            }
     
@@ -163,7 +188,7 @@ app.post('/add',adminAuth,async (req, res) => {
       ImageFile = req.files.icon;    
       if(ImageFile)
       {
-         icon = Date.now() + '_' + ImageFile.name.replace(/\s/g, "");
+         icon = Date.now() + '_' + ImageFile.name;
 
       ImageFile.mv(config.UPLOAD_DIRECTORY +"services/icons/"+ icon, function (err) {
           //upload file
@@ -251,7 +276,7 @@ app.post('/superadd',adminAuth,async (req, res) => {
       ImageFile = req.files.icon;    
       if(ImageFile)
       {
-         icon = Date.now() + '_' + ImageFile.name.replace(/\s/g, "");
+         icon = Date.now() + '_' + ImageFile.name;
 
       ImageFile.mv(config.UPLOAD_DIRECTORY +"services/icons/"+ icon, function (err) {
           //upload file
@@ -336,7 +361,7 @@ app.post('/update',adminAuth,async (req, res) => {
       ImageFile = req.files.icon;    
       if(ImageFile)
       {
-         icon = Date.now() + '_' + ImageFile.name.replace(/\s/g, "");
+         icon = Date.now() + '_' + ImageFile.name;
 
       ImageFile.mv(config.UPLOAD_DIRECTORY +"services/icons/"+ icon, function (err) {
           //upload file
@@ -437,7 +462,7 @@ app.post('/superupdate',adminAuth,async (req, res) => {
       ImageFile = req.files.icon;    
       if(ImageFile)
       {
-         icon = Date.now() + '_' + ImageFile.name.replace(/\s/g, "");
+         icon = Date.now() + '_' + ImageFile.name;
 
       ImageFile.mv(config.UPLOAD_DIRECTORY +"services/icons/"+ icon, function (err) {
           //upload file
