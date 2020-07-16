@@ -1,132 +1,129 @@
-<!-- AUI Framework -->
-<!DOCTYPE html>
-    <html>
-   <%-include ('../partials/header')%>
-    <body style="overflow: hidden;">
-        
-
-       
-
-        <div id="page-wrapper" class="demo-example">
-
-           
-
-            <!-- #page-header -->
-
-            <%-include ('../partials/side_bar')%>
-            <!-- #page-sidebar -->
-            <div id="page-content-wrapper">
-                <div id="page-title">
-
-<h3>
-    <div class="bg-gray text-transform-upr font-size-15 font-bold primary-font pad10A">Notification Listing</div>
-    
-</h3>
-         
-
-<div id="breadcrumb-right">
-                        
-    <div class="float-right">
-       
-
-        <div class="dropdown">
-            <a onclick="return confirm('Are you sure you want to clear all notifications?');" href="<%-adminpath%>notification/clearAll" class="btn medium bg-red " title="Example dropdown" >
-                <span class="button-content">
-                    <i class="glyph-icon icon-archive float-left"></i>
-                    Clear All 
-                   
-                </span>
-            </a>
-           
-        </div>
-    </div>
-</div>
-</div><!-- #page-title -->
-
-
-<div id="page-content">
-
-
-<%-include ('../partials/flashMessage')%>
-<% 
-if(data==undefined || data==null || data=='{}' || data.length==0) {%>
-
-    <%-include ('../partials/norecord')%>
-
-
-<%}else {%>
-<div class="example-box">
-    <div class="example-code">
-
-        <ul class="notifications-box">
-
-            <%for(var t=0;t<data.length;t++){%>
-            <li>
-                <span class="btn bg-grey icon-notification glyph-icon icon-list"></span>
-                <span class="notification-text "><%-data[t].notificationDescription%></span>
-              
-                <div class="notification-time">
-                    <%-commonMethods.formatAMPM(new Date(data[t].createdAt))%>           
-                      <span class="glyph-icon icon-time"></span>
-
-                      <a onclick="return confirm('Are you sure you want to delete this?');" 
-                       href="<%-adminpath%>notification/delete/<%-data[t].id %>" class="font-red" title="">
-                                                <i class="glyph-icon icon-archive mrg5R"></i>
-                                                   
-                                               </a>
+<%- include ('../partials/header') %>
+<%- include ('../partials/side_bar') %>
+    <section id="content">
+        <div class="container">
+            <div class="card">
+                <div class="card-header">
+                    <div class="pull-left"><h2>NOTIFICATION LIST</h2></div>
+                    <div class="pull-right"><a href="javascript:;" onclick="deleteAll()"><button class="btn btn-primary waves-effect">Clear All</button></a></div>
                 </div>
-            </li>
-            <%}%>
-        </ul>
+                <table id="data-table-command" class="table table-striped table-vmiddle">
+                    <thead>
+                        <tr>
+                            <th data-column-id="id" data-visible="false">ID</th>
+                            <th data-column-id="name">Description</th>
+                            <th data-column-id="Registered At">Timing</th>
+                            <th data-column-id="commands" data-formatter="commands" data-sortable="false">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for(var t=0;t<data.length;t++) { %>
+                            <tr>
+                                <td><%-data[t].id %></td>
+                                <td><%-data[t].notificationDescription%></td>
+                                <td><%-commonMethods.formatAMPM(new Date(data[t].createdAt))%> </td>
+                            </tr>
+                        <%}%>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</section>
+<script type="text/javascript">
+$(function() {
+    $('#notificationTab').addClass('active');
+    $('#notificationTab a[href^="<%- adminpath %>notification"]').addClass('active');
+});
+$(document).ready(function(){
 
-    </div>
-    
-</div>
-<%}%>
-
-                	</div><!-- #page-content -->
-            </div><!-- #page-main -->
-        </div><!-- #page-wrapper -->
-
-    </body>
-</html>
-
-
-
-
-<script>
-
-
-    function StatusChange(id,status)
-    {
-
-        
-        $.ajax({
-            type: 'POST',
-            url: '<%-adminpath%>notification/status',
-            dataType: 'json',
-            data: {'id':id,'status':status},
-            success: function (response) {
-                if (response.code == '200') {
-                   // $('#block_status_'+id).html('');
-
-                }
-                else{
-                   
-                    showToastError(response.message)
-                }
+        //Command Buttons
+        var grid = $("#data-table-command").bootgrid({
+            css: {
+                icon: 'zmdi icon',
+                iconColumns: 'zmdi-view-module',
+                iconDown: 'zmdi-expand-more',
+                iconRefresh: 'zmdi-refresh',
+                iconUp: 'zmdi-expand-less'
             },
-
-            error :function(response)
-            {
-                showToastError(response.message)
-
+            formatters: {
+                "commands": function(column, row) {
+                    return "<button type=\"button\" class=\"btn btn-icon command-delete waves-effect waves-circle\" data-row-id=\"" + row.id + "\"><span class=\"zmdi zmdi-delete\"></span></button>" ;
+                }
             }
+        }).on("loaded.rs.jquery.bootgrid", function()
+    {
+        /* Executes after data is loaded and rendered */
+        grid.find(".command-edit").on("click", function(e)
+        {
+            window.location.href="<%-adminpath%>employees/view/"+$(this).data("row-id");
+        }).end().find(".command-delete").on("click", function(e)
+        {
+            var id = $(this).data("row-id");
+            console.log(id);
+            swal({   
+                title: "Are you sure?",   
+                text: "You will not be able to recover this  notification details!",   
+                type: "warning",   
+                showCancelButton: true,   
+                confirmButtonColor: "#DD6B55",   
+                confirmButtonText: "Yes, delete it!",   
+                cancelButtonText: "No, cancel plx!",   
+            }, function(isConfirm){   
+                if (isConfirm) {    
+                    console.log(id);
+                    $.ajax({
+                        type: 'GET',
+                        url: '<%-adminpath%>notification/delete/'+id,
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response.code == '200') {
+                                   showToastSuccess( response.message);
+                                   //$(".page-loader").hide();
+                                   setTimeout(function(){ window.location.reload(); },2500);
+                            }
+                            else{
+                               //$(".page-loader").hide();
+                                showToastError(response.message)
+                            }
+                        }
+                    });  
+                } 
+            });
         });
-    
-    }
-   
- 
-    
+    })
+});
 
+function deleteAll()
+{
+    swal({   
+        title: "Are you sure?",   
+        text: "You will not be able to recover these notifications!",   
+        type: "warning",   
+        showCancelButton: true,   
+        confirmButtonColor: "#DD6B55",   
+        confirmButtonText: "Yes, delete it!",   
+        cancelButtonText: "No, cancel plx!",   
+    }, function(isConfirm){   
+        if (isConfirm) {    
+            console.log(id);
+            $.ajax({
+                type: 'GET',
+                url: '<%-adminpath%>notification/clearAll',
+                dataType: 'json',
+                success: function (response) {
+                    if (response.code == '200') {
+                           showToastSuccess( response.message);
+                           //$(".page-loader").hide();
+                           setTimeout(function(){ window.location.reload(); },2500);
+                    }
+                    else{
+                       //$(".page-loader").hide();
+                        showToastError(response.message)
+                    }
+                }
+            });  
+        } 
+    });
+}
 </script>

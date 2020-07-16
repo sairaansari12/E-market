@@ -1,183 +1,124 @@
-<!-- AUI Framework -->
-<!DOCTYPE html>
-    <html>
-   <%-include ('../partials/header')%>
-  
-    <body style="overflow: hidden;">
-        
-        
-       
-
-        <div id="page-wrapper" class="demo-example">
-
-           
-
-            <!-- #page-header -->
-
-            <%-include ('../partials/side_bar')%>
-            <!-- #page-sidebar -->
-            <div id="page-content-wrapper">
-                <div id="page-title">
-
-    <div class="bg-gray text-transform-upr col-md-12 font-size-15 font-bold primary-font pad10A" id="heading">Ratings & Reviews</div>
-    <div class="bg-gray text-transform-upr col-md-12 font-size-18 font-bold  pad10A"> Avg Rating : <span  id="avgRating"></span>
-    
-    
-    </div>
-
-
-
-                    <div id="breadcrumb-right">
-                        
-                        <div class="float-right">
-                           
-
-                            <!-- <div class="dropdown">
-                                <a href="<%-adminpath%>subcategory/add" class="btn medium primary-bg " title="Example dropdown" >
-                                    <span class="button-content">
-                                        <i class="glyph-icon icon-plus float-left"></i>
-                                        Add New 
-                                
-                                    </span>
-                                </a>
-                               
-                            </div> -->
-                        </div>
-
-                        
+<%- include ('../partials/header') %>
+<%- include ('../partials/side_bar') %>
+<style type="text/css">
+  .bs-item {
+    background: #fff;
+    margin-bottom: 13px;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 2px;
+  }
+</style>
+    <section id="content">
+        <div class="container">
+        <div class="m-b-30">
+          <div class="block-header ">
+            <div class="row">
+                <div class="col-sm-4 col-xs-4">
+                    <div class="bs-item z-depth-1 text-uppercase">
+                        Avg Rating : <span  id="avgRating"></span>
                     </div>
-</div><!-- #page-title -->
-<div id="page-content">
-
-
-<%-include ('../partials/flashMessage')%>
-
-<div class="example-box">
-    
-    
-    <div class="form-row col-lg-2 float-left form-vertical">
-        <div class="form-label">
-            <label for="from">
-                From Date:
-            </label>
+                </div>
+            </div>
+          </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="pull-left"><h2>RATINGS & REVIEWS</h2></div>
+                </div>
+                <table id="data-table-command" class="table table-striped table-vmiddle">
+                    <thead>
+                        <tr>
+                            <th data-column-id="id" data-visible="false">ID</th>
+                            <th data-column-id="name">User Name</th>
+                            <th data-column-id="Rating" data-order="desc">Rating</th>
+                            <th data-column-id="Review" data-order="desc">Review</th>
+                            <th data-column-id="Review At">Review At</th>
+                            <th data-column-id="commands" data-formatter="commands" data-sortable="false">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="appendData">
+                      
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div class="form-input">
-            <input type="text" size="10" class="fromDate" id="fromDate" name="from" />
-        </div>
-    </div>
+    </section>
+</section>
+        <script type="text/javascript">
+        $(function() {
+            $('#ratingtab').addClass('active toggled');
+            $('#myratingtab').addClass('active');
+        });
 
-    <div class="form-row col-lg-2 float-left form-vertical">
-        <div class="form-label">
-            <label for="to">
-                To Date: 
-            </label>
-        </div>
-        <div class="form-input">
-            <input type="text" size="10" class="toDate"  id ="toDate" name="to" />
-        </div>
-    </div>
+                               //Command Buttons
+                var grid = $("#data-table-command").bootgrid({
+                    css: {
+                        icon: 'zmdi icon',
+                        iconColumns: 'zmdi-view-module',
+                        iconDown: 'zmdi-expand-more',
+                        iconRefresh: 'zmdi-refresh',
+                        iconUp: 'zmdi-expand-less'
+                    },
+                    formatters: {
+                        "commands": function(column, row) {
+                            return "<button type=\"button\" class=\"btn btn-icon command-delete waves-effect waves-circle\" data-row-id=\"" + row.id + "\"><span class=\"zmdi zmdi-delete\"></span></button>" ;
+                        }
+                    }
+                }).on("loaded.rs.jquery.bootgrid", function()
+            {
+                /* Executes after data is loaded and rendered */
+                grid.find(".command-edit").on("click", function(e)
+                {
+                    window.location.href="<%-adminpath%>employees/view/"+$(this).data("row-id");
+                }).end().find(".command-delete").on("click", function(e)
+                {
+                    var id = $(this).data("row-id");
+                    swal({   
+                        title: "Are you sure?",   
+                        text: "You will not be able to recover this  review details!",   
+                        type: "warning",   
+                        showCancelButton: true,   
+                        confirmButtonColor: "#DD6B55",   
+                        confirmButtonText: "Yes, delete it!",   
+                        cancelButtonText: "No, cancel plx!",   
+                    }, function(isConfirm){   
+                        if (isConfirm) {    
+                            console.log(id);
+                            $.ajax({
+                                type: 'POST',
+                                url: '<%-adminpath%>ratings/company/delete',
+                                dataType: 'json',
+                                 data: {'userId':userId},
+                                success: function (response) {
+                                    if (response.code == '200') {
+                                           showToastSuccess( response.message);
+                                           //$(".page-loader").hide();
+                                           setTimeout(function(){ window.location.reload(); },2500);
+                                    }
+                                    else{
+                                       //$(".page-loader").hide();
+                                        showToastError(response.message)
+                                    }
+                                }
+                            });  
+                        } 
+                    });
+                });
+            })
+        </script>
+        <script>
+     var currentPage=1
+     var dataList=[]
 
-
-
-    <div class="form-row col-lg-2 float-left form-vertical form-label mrg25T">
-        <a onclick="getList(1)" href="javascript:;" class="btn medium primary-bg" title="" >
-            <span class="button-content text-center float-none font-size-11 text-transform-upr">
-                Filter
-            </span>
-        </a>
-
-     </div>
-
- 
-     <div class="form-row col-lg-3 mrg5B float-right">
-        <div class="form-label">
-            <label for="to">
-                Search: 
-            </label>
-        </div>
-        <div class="form-input">
-            <input type="text" size="10" class="search"  id ="search" name="search" />
-        </div>
-    </div>
-
-</div>  
-
-    
-
-<table id="example" class="table" style="width:100%">
-	<thead>
-		<tr>
-            <th>User Name</th>
-            <th>User Photo</th>
-            <th>Rating</th>
-            <th>Review</th>
-            <th>Review At</th>
-			<th>Action</th>
-		</tr>
-	</thead>
-	<tbody id="appendData">
-        
-
-		
-
-
-		
-	</tbody>
-	
-</table>
-
-
-<div class="col-md-4" style="float:right" id="append_pagination">
-     
-</div>
-
-
-
-
-                    </div><!-- #page-content -->
-                    
-                 
-            </div><!-- #page-main -->
-        </div><!-- #page-wrapper -->
-
-    </body>
-</html>
-
-
-
-
-
-<script>
-    $(document).ready(function() {
-    $('#example').DataTable( {
-        "bPaginate":   false,
-        "bInfo":     false,
-        "bFilter":false,
-        "bLengthChangeInfo":false
-    } );
-    $('#example thead th').off('click')
-} );
-</script>
-
-<script>
- var currentPage=1
- var dataList=[]
-
-getList(currentPage)
-
-    
-
-  
-
-
-   function getList(currentPage,catId)
-   {
-    currentPage=currentPage
-    var limit=100
-    var fromDate=$('#fromDate').val();
-        var toDate=$('#toDate').val();
-    $('#loading1').show()
-    $.ajax({
+    getList(currentPage)
+    function getList(currentPage,catId)
+    {
+        currentPage=currentPage
+        var limit=100
+        var fromDate=$('#fromDate').val();
+            var toDate=$('#toDate').val();
+        $('#loading1').show()
+        $.ajax({
             type: 'POST',
             url: '<%-adminpath%>ratings/company/getData',
             dataType: 'json',
@@ -186,35 +127,19 @@ getList(currentPage)
                 $('#loading1').hide()
                 var myvar=""
                 $("#appendData").html('<h3>No data avialable in table/</h3>')             
-
                 if (response.code == '200') {
                    // $('#block_status_'+id).html(''
-var data1=response.body.ratingData
-var data=data1.rows
-dataList=data
-
-setData(data)   
-var avgRating=""
-var rating=response.body.avgRating
-
-
-var ratingData =getRating(rating)
-
-$('#avgRating').html(" ("+rating+") "+ ratingData)
-
-
-appendPagination(currentPage,Math.ceil(data1.count/limit))
-
-
-
-
-
-
-                    
-                            
+                    var data1=response.body.ratingData
+                    var data=data1.rows
+                    dataList=data
+                    setData(data)   
+                    var avgRating=""
+                    var rating=response.body.avgRating
+                    var ratingData =getRating(rating)
+                    $('#avgRating').html(" ("+rating+") "+ ratingData)
+                    //appendPagination(currentPage,Math.ceil(data1.count/limit))
                 }
                 else{
-                   
                     showToastError(response.message)
                 }
             },
@@ -229,73 +154,21 @@ appendPagination(currentPage,Math.ceil(data1.count/limit))
             }
         });
     }
-    function find( ) {
-        var item=$('#search').val().toLowerCase()
-//console.log(dataList)
-var rows=[];
-
-    for(var i = 0; i < dataList.length; ++i) {
-        var name= dataList[i].user!=null?dataList[i].user.firstName.toString().toLowerCase() :""
-
-
-        //if the name is what we are looking for return it
-        if(dataList[i]['rating'].toString().includes(item) ||
-          dataList[i].review.toString().includes(item) ||
-          name.includes(item) ||
-          dataList[i].createdAt.toString().includes(item) 
-
-
-          
-          )
-            
-        {  
-
-           rows.push(dataList[i]);
-        }
-    }
-
-    setData(rows)
-
-
-}
-
- 
-$('#search').on( 'keyup', function () {
-       setTimeout(function(){find() },800);
-} );
-
-
-
     function setData(data)
     {
-        var myvar=""
+        var myvar=[];
         for(var t=0;t<data.length;t++) {
 
-        
-myvar = myvar+
-'		<tr>'+
-'            <td>'+((data[t].user!=null)?data[t].user.firstName :"" ) +'</td>'+
-'			<td><img src="'+((data[t].user!=null)?data[t].user.image :"" )+'" alt="" width="90" height="90"/> </td>'+
-'            <td>'+ data[t].rating +'   '+getRating(data[t].rating) +'</td>'+
-'            <td>'+data[t].review +'</td>'+
-'            <td>'+format(new Date(data[t].createdAt)) +'</td>'+
+             myvar.push({
+            "id": data[t].order.id,
+            "name": ((data[t].user!=null)?data[t].user.firstName :"" ),
+            "Rating":  data[t].rating +'   '+getRating(data[t].rating),
+            "Review": data[t].review,
+            "Review At": format(new Date(data[t].createdAt))
+          })
 
-'            <td>'+
-
-'         <a onclick="deleteReview(\''+data[t].userId+'\')" href="javascript:;" data-id="'+data[t].id +'"  class="font-red" title="">'+
-'                            <i class="glyph-icon icon-remove mrg5R"></i>'+
-'                            Delete'+
-'                        </a>'+
-
-'            </div>'+
-'            </td>'+
-'        </tr>';
-}
-
-
-if(data.length>0)$("#appendData").html(myvar)    
-else $("#appendData").html('<div class="pad10A button-pane button-pane-alt text-center">No data avialable in table</div>')             
-
+        }
+        grid.bootgrid('append',myvar);
     }
 
     function deleteReview(userId)
@@ -303,94 +176,31 @@ else $("#appendData").html('<div class="pad10A button-pane button-pane-alt text-
 
         if( confirm('Are you sure you want to delete this review ?'))
         {
-        $.ajax({
-            type: 'POST',
-            url: '<%-adminpath%>ratings/company/delete',
-            dataType: 'json',
-            data: {'userId':userId},
-            success: function (response) {
-                if (response.code == '200') {
+            $.ajax({
+                type: 'POST',
+                url: '<%-adminpath%>ratings/company/delete',
+                dataType: 'json',
+                data: {'userId':userId},
+                success: function (response) {
+                    if (response.code == '200') {
 
-                    showToastSuccess(response.message)
-                    getList(currentPage,categoryId)
-                    
-                }
-                else{
-                   
+                        showToastSuccess(response.message)
+                        getList(currentPage,categoryId)
+                        
+                    }
+                    else{
+                       
+                        showToastError(response.message)
+                    }
+                },
+
+                error :function(response)
+                {
                     showToastError(response.message)
+
                 }
-            },
-
-            error :function(response)
-            {
-                showToastError(response.message)
-
-            }
-        });
+            });
+        }
     }
-    }
-   
-
-
-
-function appendPagination(currentPage,count)
-{
-    var fd="";
-//alert(data.pageCount);
- if (count > 1) { 
-fd=fd+'<ul class="button-group center-div">'; 
-
-  if (currentPage > 1) {
-      fd=fd+'<a  href="javascript:;" class="btn medium ui-state-default" onclick="getList(1)"><i class="glyph-icon icon-chevron-left"></i></a>';
-  }
-  else{
-    fd=fd+'<a  href="javascript:;" class="btn medium ui-state-default disabled"><i class="glyph-icon icon-chevron-left"></i></a>';
- 
-  }
-  var i = 1;
-  if (currentPage > 5) {
-  i = +currentPage - 4;
-  } 
- if (i !== 1) { 
-      fd=fd+'<a  class="btn medium disabled ui-state-default" href="javascript:;">...</a>';
-  } 
-                 
- // alert(fd);
-  
- 
- for (i; i<=count; i++) {
- if (currentPage == i) { 
-      fd=fd+'<li class="btn medium ui-state-default primary-bg"><span><span>'+currentPage+'</span></span></li>';
-    } else {
-        fd=fd+'<a  class="btn medium  ui-state-default" href="javascript:;" onclick="getList('+i+')">'+i+'</a>';
-     }
-    if (i == (+currentPage + 4)) {
-        fd=fd+'<a  class="btn medium disabled ui-state-default" href="javascript:;">...</a>';
-     break; } 
-  }
- 
-  
-  if (currentPage != count) {
-      fd=fd+'<a  class="btn medium ui-state-default"  href="javascript:void(0)" onclick="getList('+count+')"> <i class="glyph-icon icon-chevron-right"></i></a>';
- } 
- else{
-      fd=fd+'<a  class="btn medium ui-state-default disabled"  href="javascript:void(0)" > <i class="glyph-icon icon-chevron-right"></i></a>';
- } 
- 
-fd=fd+'</ul>';  
- } 
-
-       $("#append_pagination").html(fd)  
-}
-
-
-
-  
-
-   
-  
-
-  
-    
 
 </script>

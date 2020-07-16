@@ -273,20 +273,17 @@ app.get('/delete/:id',adminAuth,async(req,res,next) => {
             
           if(numAffectedRows>0)
           {
-           req.flash('successMessage',appstrings.delete_success)
-          return res.redirect(adminpath+"notification");
+            return responseHelper.post(res, appstrings.delete_success, null,200);
 
           }
 
           else {
-            req.flash('errorMessage',appstrings.no_record)
-            return res.redirect(adminpath+"notification");
+            return responseHelper.noData(res, appstrings.no_record);
           }
 
         }catch (e) {
           //return responseHelper.error(res, e.message, 400);
-          req.flash('errorMessage',appstrings.no_record)
-          return res.redirect(adminpath+"notification");
+          return responseHelper.noData(res, appstrings.no_record);
         }
 });
 
@@ -303,20 +300,17 @@ app.get('/clearAll',adminAuth,async(req,res,next) => {
             
           if(numAffectedRows>0)
           {
-           req.flash('successMessage',appstrings.delete_success)
-          return res.redirect(adminpath+"notification");
+            return responseHelper.post(res, appstrings.delete_success, null,200);
 
           }
 
           else {
-            req.flash('errorMessage',appstrings.no_record)
-            return res.redirect(adminpath+"notification");
+            return responseHelper.noData(res, appstrings.no_record);
           }
 
         }catch (e) {
           //return responseHelper.error(res, e.message, 400);
-          req.flash('errorMessage',appstrings.no_record)
-          return res.redirect(adminpath+"notification");
+          return responseHelper.noData(res, appstrings.no_record);
         }
 });
 

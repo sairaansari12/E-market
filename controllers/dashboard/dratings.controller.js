@@ -30,6 +30,8 @@ return res.render('admin/ratings/ratingsListing.ejs',{catData:cdata});
 app.post('/getData',adminAuth, async (req, res, next) => {
     
   var params=req.body
+
+  console.log("sdgdfgdfhdfh",params)
     try {
       
     var page =1
@@ -80,22 +82,13 @@ app.post('/getData',adminAuth, async (req, res, next) => {
       ],
       order: [['createdAt', 'DESC']],
       distinct:true,
-      offset: offset, limit: limit,
+      //offset: offset, limit: limit,
 
     })
     
 
-   // console.log(">>>>>>>>>>>>>>>",ratingData[0])
-    const ratData = await SUBORDERS.findOne({
-      attributes: [[sequelize.fn('avg', sequelize.col('rating')), 'totalRating']],
-    where: {
-      //serviceId:  params.serviceId
-    }
-    })
-    
-    var cdata= await commonMethods.getAllCategories(req.companyId)
-
-    return responseHelper.post(res, appstrings.message,ratingData);
+   console.log(">>>>>>>>>>>>>>>",ratingData)
+   return responseHelper.post(res, appstrings.message,ratingData);
 
         //return res.render('admin/ratings/ratingsListing.ejs',{avgRating : ratData.dataValues.totalRating,data:ratingData,catData:cdata});
 
@@ -161,8 +154,52 @@ app.get('/company/',adminAuth, async (req, res, next) => {
     
   var params=req.query
     try {
-      
-return res.render('admin/ratings/companyRatings.ejs');
+          var page =1
+    var limit =100
+    var categoryId =""
+var fromDate=""
+var toDate=""
+var where= {rating:  {[Op.not]: '0'}}
+    if(params.page) page=params.page
+    if(params.limit) limit=parseInt(params.limit)
+    if(params.categoryId) categoryId=params.categoryId
+    if(params.fromDate)fromDate= Math.round(new Date(params.fromDate).getTime())
+    if(params.toDate) toDate=Math.round(new Date(params.toDate).getTime())
+    var offset=(page-1)*limit
+
+    if(fromDate!="" && toDate!="")
+    {
+      where= {
+        rating:  {[Op.not]: '0'},
+        createdAt: { [Op.gte]: fromDate,[Op.lte]: toDate},
+      }
+    }
+    var ratingData = await COMPANYRATING.findAndCountAll({
+      attributes: ['id','rating','review','userId','createdAt'],
+  
+      where: where,
+      include: [
+        {
+        model: USERS,
+        attributes: ['id','firstName','lastName','image'],
+        required: false
+        }
+      ],
+      order: [['createdAt', 'DESC']],
+      distinct:true,
+      //offset: offset, limit: limit,
+
+    })
+    
+var data={}
+data.ratingData=ratingData
+
+    var rating =0
+    var dataRating=await commonMethods.getCompAvgRating(req.id) 
+    if(dataRating && dataRating.dataValues && dataRating.dataValues.totalRating) rating=dataRating.dataValues.totalRating
+    
+    data.avgRating=rating
+return res.render('admin/ratings/companyRatings.ejs',{data});
       } catch (e) {
        return responseHelper.error(res, e.message, 400);
      
@@ -211,7 +248,7 @@ var where= {rating:  {[Op.not]: '0'}}
       ],
       order: [['createdAt', 'DESC']],
       distinct:true,
-      offset: offset, limit: limit,
+      //offset: offset, limit: limit,
 
     })
     

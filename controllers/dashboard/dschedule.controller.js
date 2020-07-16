@@ -57,10 +57,9 @@ app.post('/addupdate',adminAuth,async (req, res) => {
     var slotsRemaining=[]
 
     var leave=""
-//console.log(data)
+console.log(data)
 
-
-    let responseNull= commonMethods.checkParameterMissing([data.fromDate,data.toDate,data.slotsTime,data.slotsQuantity,data.turnaround])
+    let responseNull= commonMethods.checkParameterMissing([data.slotsTime,data.slotsQuantity,data.turnaround])
     if(responseNull) return responseHelper.post(res, appstrings.required_field,null,400);
 
     if(typeof data.slotsTime=='string') {

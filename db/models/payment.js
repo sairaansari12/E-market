@@ -69,6 +69,16 @@ amount: {
     defaultValue: "0"
 },
 
+  companyId: {
+    type: DataTypes.UUID,
+    allowNull: false,
+    references: {
+      model: 'companies',
+      key: 'id'
+     },
+     onUpdate: 'CASCADE',
+     onDelete: 'CASCADE',
+  },
 
 
 createdAt: {

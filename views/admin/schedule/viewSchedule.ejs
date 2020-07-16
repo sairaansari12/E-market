@@ -1,277 +1,145 @@
-<!-- AUI Framework -->
-<!DOCTYPE html>
-    <html>
-   <%-include ('../partials/header')%>
-    <body style="overflow: hidden;">
-        
-
-       
-
-        <div id="page-wrapper" class="demo-example">
-
-           
-
-            <!-- #page-header -->
-
-            <%-include ('../partials/side_bar')%>
-            <!-- #page-sidebar -->
-            <div id="page-content-wrapper">
-                <div id="page-title">
-
-
-    <div class="bg-gray text-transform-upr font-size-15 font-bold primary-font pad10A" >Edit Schedule</div>
-
-    
-
-                </div>
-                   <!-- #page-title -->
-<div id="page-content">
-
-
-<%-include ('../partials/flashMessage')%>
-
-
-
-    <div class="large-box col-md-10">
-        <div class="pad10A">
-            
-
-                <!-- <form id="demo-form" action=""  method="" /> -->
-
-
-
-
-                <form  role="form" onsubmit="return false"  class="col-md-12"  id="adduser" >
-                    <input type="hidden"  name="scheduleId" id="scheduleId"   <%if(data){%> value="<%-data.id%>"  <%}%>/>
-                    <input type="hidden"  name="dayParts" id="dayParts"   value="mon"/>
-
-
-
-                    
-
-                    <div class="form-row">
-                        <div class="form-label col-md-4">
-                            <label for="">
-                                From Date:
-                                <span class="required">*</span>
-                            </label>
-                        </div>
-                        <div class="form-input col-md-8">
-                        
-                            <input type="text"    <%if(data){%>  value="<%-data.fromDate%>" <%}%>   autocomplete="off"  data-required="true"  class="fromDate" id="fromDate" name="fromDate" />
-                        </div>
-                    </div>
-
-
-                  
-
-
-                    <div class="form-row">
-                        <div class="form-label col-md-4">
-                            <label for="">
-                                To Date:
-                                <span class="required">*</span>
-                            </label>
-                        </div>
-                        <div class="form-input col-md-8">
-                           
-                            <input type="text"   <%if(data){%>   value="<%-data.toDate%>"  <%}%> autocomplete="off"   data-required="true"  class="toDate"  id ="toDate" name="toDate" />
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-label col-md-4">
-                            <label for="">
-                                Duration:
-                                <span class="required">*</span>
-                            </label>
-                        </div>
-                        <div class="bootstrap-timepicker dropdown col-md-3">
-                            <span clas>Start Time:</span> 
-                            <input class="timepicker input"  <%if(data){%>  value="<%-data.startTime%>"  <%}%> id="fromTime"  data-required="true" onchange="getTimeSlots()"  name="startTime" type="text" />
-
-                        </div>
-
-                        <div class="form-input bootstrap-timepicker dropdown col-md-3">
-                            End Time:
-                            <input class="timepicker input"   <%if(data){%> value="<%-data.endTime%>" <%}%>  id="toTime"  data-required="true" onchange="getTimeSlots()" name="endTime" type="text" />
-                        </div>
-                    </div>
-
-                   
-                    <!-- <div class="form-row">
-
-                            <div class="form-label col-md-4"><label for="">Break Time:</label></div>
-
-                            <div class="form-row col-md-7" id="breakSlots">
-                           
-                           
-                            <div class="form-input" id="row_0">
-                            <div class="bootstrap-timepicker dropdown col-md-5"> Start Time:
-                                <input class="timepicker" id="breakFTime_0" onchange="getTimeSlots()" name="fromBTime0" type="text" /></div>
-                            <div class="form-input bootstrap-timepicker dropdown col-md-5">End Time:
-                                <input class="timepicker input"  id="breakTTime_0"  name="toBTime0" type="text" />
-                            </div>
-                            </div> 
-
-<!-- 
-                           //breakSolt Row End -->
- 
-<!-- </div>
-<i class="col-md-1 glyph-icon icon-plus font-size-20"  onclick="addMoreBreak()" style="margin-top:15px"></i>
-
-                          
-
-                            
-                      
-                      
-        
-                        </div>
-                    </div>  -->
-
-
-                  
-                    <div class="form-row">
-                        <div class="form-label col-md-4">
-                            <label for="">
-                                Turnaround (minutes):
-                                <span class="required">*</span>
-                            </label>
-                        </div>
-                        <div class="form-input col-md-8">
-                        <input    value="60" data-type="number" data-required="true"    onchange="getTimeSlots()" id="turnaround" name="turnaround" />
-                        </div>
-                    </div>
-                    
-
-
+<%- include ('../partials/header') %>
+<%- include ('../partials/side_bar') %>
+<section id="content">
+  <div class="container">
+    <div class="card">
+      <div class="card-header">
+          <h2>Edit Schedule</h2>
+      </div>
+      
+      <div class="card-body card-padding">
+        <form method="POST" role="form" id="adduser" >
+           <div class="row">
+           <div class="col-sm-12">   
+              <input type="hidden"  name="scheduleId" id="scheduleId"   <%if(data){%> value="<%-data.id%>"  <%}%>/>
+              <input type="hidden"  name="dayParts" id="dayParts"   value="mon"/>
               <div class="form-row">
-                        <div class="form-label col-md-4">
-                            <label for="">
-                               Time Slots:
-                            </label>
-                        </div>
-        
-                        
-                    <div class="tabs col-md-8 font-size-12">
-                       
-                        <div class="form-checkbox-radio col-md-1" >
-                            <input type="checkbox" class="custom-checkbox" name="checkedMonFri"  />
-                            <label for="">Mon-Fri</label>
-                            </div>
-
-                            <ul >
-
-                        
-                                <li>
-                                    <a   href="#tabs-accordion-1" onclick="getDaydata('mon')" title="Tab 1">
-                <i class="glyph-icon icon-calendar small"></i>
-        Mon
-                                    </a>
-                                </li>
-                                <li>
-                                    <a  href="#tabs-accordion-1" onclick="getDaydata('tue')" title="Tab 2">
-                                        <i class="glyph-icon icon-calendar small"></i>
-                                        Tue
-                                    </a>
-                                </li>
-                                <li class="mobile-hidden">
-                                    <a   href="#tabs-accordion-1"  onclick="getDaydata('wed')"  title="Tab 3">
-                                        <i class="glyph-icon icon-calendar small"></i>
-                                        Wed
-                                    </a>
-                                </li>
-                                <li class="mobile-hidden">
-                                    <a   href="#tabs-accordion-1" onclick="getDaydata('thu')" title="Tab 4">
-                                        <i class="glyph-icon icon-calendar small"></i>
-                                        Thu
-                                    </a>
-                                </li>
-                                <li class="mobile-hidden">
-                                    <a    href="#tabs-accordion-1" onclick="getDaydata('fri')" title="Tab 4">
-                                        <i class="glyph-icon icon-calendar small"></i>
-                                        Fri
-                                    </a>
-                                </li>
-
-                                <li class="mobile-hidden">
-                                    <a   href="#tabs-accordion-1"onclick="getDaydata('sat')" title="Tab 4">
-                                        <i class="glyph-icon icon-calendar small"></i>
-                                         Sat
-                                    </a>
-                                </li>
-                                <li class="mobile-hidden">
-                                    <a   href="#tabs-accordion-1" onclick="getDaydata('sun')" title="Tab 4">                <i class="glyph-icon icon-calendar small"></i>
-                                        Sun
-                                    </a>
-                                </li>
-
-                            </ul>
-
-                            
-                        <div id="justified-tabs-1">
-                            <div class="form-row" id="timeSlots">
-                    
-                                <div class="form-input col-md-12">
-                                 <div class="form-label col-md-3 font-size-11"><label> Time Slot:</label></div>
-                                <div class="form-label col-md-3 "><label> Time Slot:</label></div>
-                                 <div class="form-label col-md-3 font-size-11"><label>Quantity:</label></div>
-                                <input class="col-md-2" data-required="true"  data-type="number" />
-                              </div>
-        
-        
-        
-        
-        
-        </div>
-        
-                        </div>
-                        
-                        
-                       
-                    </div>
+                <div class="col-sm-6">
+                  <p class="c-black f-500 m-b-20">Start Time:</p>
+                  <div class="input-group form-group">
+                      <span class="input-group-addon"><i class="zmdi zmdi-time"></i></span>
+                          <div class="dtp-container fg-line">
+                          <input type='text' class="form-control time-picker" <%if(data){%>  value="<%-data.startTime%>" id="fromTime"  data-required="true" onchange="getTimeSlots()"  name="startTime" type="text" <%}%> placeholder="Click here...">
+                      </div>
+                  </div>
                 </div>
-
-                 
-
-                  
-
-                    <div class="divider"></div>
-                    <div class="form-row">
-                        <input type="hidden" name="superhidden" id="superhidden" />
-                        <div class="form-input col-md-8 col-md-offset-6">
-                            <!-- //onclick="javascript:$(&apos;#demo-form&apos;).parsley( &apos;validate&apos; );" -->
-                            <!-- onclick="javascript:$('#adduser').parsley('validate' );"  -->
-                            <button  type="button" onclick="window.history.back();"   class="btn ui-state-default medium bg-red mrg15R">
-                                <span class="button-content">Cancel</span>
-                            </button>
-                            <button  type="submit" class="btn ui-state-default medium  primary-bg">
-                                <span class="button-content">Submit</span>
-                            </button>
-                            </div>
+                <br/>
+                <div class="col-sm-6 m-b-20">
+                  <div class="form-group fg-line">
+                      <label>Turnaround (minutes):
+                        <span class="required">*</span></label>
+                      <input type="text" value="60" class="form-control input-mask" onchange="getTimeSlots()" id="turnaround" name="turnaround" data-mask="00" placeholder="00">
+                  </div>
+                </div>
+                <br/>
+                <div class="col-sm-6">
+                  <p class="c-black f-500 m-b-20">End Time:</p>
+                  <div class="input-group form-group">
+                    <span class="input-group-addon"><i class="zmdi zmdi-time"></i></span>
+                    <div class="dtp-container fg-line">
+                      <input type='text' class="form-control time-picker" <%if(data){%>  value="<%-data.endTime%>" id="toTime"  data-required="true" onchange="getTimeSlots()"  name="endTime" type="text" <%}%> placeholder="Click here...">
                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-12">
+              <div class="col-sm-6">
+                  <p class="c-black f-500 m-b-20">Time Slots:</p>
+                  <div class="checkbox m-b-15">
+                    <label>
+                        <input type="checkbox" class="custom-checkbox" name="checkedMonFri">
+                        <i class="input-helper"></i>
+                        Mon-Fri
+                    </label>
+                  </div>
+              </div> 
+            </div>  
+            <div class="col-sm-12">
 
-                </form>
+              <div class="tabs col-md-8 font-size-12">
 
-        </div>
+                <div class="col-sm-12 m-b-15">
+                    <div role="tabpanel" class="tab">
+                        <ul class="tab-nav" role="tablist">
+                              <li class="mobile-hidden  mon">
+                                <a   href="#tabs-accordion-1" onclick="getDaydata('mon')" title="Tab 1">
+                                <i class="zmdi zmdi-calendar small"></i>
+                                Mon
+                                </a>
+                              </li>
+                              <li class="mobile-hidden tue">
+                              <a  href="javascript:;" onclick="getDaydata('tue')" title="Tab 2">
+                                  <i class="zmdi zmdi-calendar small"></i>
+                                  Tue
+                              </a>
+                              </li>
+                              <li class="mobile-hidden wed">
+                                <a   href="javascript:;"  onclick="getDaydata('wed')"  title="Tab 3">
+                                    <i class="zmdi zmdi-calendar small"></i>
+                                    Wed
+                                </a>
+                              </li>
+                              <li class="mobile-hidden thu">
+                                <a   href="javascript:;" onclick="getDaydata('thu')" title="Tab 4">
+                                    <i class="zmdi zmdi-calendar small"></i>
+                                    Thu
+                                </a>
+                              </li>
+                              <li class="mobile-hidden fri">
+                                <a    href="javascript:;" onclick="getDaydata('fri')" title="Tab 4">
+                                    <i class="zmdi zmdi-calendar small"></i>
+                                    Fri
+                                </a>
+                              </li>
 
-       
-    </div>
+                              <li class="mobile-hidden  sat">
+                                <a   href="javascript:;" onclick="getDaydata('sat')" title="Tab 4">
+                                    <i class="zmdi zmdi-calendar small"></i>
+                                     Sat
+                                </a>
+                              </li>
+                              <li class="mobile-hidden sun">
+                                <a href="javascript:;" onclick="getDaydata('sun')" title="Tab 4">                <i class="zmdi zmdi-calendar small"></i>
+                                    Sun
+                                </a>
+                              </li>
+                        </ul>
+                        
+                    </div>
+                </div> 
+                <br/>  
+                <div id="justified-tabs-1">
+                  <div class="form-row" id="timeSlots">
+                    <div class="form-input col-md-12">
+                     <div class="form-label col-md-3 font-size-11"><label> Time Slot:</label></div>
+                    <div class="form-label col-md-3 "><label> Time Slot:</label></div>
+                     <div class="form-label col-md-3 font-size-11"><label>Quantity:</label></div>
+                    <input class="col-md-2" data-required="true"  data-type="number" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="divider"></div>
+            </div>
+            <div class="m-t-30 text-center">
+              <input type="hidden" name="superhidden" id="superhidden" />
+              <button class="btn btn-primary btn-sm waves-effect">Save</button>
+              <a href="<%- adminpath %>schedule"><button type="button" class="btn btn-link btn-sm waves-effect">Cancel</button></a>
+            </div>
+            </div>
+        </form>
 
+</section>
+</section>
 
-
-                	</div><!-- #page-content -->
-            </div><!-- #page-main -->
-        </div><!-- #page-wrapper -->
-
-    </body>
-</html>
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js"></script>
-
+<script type="text/javascript" src="<%- config.BASEURL %>assets/js/minified/parsely-min.js"></script>
 <script type="text/javascript">
-
+$(function() {
+        $('#schudleTab').addClass('active');
+        $('#schudleTab a[href^="<%- adminpath %>schedule"]').addClass('active');
+    });
 var breakRow=0
 var slotRow=0
 var breakTime=[]
@@ -306,7 +174,6 @@ else{
 
             var form_data = new FormData(tempform[0]);
             $("#loading1").show();
-
             $.ajax({
                 type: 'POST',
                 url: '<%-adminpath%>schedule/addupdate',
@@ -316,12 +183,12 @@ else{
                 cache:false,
                 processData:false,
                 success: function (response) {
+                console.log(response)
                     $(".overlay").hide();
                     if (response.code == 200) {
                   
-                        showToastSuccess(response.message)
-
-                  window.location.reload()                       
+                        showToastSuccess(response.message);
+                      
                     } else {
                         showToastError(response.message)
                     }
@@ -439,7 +306,7 @@ timeSlots=timeSlots+ '<div class="form-input col-md-12">'+
 }
 
 
-timeSlots=timeSlots+'<div class="form-label col-md-3 font-size-11"><label> Remaining Today:</label></div>';
+timeSlots=timeSlots+'<div class="form-label col-md-2 font-size-11 m-b-5" style="margin-left:78px;"><label> Remaining Today:</label></div>';
 timeSlots=timeSlots+timeSlots1+'</div>'
      times.push(slotTime.format("hh:mm"));
      slotRow++;
@@ -486,7 +353,8 @@ else{
                processData:false,
                success: function (response) {
                    if (response.code == 200) {
-                 
+                      showToastSuccess("Updated Successfully");
+                   setTimeout(function(){ window.location.reload(); },2500);
 
                    } else {
                    }
@@ -529,7 +397,6 @@ if(newVal<0 ) {
 
 function getDaydata(day)
 {
-
 if(count>0)saveSlot()
 count++;
 
@@ -554,14 +421,15 @@ setTimeout(function(){
                    getTimeSlots(null,null);
 
                 else {
-                 $('#fromTime').val(data.startTime)
-                 $('#toTime').val(data.endTime)
-                 $('#turnaround').val(data.turnaround)
-                 $('#fromDate').val(data.fromDate)
-                $('#toDate').val(data.toDate)
-                getTimeSlots(data.permanentSlots,data.slots);
+                  $('#fromTime').val(data.startTime)
+                  $('#toTime').val(data.endTime)
+                  $('#turnaround').val(data.turnaround)
+                  $('#fromDate').val(data.fromDate)
+                  $('#toDate').val(data.toDate)
+                  getTimeSlots(data.permanentSlots,data.slots);
 
-
+                  $('.mobile-hidden').removeClass('active');
+                  $('.'+day).addClass('active')
                 }
 
                     }
@@ -592,3 +460,6 @@ setTimeout(function(){
 
     </script>
 
+
+    </body>
+</html>
