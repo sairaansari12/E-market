@@ -71,6 +71,7 @@ app.post('/getData',adminAuth, async (req, res, next) => {
               [Op.like]: '%'+ categoryId + '%'
     
             },    
+            companyId :req.companyId
           },
           required: true
           }]

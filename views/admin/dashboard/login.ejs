@@ -33,68 +33,25 @@
             </div>
             <button type="submit" class="btn btn-login btn-danger btn-float"><i class="zmdi zmdi-arrow-forward"></i></button>
             <ul class="login-navigation">
-                <li data-block="#l-register" class="bgm-red">Register</li>
                 <li data-block="#l-forget-password" class="bgm-orange">Forgot Password?</li>
             </ul>
         </div>
         </form>
-        <!-- Register -->
-        <div class="lc-block" id="l-register">
-            <div class="input-group m-b-20">
-                <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
-                <div class="fg-line">
-                    <input type="text" class="form-control" placeholder="Username">
-                </div>
-            </div>
-            
-            <div class="input-group m-b-20">
-                <span class="input-group-addon"><i class="zmdi zmdi-email"></i></span>
-                <div class="fg-line">
-                    <input type="text" class="form-control" placeholder="Email Address">
-                </div>
-            </div>
-            
-            <div class="input-group m-b-20">
-                <span class="input-group-addon"><i class="zmdi zmdi-male"></i></span>
-                <div class="fg-line">
-                    <input type="password" class="form-control" placeholder="Password">
-                </div>
-            </div>
-            
-            <div class="clearfix"></div>
-            
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" value="">
-                    <i class="input-helper"></i>
-                    Accept the license agreement
-                </label>
-            </div>
-            
-            <a href="" class="btn btn-login btn-danger btn-float"><i class="zmdi zmdi-arrow-forward"></i></a>
-            
-            <ul class="login-navigation">
-                <li data-block="#l-login" class="bgm-green">Login</li>
-                <li data-block="#l-forget-password" class="bgm-orange">Forgot Password?</li>
-            </ul>
-        </div>
         
         <!-- Forgot Password -->
         <div class="lc-block" id="l-forget-password">
-            <p class="text-left">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eu risus. Curabitur commodo lorem fringilla enim feugiat commodo sed ac lacus.</p>
-            
+            <p class="text-left">FORGOT PASSWORD!</p>
+            <form id="forgotPassword" role="form" method="POST" enctype="application/x-www-form-urlencoded">
             <div class="input-group m-b-20">
                 <span class="input-group-addon"><i class="zmdi zmdi-email"></i></span>
                 <div class="fg-line">
-                    <input type="text" class="form-control" placeholder="Email Address">
+                    <input type="email" id="name" name="email" class="form-control" placeholder="Email Address">
                 </div>
             </div>
-            
-            <a href="" class="btn btn-login btn-danger btn-float"><i class="zmdi zmdi-arrow-forward"></i></a>
-            
+            <button type="submit" class="btn btn-login btn-danger btn-float"><i class="zmdi zmdi-arrow-forward"></i></button>
+            </form>
             <ul class="login-navigation">
                 <li data-block="#l-login" class="bgm-green">Login</li>
-                <li data-block="#l-register" class="bgm-red">Register</li>
             </ul>
         </div>
 <!-- /.login-box -->
@@ -130,6 +87,48 @@ $(document).ready(function () {
       $.ajax({
             type: 'POST',
             url: '<%-adminpath%>login',
+            dataType: 'json',
+            data: form_data,
+            contentType:false,
+            cache:false,
+            processData:false,
+            success: function (response) {
+            console.log(response);
+            if (response.code == '200') {
+                   showToastSuccess( response.message)
+                   setTimeout(function(){ $("#loading-img").hide(); window.location.reload();},2500);
+                
+            }
+            else{
+               $("#loading-img").hide();
+                showToastError(response.message)
+            }
+          }
+      });
+    }
+  });
+
+
+  $('#forgotPassword').validate({
+    rules: {
+      email: {
+        required: true,
+        email: true,
+      }
+    },
+    messages: {
+      email: {
+        required: "Please enter a email address",
+        email: "Please enter a vaild email address"
+      }
+    },
+    submitHandler: function (form) {
+    $("#loading-img").show();
+    var tempform = $('#forgotPassword');
+    var form_data = new FormData(tempform[0]);
+      $.ajax({
+            type: 'POST',
+            url: '<%-adminpath%>forgotPassword',
             dataType: 'json',
             data: form_data,
             contentType:false,

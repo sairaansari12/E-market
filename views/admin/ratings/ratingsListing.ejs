@@ -13,19 +13,19 @@
         <div class="container">
         <div class="m-b-30">
             <div class="card">
-                <div class="card-header">
+                  <div class="card-header">
                     <div class="pull-left"><h2>RATINGS & REVIEWS</h2></div>
-                    <div class="pull-right"><div class="form-row col-lg-3  float-left form-vertical font-size-15 bold   dropdown form-label mrg25T ">
-        <select   data-placeholder="Choose Category" onchange="getSubCat(this.value)" class="chosen-select" id="categoryId">
-            <option value="" > Choose  Category</option>
-            <%for(var t=0;t<catData.length;t++){%>
-            <option value="<%-catData[t].id%>" /><%-catData[t].name%> 
-           
-    <%}%>
-   </select>
-   </div>
-     </div>
-                </div>
+                    <div class="pull-right"><div class="col-sm-12">
+                      <select onchange="getSubCat(this.value)" class="chosen" id="categoryId">
+                      <option value="" disabled selected> Choose  Category</option>
+                      <%for(var t=0;t<catData.length;t++){%>
+                      <option value="<%-catData[t].id%>" /><%-catData[t].name%> 
+                     
+                      <%}%>
+                      </select>
+                   </div>
+             </div>
+          </div>
                 <table id="data-table-command" class="table table-striped table-vmiddle">
                     <thead>
                         <tr>
@@ -135,7 +135,7 @@ getList(currentPage,categoryId)
             success: function (response) {
             console.log(response)
                 $('#loading1').hide()
-                $("#appendData").html('<h3>No data avialable in table/</h3>')             
+                //$("#appendData").html('<h3>No data avialable in table/</h3>')             
 
                 if (response.code == '200') {
                    // $('#block_status_'+id).html(''

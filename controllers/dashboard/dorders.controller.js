@@ -8,16 +8,14 @@ const USER = db.models.users
 
 SUBORDERS.belongsTo(PRODUCTS,{foreignKey: 'serviceId'})
 ASSIGNMENT.belongsTo(EMPLOYEE,{foreignKey: 'empId'})
-//ORDERS.belongsTo(db.models.address,{foreignKey: 'addressId'})
 ORDERS.belongsTo(USER,{foreignKey: 'userId'})
 ORDERS.hasMany(ASSIGNMENT,{foreignKey: 'orderId'})
 ORDERS.hasMany(SUBORDERS,{foreignKey: 'orderId'})
 ORDERS.hasOne(PAYMENT,{foreignKey: 'orderId'})
-
+SUBORDERS.hasMany(ADDRESS,{foreignKey: 'addressId'})
 
 app.get('/',adminAuth, async (req, res, next) => {
-    
-  try {
+   
     var params=req.query
     var progressStatus =  ['0','1','2','3','4','5']
 
@@ -52,10 +50,6 @@ app.get('/',adminAuth, async (req, res, next) => {
       return res.render('admin/orders/ordersListing.ejs',{data:findData,empData:empData});
 
     
-
-    } catch (e) {
-      return responseHelper.error(res, e.message, 400);
-    }
 
 
 });
@@ -111,7 +105,6 @@ if(fromDate!="" && toDate!="")
       where :where,
       
       include: [
-        {model: db.models.address , attributes: ['id','addressName','addressType','houseNo','latitude','longitude','town','landmark','city'] } ,
         {model: USER , attributes: ['id','firstName','lastName',"phoneNumber","countryCode","image"]},
         {model: PAYMENT , attributes: ['transactionStatus']},
         {model: SUBORDERS , attributes: ['id','serviceId','quantity'],
@@ -557,7 +550,6 @@ app.get('/view/:id',adminAuth,async(req,res,next) => {
       const findData = await ORDERS.findOne({
       where :{companyId :req.companyId, id: id },
       include: [
-        {model: db.models.address , attributes: ['id','addressName','addressType','houseNo','latitude','longitude','town','landmark','city'] } ,
         {model: USERS , attributes: ['firstName','lastName','countryCode','phoneNumber','image'] } ,
         {model: ASSIGNMENT , attributes: ['id'],
         include: [{
@@ -667,10 +659,6 @@ async function findSearchData(where,whereAddress,whereUser,offset,limit)
     where :where,
 
     include: [
-      {model: ADDRESS  ,
-        attributes: ['id','addressName','addressType','houseNo','latitude','longitude','town','landmark','city'],
-        where:whereAddress
-      } ,
       {model: USER , 
         attributes: ['id','firstName','lastName',"phoneNumber","countryCode","image"],
         where:whereUser},

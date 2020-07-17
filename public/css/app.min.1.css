@@ -15261,25 +15261,12 @@ a.thumbnail.active {
   backface-visibility: hidden;
 }
 
-.login-navigation > li > span {
-  opacity: 0;
-  filter: alpha(opacity=0);
-}
 
-.login-navigation > li:not(:hover) {
-  font-size: 0px;
-  border-radius: 100%;
-}
 
-.login-navigation > li:hover {
+.login-navigation > li {
   border-radius: 10px;
-  padding: 0 5px;
-  font-size: 8px;
-}
-
-.login-navigation > li:hover > span {
-  opacity: 1;
-  filter: alpha(opacity=100);
+      padding: 4px 8px;
+    font-size: 14px;
 }
 
 .lcb-alt {
