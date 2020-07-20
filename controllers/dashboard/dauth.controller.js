@@ -11,11 +11,8 @@ function isAdminAuth(req, res, next) {
     }
     return res.redirect('/company');
   }
-/**
-*@role Get Login Page
-*@Method POST
-*@author Saira Ansari
-*/
+
+  
 app.get('/', async (req, res, next) => {
    //return res.render(adminfilepath+'index.ejs',{data:null});
     if(req.session.userData){
@@ -159,7 +156,8 @@ app.post('/login',async(req,res,next) => {
                   role:2,
                   status:1
             		}
-            	  })  
+                })  
+              
                   
                 if(userData)
                {

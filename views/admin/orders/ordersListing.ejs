@@ -217,7 +217,7 @@ if(data==undefined || data==null || data=='{}' || data.length==0) {%>
 
 
 
-
+<script src="<%- config.BASEURL %>plugins/datatables/jquery.dataTables.min.js" type="text/javascript"></script>
 <script type="text/javascript">
    
   
@@ -292,10 +292,13 @@ if(data==undefined || data==null || data=='{}' || data.length==0) {%>
     
   
     </script>
-<!-- 
-     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> -->
-     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+
+     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> 
+     
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+     
      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
 
 <script>
@@ -491,11 +494,11 @@ for(var t=0;t<data.length;t++)
 
 
 row =row+ '<tr id="row_'+data[t].id+'">'+
-    '			<td>'+data[t].orderNo+' </td>'+
+    '			<td>'+data[t].orderId+' </td>'+
 '			<td>'+data[t].user.firstName+ " "+  data[t].user.lastName+' </td>'+
-'			<td>'+format(new Date(data[t].serviceDateTime))+' </td>'+
+'			<td>'+format(new Date(data[t].order.serviceDateTime))+' </td>'+
 '            <td>'+data[t].user.countryCode +" "+ data[t].user.phoneNumber+'</td>'+
-'            <td>'+data[t].totalOrderPrice  +'</td>'+
+'            <td>'+data[t].order.totalOrderPrice  +'</td>'+
 '            <td>'+
 '             <a href="javascript:;"  class="btn '+paymentBg+' font-size-10 pad5A tooltip-button" data-placement="bottom" title="Open modal window"   >'+
     '                <span class="button-content">'+

@@ -13,44 +13,108 @@ ORDERS.hasMany(ASSIGNMENT,{foreignKey: 'orderId'})
 ORDERS.hasMany(SUBORDERS,{foreignKey: 'orderId'})
 ORDERS.hasOne(PAYMENT,{foreignKey: 'orderId'})
 SUBORDERS.hasMany(ADDRESS,{foreignKey: 'addressId'})
+SUBORDERS.hasMany(PAYMENT,{foreign_key: 'orderId'});
 
 app.get('/',adminAuth, async (req, res, next) => {
    
-    var params=req.query
+  // try {
+    var params=req.body
     var progressStatus =  ['0','1','2','3','4','5']
-
+    var fromDate =  ""
+    var toDate =  ""
+  
+  
     var page =1
-    var limit =100
+    var limit =50
     if(params.page) page=params.page
     if(params.limit) limit=parseInt(params.limit)
-    if(params.progressStatus && params.progressStatus!="")  progressStatus=[params.progressStatus]
-
- 
     var offset=(page-1)*limit
-
-   
-    const findData = await ORDERS.findAll({
-      order: [
-        ['createdAt', 'DESC'],  
-    ],
-    where :{companyId: req.companyId,
-      progressStatus: { [Op.or]: progressStatus},
-
-    },
-    offset: offset, limit: limit ,
+  
+  
+    if(params.progressStatus && params.progressStatus!="")  progressStatus=[params.progressStatus]
+  
+    where={companyId: req.companyId,
+    progressStatus: { [Op.or]: progressStatus}
+       }
     
-   
-  });
-  var empData = await EMPLOYEE.findAll({
-    where :{companyId:req.companyId}
-
-});
-
-
-      return res.render('admin/orders/ordersListing.ejs',{data:findData,empData:empData});
-
+  
+       where1={companyId: req.companyId,progressStatus: { [Op.or]: progressStatus}}
+    if(params.fromDate)fromDate= Math.round(new Date(params.fromDate).getTime())
+    if(params.toDate) toDate=Math.round(new Date(params.toDate).getTime())
     
+  
+  if(fromDate!="" && toDate!="")
+  {
+    where= {
+            companyId: req.companyId,
+            progressStatus: { [Op.or]: progressStatus},
+            createdAt: { [Op.gte]: fromDate,[Op.lte]: toDate},
+          }
+  
+         where1={companyId: req.companyId,
+          progressStatus: { [Op.or]: progressStatus},
+          createdAt: { [Op.gte]: fromDate,[Op.lte]: toDate},
+             }
+  
+        }
+  
+        const findData = await SUBORDERS.findAndCountAll({
+          order: [
+            ['createdAt', 'DESC'],  
+        ],
+        where :where,
+        
+        include: [
+          {model: USER , attributes: ['id','firstName','lastName',"phoneNumber","countryCode","image"]},
+          {model: ORDERS , attributes: ['serviceDateTime','orderPrice','serviceCharges','totalOrderPrice']},
+            {
+            model: PRODUCTS,
+            attributes: ['id','name','description','price','icon','thumbnail','type','price','duration'],
+            required: false
+          },
+          {
+            model: ADDRESS,
+            attributes: ['addressName','addressType','houseNo','town','landmark','city']
+          }
+        
+        ],
+        distinct:true,
+        offset: offset, limit: limit ,
+  
+      });
+  
+      var countDataq = await SUBORDERS.findAll({
+        attributes: ['progressStatus',
+          [sequelize.fn('sum', sequelize.col('order.totalOrderPrice')), 'totalSum'],
+          [sequelize.fn('COUNT', sequelize.col('progressStatus')), 'count'],
+         ],
+        include: [
+          {model: ORDERS , attributes: ['serviceDateTime','orderPrice','serviceCharges','totalOrderPrice']}
+        ],
+        group: ['progressStatus'],
+      where :where1
+    
+    });
+  
+  
+  
+   
+  
+      var userDtaa={}
+      userDtaa.data=findData
+      userDtaa.counts=countDataq
+      let rows = userDtaa.data.rows;
+    
+      // return false;
+      console.log("countDataq",countDataq);
 
+      return res.render('admin/orders/orderListingNew.ejs',{data1:rows,count:countDataq});
+  
+    // } catch (e) {
+    //   console.log(e)
+    //   return responseHelper.error(res, e.message, 400);
+    // }
+  
 
 });
 
@@ -98,7 +162,7 @@ if(fromDate!="" && toDate!="")
 
       }
 
-      const findData = await ORDERS.findAndCountAll({
+      const findData = await SUBORDERS.findAndCountAll({
         order: [
           ['createdAt', 'DESC'],  
       ],
@@ -106,13 +170,15 @@ if(fromDate!="" && toDate!="")
       
       include: [
         {model: USER , attributes: ['id','firstName','lastName',"phoneNumber","countryCode","image"]},
-        {model: PAYMENT , attributes: ['transactionStatus']},
-        {model: SUBORDERS , attributes: ['id','serviceId','quantity'],
-        include: [{
+        {model: ORDERS , attributes: ['serviceDateTime','orderPrice','serviceCharges','totalOrderPrice']},
+          {
           model: PRODUCTS,
           attributes: ['id','name','description','price','icon','thumbnail','type','price','duration'],
           required: false
-        }]
+        },
+        {
+          model: ADDRESS,
+          attributes: ['addressName','addressType','houseNo','town','landmark','city']
         }
       
       ],
@@ -121,12 +187,13 @@ if(fromDate!="" && toDate!="")
 
     });
 
-    var countDataq = await ORDERS.findAll({
+    var countDataq = await SUBORDERS.findAll({
       attributes: ['progressStatus',
-        [sequelize.fn('sum', sequelize.col('totalOrderPrice')), 'totalSum'],
+        [sequelize.fn('sum', sequelize.col('order.totalOrderPrice')), 'totalSum'],
         [sequelize.fn('COUNT', sequelize.col('progressStatus')), 'count'],
-       
-
+       ],
+      include: [
+        {model: ORDERS , attributes: ['serviceDateTime','orderPrice','serviceCharges','totalOrderPrice']}
       ],
       group: ['progressStatus'],
     where :where1

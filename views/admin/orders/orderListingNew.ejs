@@ -1,0 +1,220 @@
+<%- include ('../partials/header') %>
+<%- include ('../partials/side_bar') %>
+    <section id="content">
+
+        <div class="container">
+
+            <div class="card">
+
+                <div class="card-header">
+                    <div class="pull-left"><h2>ORDER LIST</h2></div>
+                    
+                </div>
+
+                <div class="card-body">
+
+                <div class="hero-unit">
+                    <h1 class="text-secondary text-center">
+                        Total ORDERS : <span id="totalOrders">5</span>  &nbsp;&nbsp;&nbsp;Total Payment : $&nbsp;<span id="totalPayment">2520</span> 
+                    </h1>
+
+                    <div class="row m-2 p-2">
+
+                    <% for(j=0;j<count.length;j++){ %>
+
+                    <div class="col-md-6 form-bordered  bg-gray  text-transform-upr font-size-12  font-bold  font-black pad10A">
+                        <% if(count[j].progressStatus == "0"){ %>
+
+                        PENDING  ORDERS :<span id="totalPendingCount"> <%=count[j].count %> </span> 
+                        &nbsp;&nbsp;&nbsp;Total Payment : $ &nbsp;<span id="totalPendingSum"><%count[j].totalSum %></span>  </div>
+
+                    <% } else if(count[j].progressStatus == "1"){ %>
+
+                        CONFIRMED  ORDERS :<span id="totalPendingCount"> <%=count[j].count %> </span> 
+                        &nbsp;&nbsp;&nbsp;Total Payment : $ &nbsp;<span id="totalPendingSum"><%count[j].totalSum %></span>  </div>
+
+                    <% } else if(count[j].progressStatus == "2"){ %>
+
+                        CANCELLED ORDERS :<span id="totalPendingCount"> <%=count[j].count %> </span> 
+                        &nbsp;&nbsp;&nbsp;Total Payment : $ &nbsp;<span id="totalPendingSum"><%count[j].totalSum %></span>  </div>
+                    
+                    <% } else if(count[j].progressStatus == "3"){ %>
+
+                        PROCESSED ORDERS :<span id="totalPendingCount"> <%=count[j].count %> </span> 
+                        &nbsp;&nbsp;&nbsp;Total Payment : $ &nbsp;<span id="totalPendingSum"><%count[j].totalSum %></span>  </div>
+                    
+                    <% } else if(count[j].progressStatus == "5"){ %>    
+
+                        COMPLETED ORDERS :<span id="totalPendingCount"> <%=count[j].count %> </span> 
+                        &nbsp;&nbsp;&nbsp;Total Payment : $ &nbsp;<span id="totalPendingSum"><%count[j].progressStatus %></span>  </div>
+                    
+                    <% } %> <!-- If Statement Finish -->
+                <% } %> <!-- For Loop Finish -->
+
+                </div>
+
+                </div>
+            
+
+                </div>
+      
+                <table id="data-table-command" class="table table-striped table-vmiddle">
+                    <thead>
+                        <tr>
+                            <th data-column-id="id" data-visible="false">Order ID</th>
+                            <th data-column-id="name">Name</th>
+                            <th data-column-id="Status">Status</th>
+                            <th data-column-id="phoneNumber" data-order="desc">Service Date</th>
+                            <th data-column-id="email" data-order="desc">Phone Number</th>
+                            <th data-column-id="Registered At">Price</th>
+                            <th data-column-id="commandsStatus" data-formatter="commandsStatus" data-sortable="false">Payment Status</th>
+                            <th data-column-id="commands" data-formatter="commands" data-sortable="false">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for(t=0;t<data1.length;t++) { %>
+                            <tr>
+                                <td><%-data1[t].orderId %></td>
+                                <td><%-data1[t].user.firstName %> <%-data1[t].user.lastName%> </td>
+                                <% var status = "Pending"; %>
+
+                                <% if(data1[t].progressStatus=="1") status="Confirmed" %>
+                                <% if(data1[t].progressStatus=="2") status="Cancelled" %>
+                                <% if(data1[t].progressStatus=="3") status="Processing" %>
+                                <% if(data1[t].progressStatus=="4") status="Cancelled-Comapny" %>
+                                <% if(data1[t].progressStatus=="5") status="Completed" %>
+                                %>
+
+                                <td><%=status %></td>
+                                
+                                <td><%-new Date(data1[t].order.serviceDateTime) %></td>
+                                <td><%-data1[t].user.countryCode %> <%-data1[t].user.phoneNumber %>  </td>
+                                <td><%-data1[t].order.totalOrderPrice %> </td>
+                                
+                                <%
+                                var Payment = "Failed";
+                                if(data1[t].payment && data1[t].payment.transactionStatus=="1") {
+                                    Payment="Success"
+                                }
+                                %>
+                                <td><%-Payment %></td>
+                                <td><button class="btn btn-sm btn-primary">Action</button></td>
+                            </tr>
+                        <%}%>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</section>
+        <script type="text/javascript">
+        $(function() {
+            $('#employeeTab').addClass('active');
+            $('#employeeTab a[href^="<%- adminpath %>coupans"]').addClass('active');
+        });
+            $(document).ready(function(){
+
+                               //Command Buttons
+                var grid = $("#data-table-command").bootgrid({
+                    css: {
+                        icon: 'zmdi icon',
+                        iconColumns: 'zmdi-view-module',
+                        iconDown: 'zmdi-expand-more',
+                        iconRefresh: 'zmdi-refresh',
+                        iconUp: 'zmdi-expand-less'
+                    },
+                    formatters: {
+                        "commands": function(column, row) {
+                            return "<button type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" data-row-id=\"" + row.id + "\"><span class=\"zmdi zmdi-edit\"></span></button> " + 
+                            "<button type=\"button\" class=\"btn btn-icon command-delete waves-effect waves-circle\" data-row-id=\"" + row.id + "\"><span class=\"zmdi zmdi-delete\"></span></button>" ;
+                        },
+                        "commandsStatus": function(column, row) {
+                            console.log(row)
+                            
+                            
+                        }
+                    }
+                }).on("loaded.rs.jquery.bootgrid", function()
+            {
+                /* Executes after data is loaded and rendered */
+                grid.find(".command-edit").on("click", function(e)
+                {
+                    window.location.href="<%-adminpath%>orders/view/"+$(this).data("row-id");
+                }).end().find(".command-delete").on("click", function(e)
+                {
+                    var id = $(this).data("row-id");
+                    swal({   
+                        title: "Are you sure?",   
+                        text: "You will not be able to recover this  employee details!",   
+                        type: "warning",   
+                        showCancelButton: true,   
+                        confirmButtonColor: "#DD6B55",   
+                        confirmButtonText: "Yes, delete it!",   
+                        cancelButtonText: "No, cancel plx!",   
+                    }, function(isConfirm){   
+                        if (isConfirm) {    
+                            console.log(id);
+                            $.ajax({
+                                type: 'GET',
+                                url: '<%-adminpath%>employees/delete/'+id,
+                                dataType: 'json',
+                                success: function (response) {
+                                    if (response.code == '200') {
+                                           showToastSuccess( response.message);
+                                           //$(".page-loader").hide();
+                                           setTimeout(function(){ window.location.reload(); },2500);
+                                    }
+                                    else{
+                                       //$(".page-loader").hide();
+                                        showToastError(response.message)
+                                    }
+                                }
+                            });  
+                        } 
+                    });
+                }).end().find(".command-block").on("click", function(e)
+                {
+                    var id = $(this).data("row-id");
+                    $.ajax({
+                        type: 'POST',
+                        url: '<%-adminpath%>employees/status/',
+                        data: {'id': id,'status': '1'},
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response.code == '200') {
+                                   showToastSuccess( response.message);
+                                   //$(".page-loader").hide();
+                                   setTimeout(function(){ window.location.reload(); },2500);
+                            }
+                            else{
+                               //$(".page-loader").hide();
+                                showToastError(response.message)
+                            }
+                        }
+                    });  
+                    
+                }).end().find(".command-unblock").on("click", function(e)
+                {
+                    var id = $(this).data("row-id");
+                    $.ajax({
+                        type: 'POST',
+                        url: '<%-adminpath%>employees/status/',
+                        data: {'id': id,'status': '0'},
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response.code == '200') {
+                                   showToastSuccess( response.message);
+                                   //$(".page-loader").hide();
+                                   setTimeout(function(){ window.location.reload(); },2500);
+                            }
+                            else{
+                               //$(".page-loader").hide();
+                                showToastError(response.message)
+                            }
+                        }
+                    });  
+                    
+                });
+            })
+            });
+        </script>

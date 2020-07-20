@@ -131,11 +131,6 @@ else return []
       allowNull: false,
       defaultValue:0
    },
-   
-
-
-
-
   
 trackingLatitude:
 
