@@ -98,7 +98,13 @@
                                 }
                                 %>
                                 <td><%-Payment %></td>
-                                <td><button class="btn btn-sm btn-primary">Action</button></td>
+                                <td>
+
+                                    <button type="button" class="btn btn-icon command-edit waves-effect waves-circle" data-row-id="<%=data1[t].orderId %>"><span class="zmdi zmdi-edit"></span></button>
+
+                                    <button type="button" class="btn btn-icon command-delete waves-effect waves-circle" data-row-id="" ""><span class="zmdi zmdi-delete"></span></button>
+
+                                </td>
                             </tr>
                         <%}%>
                     </tbody>
@@ -125,12 +131,18 @@
                     },
                     formatters: {
                         "commands": function(column, row) {
-                            return "<button type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" data-row-id=\"" + row.id + "\"><span class=\"zmdi zmdi-edit\"></span></button> " + 
+
+                            return "<button type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" data-row-id=\"" + row.id + "\"><span class=\"zmdi zmdi-eye\"></span></button> "+ 
                             "<button type=\"button\" class=\"btn btn-icon command-delete waves-effect waves-circle\" data-row-id=\"" + row.id + "\"><span class=\"zmdi zmdi-delete\"></span></button>" ;
                         },
                         "commandsStatus": function(column, row) {
                             console.log(row)
-                            
+                            if(row.commandsStatus == "Failed")
+                            {
+                                return "<button class=\"btn btn-danger commands-block\" data-row-id=\"" + row.id + "\" data-ts-color=\"red\">"+row.commandsStatus+"</button>";
+                            }else{
+                                return "<button class=\"btn btn-primary commands-block\" data-row-id=\"" + row.id + "\" data-ts-color=\"red\">"+row.commandsStatus+"</button>";
+                            }
                             
                         }
                     }
@@ -150,13 +162,13 @@
                         showCancelButton: true,   
                         confirmButtonColor: "#DD6B55",   
                         confirmButtonText: "Yes, delete it!",   
-                        cancelButtonText: "No, cancel plx!",   
+                        cancelButtonText: "No! Cancel.",   
                     }, function(isConfirm){   
                         if (isConfirm) {    
                             console.log(id);
                             $.ajax({
                                 type: 'GET',
-                                url: '<%-adminpath%>employees/delete/'+id,
+                                url: '<%-adminpath%>orders/delete/'+id,
                                 dataType: 'json',
                                 success: function (response) {
                                     if (response.code == '200') {

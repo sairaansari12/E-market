@@ -1,5 +1,6 @@
 
 const express = require('express');
+const { adminAuth } = require('../../middleware/auth');
 const app     = express();
 const Op = require('sequelize').Op;
 const ORDERS= db.models.orders
@@ -216,6 +217,42 @@ if(fromDate!="" && toDate!="")
     return responseHelper.error(res, e.message, 400);
   }
 
+
+});
+
+app.get('/view/:orderid', adminAuth, async (req, res, next) => {
+
+
+  const findData = await SUBORDERS.findAndCountAll({
+    order: [
+      ['createdAt', 'DESC'],  
+  ],
+  where : {orderId: req.params.orderid},
+  
+  include: [
+    {model: USER , attributes: ['id','firstName','lastName',"phoneNumber","countryCode","image"]},
+    {model: ORDERS , attributes: ['serviceDateTime','orderPrice','promoCode','offerPrice','serviceCharges','totalOrderPrice','createdAt']},
+      {
+      model: PRODUCTS,
+      attributes: ['id','name','description','price','icon','thumbnail','type','price','duration'],
+      required: false
+    },
+    {
+      model: ADDRESS,
+      attributes: ['addressName','addressType','houseNo','town','landmark','city']
+    }
+  
+  ],
+  distinct:true,
+  limit: 1 ,
+
+});
+
+let data = findData.rows[0].dataValues;
+
+// console.log("orders->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",data.product);
+// return false
+return res.render('admin/orders/viewOrder.ejs',{data});
 
 });
 
@@ -603,64 +640,64 @@ companyId: req.companyId
 });
 
 
-app.get('/view/:id',adminAuth,async(req,res,next) => { 
+// app.get('/view/:id',adminAuth,async(req,res,next) => { 
   
-  var id=req.params.id
-  try {
+//   var id=req.params.id
+//   try {
 
-  let responseNull=  common.checkParameterMissing([id])
-  if(responseNull) 
-  { req.flash('errorMessage',appstrings.required_field)
-  return res.redirect(adminpath+"orders");
-}
+//   let responseNull=  common.checkParameterMissing([id])
+//   if(responseNull) 
+//   { req.flash('errorMessage',appstrings.required_field)
+//   return res.redirect(adminpath+"orders");
+// }
 
-      const findData = await ORDERS.findOne({
-      where :{companyId :req.companyId, id: id },
-      include: [
-        {model: USERS , attributes: ['firstName','lastName','countryCode','phoneNumber','image'] } ,
-        {model: ASSIGNMENT , attributes: ['id'],
-        include: [{
-          model: EMPLOYEE,
-          attributes: ['id','firstName','lastName','countryCode','phoneNumber','image'],
-          required: false
-        }]
+//       const findData = await ORDERS.findOne({
+//       where :{companyId :req.companyId, id: id },
+//       include: [
+//         {model: USERS , attributes: ['firstName','lastName','countryCode','phoneNumber','image'] } ,
+//         {model: ASSIGNMENT , attributes: ['id'],
+//         include: [{
+//           model: EMPLOYEE,
+//           attributes: ['id','firstName','lastName','countryCode','phoneNumber','image'],
+//           required: false
+//         }]
       
-      } ,
-        {model: SUBORDERS , attributes: ['id','serviceId','quantity'],
-        include: [{
-          model: PRODUCTS,
-          attributes: ['id','name','description','price','icon','thumbnail','type','price','duration'],
-          required: false
-        }]},
+//       } ,
+//         {model: SUBORDERS , attributes: ['id','serviceId','quantity'],
+//         include: [{
+//           model: PRODUCTS,
+//           attributes: ['id','name','description','price','icon','thumbnail','type','price','duration'],
+//           required: false
+//         }]},
         
-      ]
+//       ]
       
             
-      });
+//       });
 
 
 
-      var empData = await EMPLOYEE.findAll({
-        where :{companyId:req.companyId}
+//       var empData = await EMPLOYEE.findAll({
+//         where :{companyId:req.companyId}
     
-    });
+//     });
 
    
 
 
 
-      return res.render('admin/orders/viewOrder.ejs',{data:findData,empData:empData});
+//       return res.render('admin/orders/viewOrder.ejs',{data:findData,empData:empData});
 
 
 
-    } catch (e) {
-      req.flash('errorMessage',e.message)
-      return res.redirect(adminpath+"orders");
-    }
+//     } catch (e) {
+//       req.flash('errorMessage',e.message)
+//       return res.redirect(adminpath+"orders");
+//     }
 
 
  
-});
+// });
 
 
 app.get('/add',adminAuth, async (req, res, next) => {
