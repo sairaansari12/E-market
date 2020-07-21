@@ -28,7 +28,7 @@
     "flash": "^1.1.0",
     "jsonwebtoken": "^8.5.1",
     "lodash.sortby": "^4.7.0",
-    "moment": "^2.24.0",
+    "moment": "^2.27.0",
     "mysql2": "^2.1.0",
     "node-cron": "^2.0.3",
     "node-geocoder": "^3.27.0",

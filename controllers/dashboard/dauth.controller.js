@@ -1,9 +1,19 @@
 
 const express = require('express');
 const app     = express();
+const moment = require('moment');
+const { QueryTypes, Sequelize } = require('sequelize');
 const hashPassword = require('../../helpers/hashPassword');
+const db = require('../../db/db');
 const COMPANY= db.models.companies
+const USER = db.models.users
+const ORDERS= db.models.orders
+const SUBORDERS=db.models.suborders
 const Op = require('sequelize').Op;
+
+ORDERS.hasMany(SUBORDERS,{foreignKey: 'orderId'});
+ORDERS.hasOne(PAYMENT,{foreignKey: 'orderId'})
+SUBORDERS.hasMany(PAYMENT,{foreign_key: 'orderId'});
 
 function isAdminAuth(req, res, next) {
     if(req.session.userData){
@@ -16,108 +26,107 @@ function isAdminAuth(req, res, next) {
 app.get('/', async (req, res, next) => {
    //return res.render(adminfilepath+'index.ejs',{data:null});
     if(req.session.userData){
-       //var data=await  getDashboardData("2020-04-10","2020-04-17",null,null,req.session.companyId)
-        return res.render(adminfilepath+'index.ejs',{data:null});
+       var data=await  getDashboardData(req.session.companyId);
+
+       console.log(data);
+
+        return res.render(adminfilepath+'index.ejs',{data:data});
     }
     return res.render(adminfilepath+'login.ejs');
 });
 
-async function getDashboardData(fromDate1,toDate1,progressStatus1,filterName,companyId)
+async function getDashboardData(companyId)
 {
-    try {
-        
-        var fromDate =  ""
-        var toDate =  ""
-        var filterNameMain=[sequelize.literal(`DAY(createdAt)`), 'DAY']
 
-        var progressStatus =  ['0','1','2','3','4','5']
-        if(progressStatus1 && progressStatus1!="")  progressStatus=[progressStatus1]
-        if(filterName && filterName!="")
-        {
-          if(filterName=="MONTH")  filterNameMain= [sequelize.literal(`MONTH(createdAt)`), 'MONTH']
-          if(filterName=="YEAR")  filterNameMain= [sequelize.literal(`YEAR(createdAt)`), 'YEAR']
-          if(filterName=="WEEK")  filterNameMain= [sequelize.literal(`WEEK(createdAt)`), 'WEEK']
-
-        }
-
-
-
-        orderWhere={companyId: companyId,progressStatus: { [Op.or]: progressStatus}}
-        paymentWhere={companyId: companyId,transactionStatus: { [Op.or]: progressStatus}}
-        userWhere={companyId: companyId}
-
-        
-       
-        if(fromDate1)fromDate= Math.round(new Date(fromDate1).getTime())
-        if(toDate1) toDate=Math.round(new Date(toDate1).getTime())
-        
-      
-      if(fromDate1!="" && toDate1!="")
-      {
-        
-        orderWhere={companyId: companyId,progressStatus: { [Op.or]: progressStatus},createdAt: { [Op.gte]: fromDate,[Op.lte]: toDate}}
-        paymentWhere={companyId: companyId,transactionStatus: { [Op.or]: progressStatus},createdAt: { [Op.gte]: fromDate,[Op.lte]: toDate}}
-        userWhere={companyId: companyId,createdAt: { [Op.gte]: fromDate,[Op.lte]: toDate}}
-
-    
+    //Count Registered Users
+    const users =  await USER.count({
+      where: {
+        companyId: companyId
       }
+    });
 
-          var ordersDataqDepth = await ORDERS.findAll({
-            attributes: ['progressStatus',
-              [sequelize.fn('sum', sequelize.col('totalOrderPrice')), 'totalSum'],
-              filterNameMain,
-              [sequelize.fn('COUNT', sequelize.col('progressStatus')), 'count']],
-              group: [filterNameMain],
-          where :orderWhere
-          });
-          
-          var paymentDataqdepth = await PAYMENT.findAll({
-            attributes: ['transactionStatus',
-              [sequelize.fn('sum', sequelize.col('amount')), 'totalSum'],
-              filterNameMain,
-              [sequelize.fn('COUNT', sequelize.col('transactionStatus')), 'count']],
-            group: ['transactionStatus',filterNameMain],
-          where :paymentWhere});
-      
-          var userDataqDepth = await USER.findAll({
-            attributes: ['id','status',
-            filterNameMain,
-              [sequelize.fn('COUNT', sequelize.col('status')), 'count'],[sequelize.literal(`WEEK(createdAt)`), 'week'],
-            ],
-               group:['status',filterNameMain],
-              where :userWhere});
+    // console.log("user count is ",users);
 
-
-          var categoryDataq = await CATEGORY.findAll({
-            attributes: ['id','parentId',filterNameMain,
-              [sequelize.fn('COUNT', sequelize.col('status')), 'count']],
-            group: ['status',filterNameMain],
-          where :userWhere});
-
-
-
-          var userDtaa={}
-          userDtaa.ordersDataStat=JSON.parse(JSON.stringify(ordersDataqDepth))
-          userDtaa.paymentDataStat=JSON.parse(JSON.stringify(paymentDataqdepth))
-          userDtaa.userDataStat=JSON.parse(JSON.stringify(userDataqDepth))
-          userDtaa.categoryDataStat=JSON.parse(JSON.stringify(categoryDataq))
-          userDtaa.totalStatOrder=userDtaa.ordersDataStat.map(item => item.count).reduce(function(acc, val) { return acc + val; }, 0)
-          userDtaa.totalStatCategory=userDtaa.categoryDataStat.map(item => item.count).reduce(function(acc, val) { return acc + val; }, 0)
-          userDtaa.totalStatPayment=userDtaa.paymentDataStat.map(item => item.count).reduce(function(acc, val) { return acc + val; }, 0)
-          userDtaa.totalStatUser=userDtaa.userDataStat.map(item => item.count).reduce(function(acc, val) { return acc + val; }, 0)
-          userDtaa.mainTotalOrder=(await ORDERS.findAll({where:{companyId:companyId}})).length
-          userDtaa.mainTotalUser=(await USER.findAll({where:{companyId:companyId}})).length
-          userDtaa.mainTotalPayment=(await PAYMENT.findAll({where:{companyId:companyId}})).length
-          userDtaa.mainTotalCategory=(await CATEGORY.findAll({where:{companyId:companyId}})).length
-
-          return  userDtaa
-      
-        } catch (e) {
-          console.log(e)
-          return null
-         // return responseHelper.error(res, e.message, 400);
+    //Count Orders under this company
+    const orders = await ORDERS.count({
+      include: [
+        {
+          model: SUBORDERS, 
+          as : 'suborders', 
+          attributes: ['companyId','userId','orderId'],
+          where: {
+            companyId: companyId
+          }
         }
-      
+      ]
+    });
+
+    // console.log("orders count is ",orders);
+
+    //Total Payments
+    const payments = await db.query(
+                        "SELECT SUM(`amount`) AS total FROM `payment` AS P INNER JOIN `suborders` AS S ON P.orderId = S.orderId WHERE S.companyId = :companyId",
+                        {
+                          replacements: {companyId: companyId},
+                          type: QueryTypes.SELECT
+                        });
+
+    // console.log("payments count is ",payments);
+
+    const weeklyPayments = await db.query(
+                              "SELECT SUM(`amount`) AS total FROM `payment` AS P INNER JOIN `suborders` AS S ON P.orderId = S.orderId WHERE S.companyId = :companyId AND P.createdAt > :datefilter",
+                              {
+                                replacements: 
+                                  {
+                                    companyId: companyId, 
+                                    datefilter: moment().subtract(7, 'days').toDate()
+                                  },
+                                type: QueryTypes.SELECT
+                              });
+
+    //moment().subtract(7, 'days').toDate()
+
+    // console.log("weekly payments are ",weeklyPayments);
+
+    //weekly Orders
+    const weeklyOrders = await ORDERS.count({
+      where: {
+        createdAt: {
+          [Op.gte]: moment().subtract(7, 'days').toDate()
+        }
+      },
+      include: [
+        {
+          model: SUBORDERS, 
+          as : 'suborders', 
+          attributes: ['companyId','userId','orderId'],
+          where: {
+            companyId: companyId
+          }
+        }
+      ]
+    });
+
+    // console.log("weekly orders are ,",weeklyOrders);
+    
+      //Group by status payments
+      const paymentStatus = await db.query(
+        "SELECT COUNT(*) AS `orders`,`progressStatus` FROM `suborders` WHERE `companyId` = :companyId GROUP BY `progressStatus`",
+        {
+          replacements: {companyId: companyId},
+          type: QueryTypes.SELECT
+        });
+
+
+      let data = {};
+      data.users = users;
+      data.orders = orders;
+      data.payments = payments[0].total != null ? payments[0].total: 0;
+      data.weeklyOrders = weeklyOrders;
+      data.weeklyPayments = weeklyPayments[0].total != null ? weeklyPayments[0].total: 0;
+      data.paymentStatus = paymentStatus;
+
+      return data;
 
 }
 

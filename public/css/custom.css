@@ -1,0 +1,9 @@
+.card_header{
+
+}
+.card_body{
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 49px;
+    font-size: 60px;
+    text-align: center;
+}
