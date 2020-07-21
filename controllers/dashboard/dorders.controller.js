@@ -247,12 +247,16 @@ app.get('/view/:orderid', adminAuth, async (req, res, next) => {
   limit: 1 ,
 
 });
-
+console.log(findData);
 let data = findData.rows[0].dataValues;
+var empData = await EMPLOYEE.findAll({
+        where :{companyId:req.companyId}
+    
+    });
 
 // console.log("orders->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",data.product);
 // return false
-return res.render('admin/orders/viewOrder.ejs',{data});
+return res.render('admin/orders/viewOrder.ejs',{data,findData,empData:empData});
 
 });
 

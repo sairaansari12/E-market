@@ -1,20 +1,7 @@
 
    <%-include ('../partials/header')%>
-    <%-include ('../partials/side_bar')%>
-
-    <div class="bg-gray text-transform-upr font-size-15 font-bold primary-font pad10A">Edit Service</div>
-
-
-
-    <%-include ('../partials/flashMessage')%>
-    <% 
-    if(data==undefined || data==null || data=='{}' || data.length==0) {%>
-
-    <%-include ('../partials/norecord')%>
-
-
-    <%}else {%>
-
+ <%-include ('../partials/side_bar')%>
+<section id="content">
     <div class="form-input col-md-9 drop-shadow center-div">
         <div class="form-label  font-size-18 pad15L">
             <label for="">Order Details:</label>
@@ -108,65 +95,36 @@
     </table>
                                         
     </div>
-                       
-
-
-
-                        <div class="form-input col-md-9 center-div pad10L" >
-
-                                <div class="form-label font-size-18 pad20L">
-            
-                                    <label for="">
-                                       Included Services Details:<br>
-                                    </label>
-                                </div>
-            
-            
-                                   
-                                <% for(var t=0;t<data.product.length ;t ++)
-                                {%> 
-                               
-                            
-                                    <div class="content-box ">
-                                        <h3 class="content-box-header ui-state-default">
-                                            <span class="float-left">Sevice <%-t+1%> Details:</span>
-                                           
-                                        </h3>
-                                      
-                                            
-                                            <table class="table font-size-12">
-                                                <tr>
-                                                    <td> <img src="<%-data.product[t].icon %>" alt="" width="50" height="50"/>
-                                                    <td> <%-data.product[t].name %>
-                                                    </tr>
-                            
-                                                <tr>
                 
-                
-                                         
-                                            <tr>
-                                                <td><b>Quantity</b></td>
-                                                <td><%-data[t].quantity %> </td>
-                                            </tr>
-            
-                                            </table>
-            
-                                           
-                                        
-                                  
-                    
-                                  
-                                </div>
-                                <%}%>
-            
-                            </div>
- 
-               
-               
-               
-                          
+    <div class="form-input col-md-9 center-div pad10L" >
 
-        
+            <div class="form-label font-size-18 pad20L">
+
+                <label for="">
+                   Included Services Details:<br>
+                </label>
+            </div>
+            <div class="content-box ">
+                <table class="table font-size-12">
+                <thead>
+                <th>S.No.</th>
+                <th>Service Name</th>
+                <th>Address</th>
+                <th>Quantity</th>
+                </thead>
+                <tbody>
+                <% for(var t=0;t<findData.count ;t ++){%> 
+                    <tr>
+                        <td><%-t+1 %></td>
+                        <td> <%-findData.rows[t].product.name %>
+                        <td> <%-findData.rows[t].address.addressName %>
+                        <td><%-findData.rows[t].quantity %> </td>
+                    </tr>
+                <%}%>
+                </tbody>
+                </table>
+            </div>
+        </div>
         <div class="form-input col-md-9 center-div ">
             <div class="form-label font-size-18 pad15L">
 
@@ -177,29 +135,18 @@
             
         <% 
         var empDatat=data.assignedEmployees!=null?data.assignedEmployees :[] 
-               for(var t=0;t<empDatat.length ;t ++)
-       
-        {%> 
-       
-            
+            for(var t=0;t<empDatat.length ;t ++){ %> 
             <div class="content-box ">
                 <h3 class="content-box-header ui-state-default">
                     <span class="float-left">Employee <%-t+1%> Details:</span>
-                   
                 </h3>
-              
-                    
-                    <table class="table small font-size-11">
-                        <tr>
-                            <td> <img  style="border-radius:50%" src="<%-empDatat[t].employee.image %>" alt="" width="60" height="60"/>
-                            <td> <b><%-empDatat[t].employee.firstName +' '+ empDatat[t].employee.lastName +' ,' +empDatat[t].employee.countryCode +empDatat[t].employee.phoneNumber  %></b>
-                            </tr>
-    
-                        <tr>
-
-                    </table>   
-
-          
+                <table class="table small font-size-11">
+                    <tr>
+                        <td> <img  style="border-radius:50%" src="<%-empDatat[t].employee.image %>" alt="" width="60" height="60"/>
+                        <td> <b><%-empDatat[t].employee.firstName +' '+ empDatat[t].employee.lastName +' ,' +empDatat[t].employee.countryCode +empDatat[t].employee.phoneNumber  %></b>
+                        </tr>
+                    <tr>
+                </table>   
         </div>
         <%}%>
 
@@ -210,12 +157,13 @@
 
 </section>
 
-<% } %>
+
 
                 	
             </div><!-- #page-main -->
         </div><!-- #page-wrapper -->
-
+   </section>
+</section>
     </body>
 </html>
 
