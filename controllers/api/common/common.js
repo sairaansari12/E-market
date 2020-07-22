@@ -31,7 +31,7 @@ getAllParentCategories: function (companyId)
 {
 
   const catData =  CATEGORY.findAll({
-    attributes: ['id','name','description','icon','thumbnail','createdAt','status'],
+    attributes: ['id','parentId','name','description','icon','thumbnail','createdAt','status'],
     where: {
       parentId :'0',
       id:  {[Op.not]: '0'},

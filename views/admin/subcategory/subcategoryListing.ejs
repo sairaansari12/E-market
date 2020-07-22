@@ -1,0 +1,184 @@
+<!-- AUI Framework -->
+
+
+
+<%- include ('../partials/header') %>
+<%- include ('../partials/side_bar') %>
+<section id="content">
+    
+    <div class="container">
+
+        <div class="block-header">
+           
+                <a  class="pull-left" href="javascript:;" onclick="window.history.back()";> <i class="col-md-1 lead zmdi zmdi-arrow-left"></i> </a>
+                <div class="lead ">All SubCategories</div>
+                    
+        </div>
+
+
+
+
+        <% 
+if(data==undefined || data==null || data=='{}' || data.length==0) {%>
+
+    <%-include ('../partials/norecord')%>
+
+
+<%}else {%>
+
+<div class="row">
+
+       
+            <%for(var t=0;t<data.length;t++) {
+                %>
+
+                <div class="col-md-4 col-sm-6">
+            
+
+                <div class="card">
+                    <div class="card-header ch-alt m-b-20">
+                        <h2><%-data[t].name %> <small>Click to check categories for <%-data[t].name %> </small></h2>
+                        <ul class="actions">
+                            <li>
+
+                                <a href="<%-adminpath%>category/view/<%= data[t].id %>" title="">
+                                    <i class="zmdi zmdi-edit"></i>
+                                </a>
+
+
+                               
+                            </li>
+                            <li>
+                                <a onclick="return confirm('Are you sure you want to delete this?');"  href="<%-adminpath%>category/delete/<%= data[t].id %>"  class="font-red" title="">
+                                    <i class="zmdi zmdi-delete"></i>
+                                    
+                                </a>
+                            </li>
+                           
+                        </ul>
+                        
+
+
+                        <a  class="btn bgm-green btn-float waves-effect" href="javascript:;"   <%if(data[t].status==0){%> style="display:none" <%}%>  id="block_status_<%-data[t].id%>"    onclick="StatusChange('<%= data[t].id %>','1')"  class="btn small  bg-green  ">
+                            <span class="button-content">
+                                <i class="zmdi zmdi-assignment-check"></i>
+                            </span>
+                        </a>
+            
+            
+                     
+                        
+                        <a  class="btn bgm-red btn-float waves-effect" href="javascript:;"   <%if(data[t].status==1){%> style="display:none" <%}%>  id="unblock_status_<%-data[t].id%>"  onclick="StatusChange('<%= data[t].id %>','0')"   class="btn small  bg-red  ">
+                            <span class="button-content">
+                                <i class="zmdi zmdi-block"></i>
+                            </span>
+                        </a>            
+
+
+                        <!-- <button class="btn bgm-red btn-float waves-effect"><i class="zmdi zmdi-assignment-check"></i></button> -->
+                    </div>
+
+                    <div class="card-body card-padding text-center">
+                        <img  src="<%-data[t].icon %>" style="opacity:0.5" width="210" height="180"  onerror="this.src='/assets/images/nocategory.png'"/>
+
+
+                        <a href="<%-adminpath%>subcategory?id=<%= data[t].id %>&name=<%= data[t].name%>&parent=<%= data[t].parentId%>" class="btn bgm-lightblue waves-effect  m-t-10 f-15 f-500  pull-right">
+
+
+                                sub-categories&nbsp;&nbsp;<i class="zmdi zmdi-arrow-forward"></i>
+                           
+                        </a>
+
+
+                    </div>
+
+                    
+
+
+
+                </div>
+
+           
+               
+            </div>
+           
+            <%}%>
+                   
+                </div>
+     
+
+<%}%>
+
+    </section>
+</section>
+
+
+
+<script>
+        $(function() {
+            $('#categoriestab').addClass('active toggled');
+            $('#catList a[href^="<%- adminpath %>/category/parent"]').addClass('active');
+        });
+    var selectedId="30a42e47-63e0-49d4-b77d-6496ec53b87d"
+        function StatusChange(id,status)
+        {
+    
+            var confirm1= (status=="1") ? "Inactive" : "Active"
+            if( confirm('Are you sure you want to '+confirm1+' this?'))
+            {
+            $.ajax({
+                type: 'POST',
+                url: '<%-adminpath%>category/status',
+                dataType: 'json',
+                data: {'id':id,'status':status},
+                success: function (response) {
+                    if (response.code == '200') {
+                       // $('#block_status_'+id).html('');
+    
+                        if(status == "1")
+                        {
+                           $('#block_status_'+id).hide()
+                           $('#unblock_status_'+id).show()
+                           showToastSuccess( "Inactive successfully")
+    
+    
+    
+                        }else{
+                             
+                             $('#block_status_'+id).show()
+                            $('#unblock_status_'+id).hide()
+                           // $('#block_status_'+id).append("<i  class='fa fa-truck'  aria-hidden='true'></i>")
+                           showToastSuccess( "Active successfully")
+    
+                        }
+                        
+                    }
+                    else{
+                       
+                        showToastError(response.message)
+                    }
+                },
+    
+                error :function(response)
+                {
+                    showToastError(response.message)
+    
+                }
+            });
+        }
+        }
+       
+        function getSubCat(id)
+        {
+          selectedId=id
+       window.location.reload()
+        }
+     
+     
+      $('#category').val(getURLParameter('id'))
+     
+    
+    
+    
+      
+    </script>

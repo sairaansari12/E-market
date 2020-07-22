@@ -1,6 +1,30 @@
 const config = require('config');
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
+var catArr = new Array();
+
+async function getallcats(parentid){
+
+    const cat = await CATEGORY.findOne({
+        attributes: ['id','parentId','name','description','icon','thumbnail','orderby','level'],
+        where: {
+            id: parentid
+        }
+    });
+
+    catArr.push(cat.dataValues);
+
+    if(cat.dataValues.parentId != 0){
+
+        await getallcats(cat.dataValues.parentId);
+
+    }else{
+
+        return catArr;
+
+    }
+
+}
 
 
 var methods={
@@ -45,6 +69,13 @@ uploadFunction:  function(req,res,imageName)
         }
         console.log('Upload Successfully');
     });
+},
+getAllParentCategories: async function(parentid){
+
+    let getAllParent = await getallcats(parentid);
+
+    return getAllParent;
+
 }
 }
 module.exports=methods

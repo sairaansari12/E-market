@@ -6,6 +6,31 @@ const Op = require('sequelize').Op;
 
 CATEGORY.belongsTo(CATEGORY,{as: 'category',foreignKey: 'parentId'})
 
+var catArr = new Array();
+
+async function getallcats(parentid){
+
+    const cat = await CATEGORY.findOne({
+        attributes: ['id','parentId','name','description','icon','thumbnail','orderby','level'],
+        where: {
+            id: parentid
+        }
+    });
+
+    catArr.push(cat.dataValues);
+
+    if(cat.dataValues.parentId != 0){
+
+        await getallcats(cat.dataValues.parentId);
+
+    }else{
+
+        return catArr;
+
+    }
+
+}
+
 
 
 app.get('/',adminAuth, async (req, res, next) => {
@@ -24,30 +49,20 @@ app.get('/',adminAuth, async (req, res, next) => {
        }
 
       
-  try{
-   
-   
+  try{ 
+
       const servicesData = await CATEGORY.findAll({
         attributes: ['id','name','description','icon','thumbnail','createdAt','status','parentId','level','minPriceRange','maxPriceRange'],
         where: where,
-               include:[ {
-                model: CATEGORY,
-                as: 'category',
-                attributes: ['name','icon','thumbnail'],
-                required: true
-              }],
               
         order: [
           ['orderby','ASC']
         ],
-      });
-     
+      });     
 
-      var cdata= await commonMethods.getAllParentCategories(req.companyId)
+      var cdata= await commonMethods.getAllParentCategories(req.session.companyId);
 
-        return res.render('admin/subcategory/subCategory.ejs',{parData:cdata,data:servicesData});
-
-
+        return res.render('admin/subcategory/subcategoryListing.ejs',{parData:cdata,data:servicesData});
 
       } catch (e) {
         return responseHelper.error(res, e.message, 400);
@@ -56,10 +71,20 @@ app.get('/',adminAuth, async (req, res, next) => {
 
 });
 
+app.get('/childcat/:parentid',adminAuth, async(req, res , next)=>{
 
+  const childcat = await CATEGORY.findAll({
+    attributes: ['id','parentId','name','icon'],
+    where: {parentId: req.params.parentid}
+  });
 
+  // console.log("childcat",childcat);
 
+  return res.json({
+    data: childcat
+  });
 
+});
 
 
 app.get('/add',adminAuth, async (req, res, next) => {
@@ -67,7 +92,9 @@ app.get('/add',adminAuth, async (req, res, next) => {
   try{
 
     
-    var cdata= await  commonMethods.getAllParentCategories(req.companyId)
+    var cdata= await  commonMethods.getAllParentCategories(req.companyId);
+
+    // console.log("cdata",cdata);
 
     return res.render('admin/subcategory/addSubCategory.ejs',{parData:cdata});
 
@@ -182,8 +209,7 @@ app.post('/add',adminAuth,async (req, res) => {
   try {
     const data = req.body;
 
-
-    let responseNull= commonMethods.checkParameterMissing([data.pcategory,data.category,data.serviceName])
+    let responseNull= commonMethods.checkParameterMissing([data.parentId,data.name,data.description])
     if(responseNull) return responseHelper.post(res, appstrings.required_field,null,400);
 
 
@@ -221,47 +247,30 @@ app.post('/add',adminAuth,async (req, res) => {
       attributes: ['id'],
 
       where: {
-        name: data.serviceName,
+        name: data.name,
         companyId: req.companyId
 
       }
     });
 
 
-
+    let level = req.body.cats.length;
     if (!user) {
 
      var parentId=0
-     var level=1
-  var connectCat=[data.pcategory]
-     if(data.category && data.category!=""){ parentId=data.category
-    level=2
-    connectCat.push(data.category)
-     }
-
-     if(data.subcat1 && data.subcat1!="") 
-     {parentId=data.subcat1
-      level=3
-      connectCat.push(data.subcat1)
-
-     }
-     if(data.subcat2 && data.subcat2!="") 
-     {parentId=data.subcat2
-      level=4
-      connectCat.push(data.subcat2)
-
-     }
+     level=req.body.cats.length;
+    var connectCat=[data.pcategory]
+    
 
 
       const users = await CATEGORY.create({
-        name: data.serviceName,
+        name: data.name,
         description: data.description,
         icon: icon,
         thumbnail: thumbnail,
         companyId: req.companyId,
         level:level,
-        connectedCat:JSON.stringify(connectCat),
-        parentId :parentId
+        parentId :data.parentId
     
 
        });
@@ -271,8 +280,7 @@ app.post('/add',adminAuth,async (req, res) => {
 
         responseHelper.post(res, appstrings.add_service, null,200);
        
-      }
-     else  responseHelper.error(res, appstrings.oops_something, 400);
+      }else{  responseHelper.error(res, appstrings.oops_something, 400); }
 
 
     }
