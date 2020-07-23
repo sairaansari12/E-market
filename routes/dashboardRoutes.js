@@ -18,7 +18,7 @@ const bannerCtrl              = require('../controllers/dashboard/dbanner.contro
 const paymentCtrl              = require('../controllers/dashboard/dpayment.controller');
 const notificationCtrl              = require('../controllers/dashboard/dnotification.controller');
 const userCtrl              = require('../controllers/dashboard/duser.controller');
-
+const sizechartCtrl = require('../controllers/dashboard/dsizecharts.controller');
 
 router.use('/',authController);
 router.use('/category/',categoryController);
@@ -37,6 +37,7 @@ router.use('/banner/',bannerCtrl);
 router.use('/payment/',paymentCtrl);
 router.use('/notification/',notificationCtrl);
 router.use('/user/',userCtrl);
+router.use('/sizecharts/',sizechartCtrl);
 
 router.use((req, res, next) => {
 

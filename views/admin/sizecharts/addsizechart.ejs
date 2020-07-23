@@ -1,0 +1,230 @@
+<%- include ('../partials/header') %>
+<%- include ('../partials/side_bar') %>
+
+<section id="content">
+    <div class="container">
+
+<div class="col-lg-10 col-md-6 ml-auto mr-auto login_main_container">
+        
+    <div class="card card-categories">
+      <div class="card-header ">
+        <div class="card-header ">
+          <h3 class="header text-center">Add New Size Chart</h3>
+          
+        </div>
+      </div>
+
+      <div class="card-body ">
+
+          <form action="./admin/sizechart/add" method="POST" class="add_size_form p-5" enctype="multipart/form-data">
+
+              <div class="form-group"> 
+
+                <div class="form-group">
+                  <input type="text" name="title" placeholder="Enter Chart Title for Reference" class="form-control">
+                </div>
+
+              </div>
+
+              <div class="custom_frame p-2 m-5" style="background:#f5f3f3;padding:3%;">
+                
+                <h2>Property 1</h2>
+
+              <div class="form-group form-inline">
+                  
+                <input type="text" name="sizename" class="form-control" placeholder="Size Name">
+
+                <input type="text" name="country" class="form-control" placeholder="Country Name">
+
+
+              </div>
+
+              <div class="custom_fields">
+
+              <div class="form-group form-inline">
+
+                  <input type="text" class="form-control fieldName1" name="fieldName1" placeholder="Custom Field 1">
+
+                  <input type="text" class="form-control valueName1" name="valueName1" placeholder="Custom Value 1"> 
+
+              </div>
+
+              </div>
+
+              <button class="btn btn-warning btn-sm generate_size" type="button">
+                Generate New Size
+              </button>
+
+            </div>
+
+            <div class="dynamic_frames">
+
+            </div>
+
+              <button class="btn btn-info btn-sm generate_frame" type="button">
+                Generate New Property 
+              </button>
+  
+            
+              <div class="form-group">
+                <select name="category" class="form-control">
+                    <option value="" selected>Choose Category</option>
+                    <% for(j=0;j<categories.length;j++){ %>
+                    <option value="<%=categories[j].id %>"><%=categories[j].name %></option>
+                    <% } %>
+                </select>
+              </div>
+  
+            
+  
+            
+  
+            <button class="btn btn-success collect_size" type="button">
+              Update
+            </button>
+            
+  
+          </form>
+        </div>
+
+        
+        </div>
+
+        
+        <br />
+       
+      </div>
+
+    </div>
+</section>
+
+</section>
+
+<script>
+
+    var count = 2;
+    
+      //Generate New Fields
+    
+      $(document).on("click",".generate_size",function(){
+    
+        var html = `<div class="form-group form-inline">
+    
+    <input type="text" class="form-control fieldName1" name="fieldName${count}" placeholder="Custom Field ${count}">
+    
+    <input type="text" class="form-control valueName1" name="valueName${count}" placeholder="Custom Value ${count}"> 
+    <a class="remove_field" href="javascript:void();">X</a>
+    </div>`
+    
+    
+        $(this).prev(".custom_fields").append(html);
+    
+        count++;
+    
+      });
+    
+    
+      //Remove Fields
+      $(document).on("click",".remove_field",function(){
+    
+        $(this).parent("div").remove();
+        
+      });
+    
+      var counter = 2;
+    
+      //generate new property
+    
+      $(document).on("click",".generate_frame",function(){
+        var html = `<div class="custom_frame p-2 m-5" style="background:#f5f3f3;padding:3%;">
+          <p class="float-right"><a href="javascript:void();" class="delete_frame">(X)</a></a></p>
+    <h2>Property ${counter}</h2>
+    <div class="form-group">
+        
+      
+      <input type="text" name="sizename" class="form-control" placeholder="Size Name">
+    
+    
+    </div>
+    
+    <div class="custom_fields">
+    
+    <div class="form-group form-inline">
+    
+        <input type="text" class="form-control fieldName1" name="fieldName1" placeholder="Custom Field 1">
+    
+        <input type="text" class="form-control valueName1" name="valueName1" placeholder="Custom Value 1"> 
+    
+    </div>
+    
+    </div>
+    
+    <button class="btn btn-warning btn-sm generate_size" type="button">
+      Generate New Size
+    </button>
+    
+    </div>`;
+    
+      $(".dynamic_frames").append(html);
+    
+      counter++;
+    
+      });
+    
+    
+      //Remove Property
+    
+      $(document).on("click",".delete_frame",function(){
+    
+        $(this).parent("p").parent("div").remove();
+        counter--;
+      });
+    
+      var id = 1;
+      var mainArray = new Array();
+    
+    $(".collect_size").click(function(){
+    
+      var mystr = "";
+      var sizeChart = "";
+    
+      $(document).find(".custom_frame").each(function(index,value){
+    
+        var str = "";
+    
+        var sizeName = $(this).children(".form-inline,.form-group").children("input[name=sizename]").val();
+
+        var country  = $(this).children(".form-inline").children("input[name=country]").val();
+    
+        var customFields = $(this).children(".custom_fields");
+    
+            customFields.each(function(i,k){
+
+              console.log(k);
+
+    
+              var fieldName1 = $(this).find(".fieldName1").val();
+
+              var valueName1 = $(this).find(".valueName1").val();
+            //   console.log(fieldName1,valueName1);
+    
+              str += ',"'+fieldName1+'":"'+valueName1+'"';
+    
+            });
+
+            var finalstr = '{"id":"'+id+'" , "sizeName": "'+sizeName+'"'+str+'}';
+
+            mystr = finalstr+","+mystr;
+    
+      });
+    
+      var sizeChart = "["+mystr+"]";
+
+      console.log(sizeChart);
+    
+    //   console.log(sizeChart);
+    
+    });
+    
+      
+    </script>
