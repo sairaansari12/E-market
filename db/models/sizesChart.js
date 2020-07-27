@@ -17,10 +17,12 @@ module.exports = function(sequelize, DataTypes) {
       defaultValue: ''
 
     },
+    title: {
+      type: DataTypes.STRING(100),
+      allowNull: true,
+      defaultValue: ''
 
-  
-    
-
+    },
     status: {
       type: DataTypes.INTEGER(11),
       allowNull: false,

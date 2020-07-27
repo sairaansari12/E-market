@@ -139,11 +139,11 @@
         var html = `<div class="custom_frame p-2 m-5" style="background:#f5f3f3;padding:3%;">
           <p class="float-right"><a href="javascript:void();" class="delete_frame">(X)</a></a></p>
     <h2>Property ${counter}</h2>
-    <div class="form-group">
+    <div class="form-group form-inline">
         
       
       <input type="text" name="sizename" class="form-control" placeholder="Size Name">
-    
+      <input type="text" name="country" class="form-control" placeholder="Country Name">
     
     </div>
     
@@ -196,19 +196,18 @@
 
         var country  = $(this).children(".form-inline").children("input[name=country]").val();
     
-        var customFields = $(this).children(".custom_fields");
+        var customFields = $(this).find(".custom_fields");
     
             customFields.each(function(i,k){
-
-              console.log(k);
-
+              
     
               var fieldName1 = $(this).find(".fieldName1").val();
 
               var valueName1 = $(this).find(".valueName1").val();
-            //   console.log(fieldName1,valueName1);
-    
+              
               str += ',"'+fieldName1+'":"'+valueName1+'"';
+
+              console.log(fieldName1,valueName1);
     
             });
 
@@ -219,11 +218,31 @@
       });
     
       var sizeChart = "["+mystr+"]";
-
-      console.log(sizeChart);
     
     //   console.log(sizeChart);
-    
+
+
+      var title = $("input[name=title]").val();
+      var category = $("select[name=category]").val();
+
+    //Initialize Ajax Request for Insert Size Chart
+    $.ajax({
+      url: '<%-adminpath%>sizecharts/insert',
+      type: 'POST',
+      data: {sizename: sizeChart,category: category, title: title },
+      success: function(data){
+        if(data.status == 200){
+          showToastSuccess( data.message);
+        }else{
+          var msg = data.message;
+          $.each(msg,function(k,v){
+            showToastError(v.message);
+          });
+        }
+      }
+    })
+
+
     });
     
       

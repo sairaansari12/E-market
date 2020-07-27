@@ -36,7 +36,7 @@ const jwt = require('jsonwebtoken');
  SHIPMENT=db.models.shipment
  RATINGS=db.models.ratings
  WISHLIST=db.models.wishlist
-
+SIZECHARTS = db.models.sizehcharts
  
 
 

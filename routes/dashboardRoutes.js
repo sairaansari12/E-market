@@ -19,6 +19,7 @@ const paymentCtrl              = require('../controllers/dashboard/dpayment.cont
 const notificationCtrl              = require('../controllers/dashboard/dnotification.controller');
 const userCtrl              = require('../controllers/dashboard/duser.controller');
 const sizechartCtrl = require('../controllers/dashboard/dsizecharts.controller');
+const productsCtrl = require('../controllers/dashboard/dproducts.controller');
 
 router.use('/',authController);
 router.use('/category/',categoryController);
@@ -38,6 +39,7 @@ router.use('/payment/',paymentCtrl);
 router.use('/notification/',notificationCtrl);
 router.use('/user/',userCtrl);
 router.use('/sizecharts/',sizechartCtrl);
+router.use('/products',productsCtrl);
 
 router.use((req, res, next) => {
 
