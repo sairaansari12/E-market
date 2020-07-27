@@ -34,6 +34,7 @@ app.get('/getprofile',adminAuth,async(req,res,next) => {
     try {
       const data = req.body;
       console.log(data);
+      console.log(req.files);
       var logo1 = "";
       var logo2 = "";
       var logo3 = "";
