@@ -68,6 +68,11 @@ module.exports = function(sequelize, DataTypes) {
        onUpdate: 'CASCADE',
        onDelete: 'CASCADE',
     },
+    sizechartId: {
+      type: DataTypes.INTEGER(11),
+      allowNull: true,
+      defaultValue: 0
+    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,

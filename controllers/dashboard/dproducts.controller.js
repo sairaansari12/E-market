@@ -8,6 +8,7 @@ const db = require('../../db/db');
 const { adminAuth } = require('../../middleware/auth');
 const SIZECHART = db.models.sizesChart;
 const Products = db.models.products;
+const ProductSpecs = db.models.productSpecifications;
 const Op = require('sequelize').Op;
 
 app.get('/add', adminAuth, async(req,res, next)=>{
@@ -109,6 +110,7 @@ app.get('/view', adminAuth, async(req, res, next)=>{
     const products = await Products.findAll({  order: [['createdAt', 'DESC']] });
     const categories = await CATEGORY.findAll({ order: [['createdAt', 'DESC']] });
 
+
     return res.render('admin/products/getproducts.ejs',{products,categories});
 });
 
@@ -189,6 +191,85 @@ app.get('/delete/:id', adminAuth, async(req, res, next)=>{
 
     req.flash('successMessage',"Product Deleted!")
     return res.redirect(adminpath+'products/view');
+});
+
+app.post('/setspecs', adminAuth, async(req, res, next)=>{
+
+    try{
+
+    const formdata = req.body;
+
+    let thumbnail = new Array();
+
+    if(req.files != null){
+
+        if("product_image" in req.files){
+
+            let thumbnailFile = req.files.product_image;
+            
+            for(i=0;i<thumbnailFile.length;i++){
+
+                thumbnailFile[i].mv('./public/assets/images/'+ Date.now() +thumbnailFile[i].name, function(err) {
+                    if (err)
+                        console.log(err);  
+                });
+
+                thumbnail.push(Date.now()+thumbnailFile[i].name);
+
+            }
+
+        }
+
+    }
+
+    let body = {
+        productColor: formdata.productColor,
+        productImages: thumbnail.join(),
+        status: 1,
+        productId: formdata.productId,
+        sizechartId: formdata.sizechartId
+    };
+
+    const insertSpecs = await ProductSpecs.create(body);
+
+    if(insertSpecs){
+        req.flash('successMessage',"Products Specifications Added")
+        return res.redirect(adminpath+'products/view');
+    }else{
+        req.flash('errorMessage',"Error Occured")
+        return res.redirect(adminpath+'products/view');
+    }
+
+    }catch(e){
+        req.flash('errorMessage',e);
+        return res.redirect(adminpath+'products/view');
+    }
+
+});
+
+app.get('/getsizecharts/:categoryid', adminAuth, async(req, res, next)=>{
+
+    let categoryid = req.params.categoryid;
+
+    const sizecharts = await SIZECHART.findAll({
+        categoryId: categoryid
+    });
+
+    if(sizecharts){
+
+        return res.json({
+            status: 200,
+            message: "Sizecharts Found!",
+            data: sizecharts
+        });
+
+    }else{
+        return res.json({
+            status: 201,
+            message: "No Sizechart found!"
+        });
+    }
+
 })
 
 module.exports = app;
