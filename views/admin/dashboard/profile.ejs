@@ -150,6 +150,11 @@
         </section>
         <script>
         $(document).ready(function () {
+        $(function() {
+  $('#userprofiletab').addClass('active toggled');
+  $('#profiledrop').css('display','block');
+  $('#profiletab').addClass('active');
+});
             new google.maps.event.addDomListener(window, 'load', initialize);
             $('#edit_profile').validate({
             rules: {

@@ -66,7 +66,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Edit User</h5>
+        <h5 class="modal-title" id="exampleModalLongTitle">Edit Product</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -75,77 +75,90 @@
         
         <form action="" method="POST" class="edit_product_form" enctype="multipart/form-data">
 
-            <div class="form-group">
-                <select name="category" class="form-control">
+            <div class="input-group">
+            <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
+                <select name="category" class="selectpicker form-control">
                     <option value="" selected>Choose Category</option>
                     <% for(j=0;j<categories.length;j++){ %>
                     <option value="<%=categories[j].id %>"><%=categories[j].name %></option>
                     <% } %>
                 </select>
             </div>
+            </br>
+            <div class="input-group">
+              <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
+              <div class="fg-line">
+               <input type="text" class="form-control" name="brandname" placeholder="Brand Name">
+              </div>
+            </div>
+            </br>
+            <div class="input-group">
+              <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
+              <div class="fg-line">
+               <input type="text" class="form-control" name="name" placeholder="Name">
+              </div>
+            </div>
+            </br>
+            <div class="input-group">
+              <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
+              <div class="fg-line">
+                 <textarea name="description" class="form-control" placeholder="Description" id="" cols="30" rows="5"></textarea>
+              </div>
+            </div>
+            </br>
+            <div class="input-group"  style="margin-left: 37px;">
+                <p class="f-500 c-black m-b-20">Upload Icon*</p>
+                <div class="fileinput fileinput-new" data-provides="fileinput">
+                    <span class="btn btn-primary btn-file m-r-10">
+                        <span class="fileinput-new">Upload Icon</span>
+                        <span class="fileinput-exists">Change</span>
+                        <input type="file" name="icon" class="file-upload">
+                    </span>
+                    <span class="fileinput-filename"></span>
+                    <a href="#" class="close fileinput-exists" data-dismiss="fileinput">&times;</a>
+                </div>      
+            </div>   
+            </br>
+            <div class="input-group"  style="margin-left: 37px;">
+                <p class="f-500 c-black m-b-20">Upload Thumbnail*</p>
+                <div class="fileinput fileinput-new" data-provides="fileinput">
+                    <span class="btn btn-primary btn-file m-r-10">
+                        <span class="fileinput-new">Upload Thumbnail</span>
+                        <span class="fileinput-exists">Change</span>
+                        <input type="file" name="thumbnail" class="file-upload">
+                    </span>
+                    <span class="fileinput-filename"></span>
+                    <a href="#" class="close fileinput-exists" data-dismiss="fileinput">&times;</a>
+                </div>      
+            </div>   
+            <div class="input-group">
+              <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
+                  <select name="status" class="selectpicker form-control">
+                     <option value="1">Active</option>
+                <option value="0">Inactive</option>
+                  </select>
+              </div>
+            </br>
+            <div class="input-group">
+              <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
+              <div class="fg-line">
+                 <input type="text" class="form-control" name="type" placeholder="Type">
+              </div>
+            </div>
+          </br>
+            <div class="input-group">
+              <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
+              <div class="fg-line">
+                 <input type="text" class="form-control" name="price" placeholder="Price">
+              </div>
+            </div>
 
-          <div class="form-group">
-
-            <input type="text" class="form-control" name="brandname" placeholder="Brand Name">
-
-          </div>
-
-          <div class="form-group">
-
-            <input type="text" class="form-control" name="name" placeholder="Name">
-
-          </div>
-
-          <div class="form-group">
-
-            <textarea name="description" class="form-control" placeholder="Description" id="" cols="30" rows="10"></textarea>
-
-          </div>
-
-          <div class="input-group">
-            <label for="file-upload">Upload Icon</label>
-            <input type="file" name="icon" class="file-upload">
-
-          </div>
-
-          <div class="input-group">
-            <label for="file-upload">Upload Thumbnail</label>
-            <input type="file" name="thumbnail" class="file-upload">
-
-          </div>
-
-          <div class="form-group">
-
-            <select name="status" class="form-control">
-              <option value="1">Active</option>
-              <option value="0">Inactive</option>
-            </select>
-
-          </div>
-
-          <div class="form-group">
-
-            <input type="text" class="form-control" name="type" placeholder="Type">
-
-          </div>
-
-          <div class="form-group">
-
-            <input type="text" class="form-control" name="price" placeholder="Price">
-
-          </div>
-
-          <button class="btn btn-success" type="submit">
-            Update
-          </button>
-          
-
+            </br>
+             <div class="m-t-30 text-center">
+                <button class="btn btn-primary btn-sm waves-effect">Update</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
         </form>
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
   </div>
@@ -211,6 +224,10 @@
 </section>
 
 <script>
+$(function() {
+  $('#productsTab').addClass('active toggled');
+  $('#listproduct').addClass('active');
+});
     $(".edit_product").click(function(){
 
       var id = $(this).data("id");
