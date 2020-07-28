@@ -1,197 +1,145 @@
 <!-- AUI Framework -->
-<!DOCTYPE html>
-    <html>
-   <%-include ('../partials/header')%>
-    <body style="overflow: hidden;">
-        
-
-       
-
-        <div id="page-wrapper" class="demo-example">
-
-           
-
-            <!-- #page-header -->
-
-            <%-include ('../partials/side_bar')%>
-            <!-- #page-sidebar -->
-            <div id="page-content-wrapper">
-                <div id="page-title">
-
-<h3>
-    <div class="bg-gray text-transform-upr font-size-15 font-bold primary-font pad10A">    Banner details </div>
-
-
-  
+<%- include ('../partials/header') %>
+<%- include ('../partials/side_bar') %>
+<section id="content">
+    <div class="container">
+ 
+    <div>
+    <div class="card">
     
-</h3>
-                </div>
-                   <!-- #page-title -->
-<div id="page-content">
-
-
-<%-include ('../partials/flashMessage')%>
-
-
-
-<div class="large-box col-md-10">
-    <div class="example-code clearfix">
-
-      <form  role="form" onsubmit="return false"  class="form-bordered"  id="adduser" >
-
+        <form  role="form" method="POST" id="addUser"  enctype="multipart/form-data">
         <input type="hidden"  name="bannerId" id="bannerId"  value="<%-data.id%>"  />
 
-        
-
-        <div class="form-row">
-            <div class="form-label col-md-4">
-                <label for="">
-                     Name:
-                    <span class="required">*</span>
-                </label>
-            </div>
-            <div class="form-input col-md-8">
-                <input type="text" id="name" name="name" value="<%-data.name%>" data-trigger="change" data-required="true" class="parsley-validated" />
-            </div>
-        </div>
-
-        
-
-        <div class="form-row">
-            <div class="form-label col-md-4">
-                <label for="">
-                    Banner Image:
-                </label>
-            </div>
-            <div class="form-input col-md-4">
-                <input type="file"  id="banner" name="banner"  />
-            </div>
-
-            <div class="form-group col-md-4" <% if (data.url =="") {%> style="display :none"  <%}%>  > 
-                <label>Uploaded Banner </label>
-                <div class="fm-admin-file">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Edit Banner</h2>
+                </div>
+                <div class="row" style="margin-left:30px">
+                    <label>Uploaded Banner </label>
+                    <div class="form-group ">
                         <img id="myIcon" src="<%=data.url%>" alt="Banner" style="width:50%;max-width:100px">
+                    </div>
+                </div>
+                <div class="card-body card-padding">
+                <div class="col-sm-6"> 
+                    <div class="form-group fg-line">
+                        <p class="f-500 c-black m-b-10"> Name <span class="c-red m-l-3" >*</span> </p>
+                        <div class="fg-line">
+                        <input type="text" id="name" placeholder="Banner Name" value="<%-data.name%>" id="name" name="name"  minlength="2" maxlength="100"  class="form-control" />
+                        </div> 
+                    </div>
+                     <br/>
+                    <div class="form-group fg-line">
+                        <p class="f-500 c-black m-b-10">Choose Order  <span class="c-red m-l-3" >*</span> </p>
+                        <select data-placeholder="Choose Order"  class="chosen form-control" name="order" id="category">
+                            <%for (var k=1;k<=10;k++){%>
+                                <option <%if(data.orderby==k){%>selected <%}%> value="<%-k%>" /><%-k%> 
+                            <%}%>
+                        </select>                    
+                    </div>
+                     <br/>
 
                 </div>
-            </div>
-        </div>
-
-
-
-        <div class="form-row">
-            <div class="form-label col-md-4">
-                <label for="">
-                     Order by :
-                    <span class="required">*</span>
-                </label>
-            </div>
-            <div class="form-input col-md-8">
-                <select data-placeholder="Choose Priority Level" data-required="true" name="order" class="chosen-select" id="order">
-                  
-                  <%for (var k=1;k<=10;k++){%>
-                    <option <%if(data.orderby==k){%>selected <%}%> value="<%-k%>" /><%-k%> 
-                  
-<%}%>
-    
-           </select>              </div>
-        </div>
-      
-
-
-            <div class="form-row">
-                <input type="hidden" name="superhidden" id="superhidden" />
-                <div class="form-input col-md-12 col-md-offset-5">
-                    <!-- //onclick="javascript:$(&apos;#demo-form&apos;).parsley( &apos;validate&apos; );" -->
-                    <!-- onclick="javascript:$('#adduser').parsley('validate' );"  -->
-                     
-                    <button  type="button" onclick="window.history.back();"   class="btn ui-state-default medium bg-red mrg15R">
-                        <span class="button-content">Cancel</span>
-                    </button>
-                    <button  type="submit" class="btn ui-state-default medium  primary-bg">
-                        <span class="button-content">Submit</span>
-                    </button>
-                    
-                    
-                   
-            </div>
-
-        </form>
-
-    </div>
-    
-</div>
-
-
-
-
-
-
-                	</div><!-- #page-content -->
-            </div><!-- #page-main -->
-        </div><!-- #page-wrapper -->
-
-    </body>
-</html>
-
-
-<script type="text/javascript">
-
-      $('#adduser').submit( function() {
-       
-        var id=$('#bannerId').val()
-       
-            var tempform = $('#adduser');
-           
-            tempform .parsley('validate' );
-
-            if(tempform.parsley('isValid' ))
-            {
-            var form_data = new FormData(tempform[0]);
-
-            var ext = $('#banner').val().split('.').pop().toLowerCase();
-            if(ext==null || ext=="") ext=$('#myIcon').attr('src').split('.').pop().toLowerCase();
-
-     if($.inArray(ext, ['gif','png','jpg','jpeg']) == -1) {
-     showToastError('<%-appstrings.image_errro%>')
-   return false;
-}
-
-
-
-            $("#loading1").show();
-            $.ajax({
-                type: 'POST',
-                url: '<%-adminpath%>banner/update',
-                dataType: 'json',
-                data: form_data,
-                contentType:false,
-                cache:false,
-                processData:false,
-                success: function (response) {
-                    $("#loading1").hide();
-                    if (response.code == 200) {
-                  
-                        showToastSuccess(response.message)
-
-                         window.location.href="<%-adminpath%>banner/view/"+id;
+                    <div class="row">
                        
-                    } else {
-                        showToastError(response.message)
-                    }
-                },
+                        <div class="form-group fg-line col-md-6">
+                            <p class="f-500 c-black m-b-15"> Upload Banner Image  <span class="c-red m-l-3" >*</span> </p>
+                            <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                                <div class="fileinput-preview thumbnail" data-trigger="fileinput"></div>
+                                <div>
+                                    <span class="btn btn-info btn-file">
+                                        <span class="fileinput-new"> Upload Banner Image</span>
+                                        <span class="fileinput-exists">Change</span>
+                                        <input type="file"  id="banner" name="banner">
+                                    </span>
+                                    <a href="#" class="btn btn-danger fileinput-exists" data-dismiss="fileinput">Remove</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group fg-line m-t-20">
+                        <button class="btn btn-primary btn-sm waves-effect">Update</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
+</section>
+<script type="text/javascript">
+$(function() {
+  $('#appsetting').addClass('active toggled');
+  $('#Bannertab').addClass('active');
+});
+ $('#addUser').validate({
+    ignore: ":hidden:not(select)",
+    rules: {
+      name: {
+        required: true
+      },
+     
+      order: {
+        required: true
+      },
+       banner: { accept: "image/jpg,image/jpeg,image/png"},
+      
+    },
 
-                error: function(response)
-                {            $("#loading1").hide();
+    messages: {
+      name: {
+        required: "This field is required",
+      },
+       order: {
+        required: "This field is required",
+      },
+       banner: {accept: 'Not an image!'},
+    },
+    submitHandler: function (form) {
+        var tempform = $('#addUser');
+        var form_data = new FormData(tempform[0]);
+        $('#loading1').show()
+        $.ajax({
+            type: 'POST',
+            url: '<%-adminpath%>banner/update',
+            dataType: 'json',
+            data: form_data,
+            contentType:false,
+            cache:false,
+            processData:false,
+            success: function (response) {
+                $('#loading1').hide()
 
-                   var errorResponse=JSON.parse(response.responseText)
-                   showToastError(errorResponse.message)
+                $(".overlay").hide();
+                if (response.code == 200) {
+              
+                    showToastSuccess(response.message)
 
-
+                     window.location.href="<%-adminpath%>banner";
+                   
+                } else {
+                    showToastError(response.message)
                 }
-            });
-        }
-      });
+            },
+
+            error: function(response)
+            {
+                $('#loading1').hide()
+
+               var errorResponse=JSON.parse(response.responseText)
+               showToastError(errorResponse.message)
+
+
+            }
+        });
+    }
+  });
+</script>
     
-  
-    </script>
+
+
+
+
+
+
+
+
 
