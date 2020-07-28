@@ -20,6 +20,7 @@ const notificationCtrl              = require('../controllers/dashboard/dnotific
 const userCtrl              = require('../controllers/dashboard/duser.controller');
 const sizechartCtrl = require('../controllers/dashboard/dsizecharts.controller');
 const productsCtrl = require('../controllers/dashboard/dproducts.controller');
+const settingsCtrl = require('../controllers/dashboard/dsetting.controller');
 
 router.use('/',authController);
 router.use('/category/',categoryController);
@@ -40,6 +41,7 @@ router.use('/notification/',notificationCtrl);
 router.use('/user/',userCtrl);
 router.use('/sizecharts/',sizechartCtrl);
 router.use('/products',productsCtrl);
+router.use('/settings',settingsCtrl);
 
 router.use((req, res, next) => {
 
