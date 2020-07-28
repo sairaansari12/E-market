@@ -195,19 +195,38 @@
         var sizeName = $(this).children(".form-inline,.form-group").children("input[name=sizename]").val();
 
         var country  = $(this).children(".form-inline").children("input[name=country]").val();
-    
         var customFields = $(this).find(".custom_fields");
     
             customFields.each(function(i,k){
-              
-    
-              var fieldName1 = $(this).find(".fieldName1").val();
+              var simple = $(this).find("input[type=text]");
+              // var fieldName1 = $(this).find(".fieldName1").val();
 
-              var valueName1 = $(this).find(".valueName1").val();
+              // var valueName1 = $(this).find(".valueName1").val();
               
-              str += ',"'+fieldName1+'":"'+valueName1+'"';
+              let simplecount = 0;
+              let fields,values;
+              $.each(simple,function(field,value){
+                  
+                  var name = $(this).attr("name");
 
-              console.log(fieldName1,valueName1);
+                  if(name.includes("fieldName")){
+                    fields = $(this).val();
+                    
+                    simplecount++;
+                  }
+                  if(name.includes("valueName")){
+                    values = $(this).val();
+                    
+                    simplecount++;
+                  }
+                  // console.log(fields,values);
+                  if(simplecount==2){
+                    str += ',"'+fields+'":"'+values+'"';
+                    
+                    simplecount = 0;
+                  }
+
+              });
     
             });
 
