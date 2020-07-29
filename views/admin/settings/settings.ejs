@@ -327,9 +327,21 @@
 
           </div>
         </div>
+
+        
+
     </div>
+
+
     
     </div>
+
+    <p class="text-right mr-5">
+        <button class="btn mr-5 btn-info buttonNext btn-sm">Next</button>
+        <button class="btn mr-5 btn-secondary buttonPrevious btn-sm">Prev</button>
+
+        <button class="btn mr-5 btn-primary buttonFinish btn-sm">Finish</button>
+    </p>
     
 </section>
 
@@ -344,6 +356,9 @@
 var count=0
  
 $(document).ready(function(){
+
+    $(".buttonFinish").hide();
+
   $(function(event){
     $(".buttonFinish").on("click", function(){
 
@@ -356,16 +371,32 @@ $(document).ready(function(){
     
     });
     $(".buttonNext").on("click", function(){
-        if(count==0) callUpdateAPI("generalForm")
-        if(count==1) callUpdateAPI("aboutusForm")
-        if(count==2) callUpdateAPI("privacyForm")
-        if(count==3) callUpdateAPI("termsForm")
+
+        if(count==0) callUpdateAPI("generalForm");
+        if(count==1) callUpdateAPI("aboutusForm");
+        if(count==2) callUpdateAPI("privacyForm");
+        if(count==3) callUpdateAPI("termsForm");
+
         count++;
+
+        if(count==4){
+            $(".buttonNext").hide();
+            $(".buttonFinish").show();
+        }
+
+        nextButton();
         
     });
 
     $(".buttonPrevious").on("click", function(){
         count--;
+
+        if(count<4){
+            $(".buttonNext").show();
+            $(".buttonFinish").hide();
+        }
+
+        prevButton();
         
     });
 
@@ -462,7 +493,25 @@ if(formName=="termsForm")
 
     }
 
+    function nextButton(){
 
+        var activeTab = $(document).find(".active");
+        $.each(activeTab,function(key,value){
+            if(typeof $(this).children("a").data("toggle") !== typeof undefined && $(this).children("a").data("toggle") !== false){
+                $(this).next("li").children("a").trigger("click");
+            }
+        });
+
+    }
+
+    function prevButton(){
+        var activeTab = $(document).find(".active");
+        $.each(activeTab,function(key,value){
+            if(typeof $(this).children("a").data("toggle") !== typeof undefined && $(this).children("a").data("toggle") !== false){
+                $(this).prev("li").children("a").trigger("click");
+            }
+        });
+    }
 
 
     </script>
