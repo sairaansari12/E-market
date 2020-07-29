@@ -1,12 +1,20 @@
 <%- include ('../partials/header') %>
 <%- include ('../partials/side_bar') %>
 
+<style>
+  .custom_frame{
+    margin-bottom: 2%;
+  }
+</style>
+
 <section id="content">
     <div class="container">
 
 <div class="col-lg-10 col-md-6 ml-auto mr-auto login_main_container">
         
     <div class="card card-categories">
+      
+
       <div class="card-header ">
         <div class="card-header ">
           <h3 class="header text-center">Add New Size Chart</h3>
@@ -16,19 +24,25 @@
 
       <div class="card-body ">
 
-          <form action="./admin/sizechart/add" method="POST" class="add_size_form p-5" enctype="multipart/form-data">
+        
+
+          <form action="./admin/sizechart/add" method="POST" style="width:85%;margin:0 auto;" class="add_size_form p-5" enctype="multipart/form-data">
 
               <div class="form-group"> 
 
-                <div class="form-group">
+                <div class="form-group ">
+      
                   <input type="text" name="title" placeholder="Enter Chart Title for Reference" class="form-control">
                 </div>
 
               </div>
 
-              <div class="custom_frame p-2 m-5" style="background:#f5f3f3;padding:3%;">
+              <div class="custom_frame mb-5" style="background:#f5f3f3;padding:3%;">
                 
+                <a href="javascript:void();" style="float:right;font-size:45px;" class="toggler"><i class="zmdi zmdi-caret-down"></i></a>
                 <h2>Property 1</h2>
+
+                <div class="frame_body">
 
               <div class="form-group form-inline">
                   
@@ -52,8 +66,10 @@
               </div>
 
               <button class="btn btn-warning btn-sm generate_size" type="button">
-                Generate New Size
+                <i class="zmdi zmdi-plus"></i> &nbsp; Generate New Size
               </button>
+
+              </div>
 
             </div>
 
@@ -61,13 +77,13 @@
 
             </div>
 
-              <button class="btn btn-info btn-sm generate_frame" type="button">
-                Generate New Property 
+              <button class="btn btn-info btn-lg generate_frame" data-toggle="tooltip" title="Generate New Property" style="border-radius:50%;" type="button">
+                <i class="zmdi zmdi-plus"></i>
               </button>
   
             
               <div class="form-group">
-                <select name="category" class="form-control">
+                <select name="category" class="selectpicker" data-live-search="true">
                     <option value="" selected>Choose Category</option>
                     <% for(j=0;j<categories.length;j++){ %>
                     <option value="<%=categories[j].id %>"><%=categories[j].name %></option>
@@ -78,13 +94,16 @@
             
   
             
-  
-            <button class="btn btn-success collect_size" type="button">
-              Update
-            </button>
+              <p class="text-center"><button class="btn btn-primary btn-lg collect_size" type="button">
+                Update
+              </button></p>
+            
             
   
           </form>
+
+          
+
         </div>
 
         
@@ -136,9 +155,12 @@
       //generate new property
     
       $(document).on("click",".generate_frame",function(){
-        var html = `<div class="custom_frame p-2 m-5" style="background:#f5f3f3;padding:3%;">
+        var html = `<div class="custom_frame " style="background:#f5f3f3;padding:3%;">
+          <a href="javascript:void();" style="float:right;font-size:45px;" class="toggler"><i class="zmdi zmdi-caret-down"></i></a>
           <p class="float-right"><a href="javascript:void();" class="delete_frame">(X)</a></a></p>
     <h2>Property ${counter}</h2>
+
+    <div class="frame_body">
     <div class="form-group form-inline">
         
       
@@ -162,7 +184,7 @@
     <button class="btn btn-warning btn-sm generate_size" type="button">
       Generate New Size
     </button>
-    
+    </div>
     </div>`;
     
       $(".dynamic_frames").append(html);
@@ -261,6 +283,14 @@
       }
     })
 
+
+    });
+
+    //Toggle Accordion
+    $(".frame_body").hide();
+    $(document).on("click",".toggler",function(){
+
+      $(this).nextAll(".frame_body").toggle();
 
     });
     
