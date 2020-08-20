@@ -7,7 +7,7 @@
     "@rimiti/invoice-it": "^3.4.0",
     "apn": "^2.2.0",
     "async-waterfall": "^0.1.5",
-    "bcrypt": "^3.0.8",
+    "bcrypt": "^5.0.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "config": "^3.2.5",
